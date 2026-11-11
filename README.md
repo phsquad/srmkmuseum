@@ -8,7 +8,7 @@
 
 ## 🏛 Структура мемориального комплекса (10 модулей)
 
-1. [index.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/index.html) — **Главный виртуальный мемориал (Десктоп)**:
+1. [index.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/index.html) — **Главный виртуальный мемориал (Десктоп)**:
    - *Зал I • Мемориал Славы*: 2.5D гранитные стелы с параллаксом, 20 кавалеров, зажжение поминальных свечей памяти и возложение цветов.
    - *Зал II • За партой Героя*: 20 интерактивных парт со студенческими архивами, зачетными книжками и досье.
    - *Зал III • Топография доблести*: Векторная интерактивная карта боевого пути и рубежей подвига.
@@ -16,46 +16,46 @@
    - *Аудиоэкскурсия*: 20 персональных аудиогидов диктора + общий экскурсионный тур.
    - *Паспорт проекта*: Официальный государственный паспорт музейной экспозиции.
 
-2. [mobile.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/mobile.html) — **PWA / Мобильная версия мемориала**:
+2. [mobile.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/mobile.html) — **PWA / Мобильная версия мемориала**:
    - Сенсорное управление, свайпы, нижний Bottom Tab Bar.
    - Адаптированный компактный плеер аудиогидов и плавающий интерфейс свечей.
 
-3. [memory-book.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/memory-book.html) — **Электронная Книга Памяти**:
+3. [memory-book.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/memory-book.html) — **Электронная Книга Памяти**:
    - 21 полный исторический том (Пролог открытия Мемориала + 20 биографических глав в формате Markdown).
    - Фильтры по учебным отделениям, воинским званиям и рубежам.
 
-4. [reader.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/reader.html) — **Интерактивный 3D-фолиант**:
+4. [reader.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/reader.html) — **Интерактивный 3D-фолиант**:
    - Читалка с реалистичным перелистыванием разворотов страниц.
    - Режим «Telegram-хроника» для быстрого чтения на смартфонах.
    - Встроенный визуализатор звуковой волны (Waveform) и голосовой плеер.
 
-5. [quiz.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/quiz.html) — **Исторический квест «Дорогами мужества»**:
+5. [quiz.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/quiz.html) — **Исторический квест «Дорогами мужества»**:
    - 32 верифицированных вопроса по истории колледжа и подвигам выпускников.
    - 4 режима тестирования и 3 уровня сложности с античит-таймингом.
    - Глобальный Зал Славы (рейтинг) с Realtime-синхронизацией через Supabase.
    - Автоматическая передача победителей в генератор наградных документов.
 
-6. [certificate.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/certificate.html) — **Генератор наградных документов**:
+6. [certificate.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/certificate.html) — **Генератор наградных документов**:
    - Выписка официальных именных сертификатов с гербовой печатью директора колледжа.
    - Индивидуальный и пакетный режим (генерация для всей учебной группы).
    - Формирование 100% сканируемого автономного векторного QR-кода верификации.
    - Регистрация выданных сертификатов в реестре Supabase (`certificates_registry`).
 
-7. [verify.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/verify.html) — **Реестр верификации сертификатов**:
+7. [verify.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/verify.html) — **Реестр верификации сертификатов**:
    - Мгновенная проверка подлинности документов по QR-коду или серийному номеру.
    - Проверка криптографического хэша SHA-256.
 
-8. [desk-qr.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/desk-qr.html) — **Конструктор «Парта Героя»**:
+8. [desk-qr.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/desk-qr.html) — **Конструктор «Парта Героя»**:
    - Генератор настольных памятных табличек формата А4 для учебных аудиторий.
    - Генерация валидных QR-кодов для мгновенного перехода к аудиогиду героя.
    - Пакетная печать комплектов табличек для всего колледжа.
 
-9. [guestbook.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/guestbook.html) — **Цифровая Стена Памяти и лампады**:
+9. [guestbook.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/guestbook.html) — **Цифровая Стена Памяти и лампады**:
    - Оставление памятных посланий и благодарностей защитникам Отечества.
    - Зажжение поминальных лампад в Realtime через Supabase WebSockets.
    - Защита от спама и накруток (аппаратный цифровой отпечаток Fingerprint).
 
-10. [methodology.html](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/methodology.html) — **Методический кабинет педагога**:
+10. [methodology.html](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/methodology.html) — **Методический кабинет педагога**:
     - Конструктор планов Уроков Мужества в соответствии с ФГОС СПО.
     - Экспорт технологической карты урока в формат Microsoft Word (.doc).
 
@@ -78,9 +78,9 @@
 1. **Создайте проект**:
    Зарегистрируйтесь на [supabase.com](https://supabase.com) и создайте новый проект.
 2. **Выполните SQL-миграцию**:
-   В боковом меню Supabase откройте **SQL Editor** ➔ **New query**, скопируйте файл [supabase_migration.sql](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/supabase_migration.sql) и нажмите **Run**.
+   В боковом меню Supabase откройте **SQL Editor** ➔ **New query**, скопируйте файл [supabase_migration.sql](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/supabase_migration.sql) и нажмите **Run**.
 3. **Подключите сайт**:
-   - Вставьте ваш **Project URL** и **Anon API Key** в файл [js/config.js](file:///c:/Users/Alexander%20Talents/Downloads/srmk-memorial-museum/js/config.js).
+   - Вставьте ваш **Project URL** и **Anon API Key** в файл [js/config.js](file:///c:/Users/Alexander%20Talents/Downloads/srmkmuseum/js/config.js).
    - **ИЛИ** откройте закрытую консоль управления базой данных через CMS (`Ctrl + Shift + A` ➔ пароль `2026` ➔ «⚡ База данных Supabase») либо через защищенное сочетание клавиш `Ctrl + Shift + S` (с вводом пароля `2026`). Панель скрыта от обычных посетителей музея.
 
 ---
@@ -95,14 +95,15 @@
    git add .
    git commit -m "Мемориальный комплекс ГБПОУ СРМК v2.0"
    git branch -M main
-   git remote add origin https://github.com/<ваш-аккаунт>/<имя-репозитория>.git
+   git remote add origin https://github.com/phsquad/srmkmuseum.git
    git push -u origin main
    ```
 2. В репозитории GitHub перейдите в **Settings** ➔ **Pages**.
 3. В разделе **Build and deployment**:
    - **Source**: `Deploy from a branch`
    - **Branch**: `main`, папка `/ (root)`
-4. Нажмите **Save**. Через 1 минуту мемориал будет доступен по адресу `https://<ваш-аккаунт>.github.io/<имя-репозитория>/`.
+4. Нажмите **Save**. Через 1 минуту мемориал будет доступен по адресу:  
+   👉 **`https://phsquad.github.io/srmkmuseum/`**
 
 > **Примечание:** В корне репозитория создан файл `.nojekyll`, исключающий обработку движком Jekyll, и файл `404.html`, обеспечивающий маршрутизацию.
 

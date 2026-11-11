@@ -1,5 +1,5 @@
 {
-  "name": "srmk-memorial-museum",
+  "name": "srmkmuseum",
   "version": "2.0.0",
   "private": true,
   "description": "Виртуальный мемориальный комплекс ГБПОУ СРМК «Быть воином — жить вечно» для GitHub Pages с интеграцией Supabase",
