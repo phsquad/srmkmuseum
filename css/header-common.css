@@ -1,0 +1,725 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   ЕДИНАЯ НАВИГАЦИОННАЯ ШАПКА И ПАСПОРТ МУЗЕЯ: css/header-common.css (v6.0 Master)
+   Мемориально-образовательный комплекс ГБПОУ СРМК «Быть воином — жить вечно»
+   ========================================================================== */
+
+:root {
+  --header-height-desktop: 48px;
+  --header-height-mobile: 44px;
+  --header-bg: rgba(10, 12, 16, 0.96);
+  --header-border: rgba(197, 160, 89, 0.28);
+  --header-text: #f1f3f7;
+  --header-text-muted: #9da6b3;
+  --header-gold: #c5a059;
+  --header-gold-hover: #dfba6d;
+  --header-granite: #8a1c22;
+  --header-granite-hover: #a8232b;
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --header-transition: 0.22s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ==========================================================================
+   1. БАЗОВЫЙ КАРКАС ШАПКИ (48px - компактная, эргономичная и эстетичная)
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height-desktop);
+  min-height: var(--header-height-desktop);
+  max-height: var(--header-height-desktop);
+  padding: 0;
+  background: var(--header-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--header-border);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+}
+
+.site-header .header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 16px;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+/* Логотип */
+.site-header .logo-group {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.site-header .logo-badge {
+  background: var(--header-granite);
+  color: #ffffff;
+  font-family: var(--font-serif);
+  font-weight: 800;
+  font-size: 0.76rem;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  letter-spacing: 1px;
+  transition: var(--header-transition);
+  display: inline-block;
+  line-height: 1.1;
+}
+
+.site-header .logo-badge:hover {
+  background: var(--header-granite-hover);
+  transform: translateY(-1px);
+}
+
+.site-header .logo-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.site-header .org-name {
+  font-family: var(--font-sans);
+  font-size: 0.56rem;
+  color: var(--header-text-muted);
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.site-header .site-title {
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--header-text);
+  white-space: nowrap;
+  line-height: 1.15;
+}
+
+/* ==========================================================================
+   2. КОМПАКТНЫЕ КНОПКИ НАВИГАЦИИ (МОДУЛИ, ЗАЛЫ, СЕРВИСЫ, О ПРОЕКТЕ)
+   ========================================================================== */
+.site-header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.site-header .header-dropdown,
+.site-header .modules-dropdown {
+  position: relative;
+}
+
+.site-header .header-dropdown-btn,
+.site-header .btn-dropdown-toggle {
+  background: rgba(22, 26, 35, 0.88);
+  border: 1px solid var(--header-border);
+  color: var(--header-text);
+  padding: 5px 9px;
+  border-radius: 3px;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: var(--header-transition);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.site-header .header-dropdown-btn .btn-icon,
+.site-header .btn-dropdown-toggle .btn-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.site-header .header-dropdown-btn:hover,
+.site-header .header-dropdown.active .header-dropdown-btn,
+.site-header .btn-dropdown-toggle:hover,
+.site-header .modules-dropdown.active .btn-dropdown-toggle {
+  border-color: var(--header-gold);
+  color: var(--header-gold);
+  background: rgba(197, 160, 89, 0.14);
+}
+
+.site-header .header-dropdown-btn.child-active,
+.site-header .btn-dropdown-toggle.child-active {
+  border-color: rgba(197, 160, 89, 0.75);
+  color: #ffffff;
+  background: rgba(197, 160, 89, 0.18);
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.22);
+}
+
+/* Акцент на кнопке Сервисы/Сертификат */
+.site-header #dropdownServices .header-dropdown-btn {
+  border-color: rgba(197, 160, 89, 0.42);
+}
+
+.site-header .arrow-icon {
+  font-size: 0.62rem;
+  opacity: 0.8;
+  transition: transform var(--header-transition);
+}
+
+.site-header .header-dropdown.active .arrow-icon,
+.site-header .modules-dropdown.active .arrow-icon {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.site-header .dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  width: 260px;
+  background: rgba(14, 17, 23, 0.98);
+  border: 1px solid var(--header-border);
+  border-radius: 4px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.92), 0 0 1px rgba(197, 160, 89, 0.35);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 2000;
+  animation: headerDropdownFade 0.18s ease-out;
+}
+
+.site-header .dropdown-menu.dropdown-menu-right {
+  right: 0;
+  left: auto;
+}
+
+.site-header .header-dropdown.active .dropdown-menu,
+.site-header .modules-dropdown.active .dropdown-menu {
+  display: flex;
+}
+
+.site-header .dropdown-header {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--header-gold);
+  padding: 4px 8px 3px 8px;
+  font-weight: 800;
+  font-family: var(--font-sans);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 3px;
+}
+
+.site-header .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 8px;
+  border-radius: 3px;
+  text-decoration: none;
+  color: var(--header-text);
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+  transition: var(--header-transition);
+}
+
+.site-header .dropdown-item:hover,
+.site-header .dropdown-item.active {
+  background: rgba(197, 160, 89, 0.14);
+  transform: translateX(2px);
+}
+
+.site-header .dropdown-item.active strong {
+  color: var(--header-gold);
+}
+
+.site-header .dropdown-item.highlight-item {
+  background: rgba(197, 160, 89, 0.08);
+  border: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+.site-header .dropdown-item.highlight-item:hover {
+  background: rgba(197, 160, 89, 0.2);
+  border-color: var(--header-gold);
+}
+
+.site-header .dropdown-item .item-icon {
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+}
+
+.site-header .dropdown-item strong {
+  display: block;
+  font-size: 0.77rem;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.site-header .dropdown-item small {
+  display: block;
+  font-size: 0.64rem;
+  color: var(--header-text-muted);
+  line-height: 1.15;
+  margin-top: 1px;
+}
+
+/* Кнопки действий */
+.site-header .btn-header-cert {
+  background: rgba(197, 160, 89, 0.12);
+  color: var(--header-gold);
+  border: 1px solid var(--header-border);
+  padding: 5px 9px;
+  border-radius: 3px;
+  font-family: var(--font-sans);
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  transition: var(--header-transition);
+}
+
+.site-header .btn-header-cert:hover {
+  background: var(--header-gold);
+  color: #000000;
+  box-shadow: 0 0 12px rgba(197, 160, 89, 0.35);
+  transform: translateY(-1px);
+}
+
+.site-header .passport-btn {
+  background: transparent;
+  color: var(--header-text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 9px;
+  border-radius: 3px;
+  font-family: var(--font-sans);
+  font-size: 0.73rem;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: var(--header-transition);
+}
+
+.site-header .passport-btn:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.site-header .contest-badge {
+  background: transparent;
+  color: var(--header-gold);
+  border: 1px solid var(--header-border);
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-family: var(--font-sans);
+  font-size: 0.73rem;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  transition: var(--header-transition);
+}
+
+.site-header .contest-badge:hover {
+  background: var(--header-gold);
+  color: #000000;
+  box-shadow: 0 0 14px rgba(197, 160, 89, 0.35);
+}
+
+/* ==========================================================================
+   4. МОБИЛЬНОЕ МЕНЮ (БУРГЕР И DRAWER)
+   ========================================================================== */
+.site-header .mobile-burger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  flex-direction: column;
+  gap: 4px;
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+}
+
+.site-header .mobile-burger-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--header-text);
+  border-radius: 1px;
+  transition: var(--header-transition);
+}
+
+.site-header .mobile-burger-btn[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.site-header .mobile-burger-btn[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.site-header .mobile-burger-btn[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: var(--header-height-desktop);
+  left: 0;
+  width: 100%;
+  height: calc(100vh - var(--header-height-desktop));
+  background: rgba(10, 12, 16, 0.98);
+  border-top: 1px solid var(--header-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 999;
+  display: none;
+  overflow-y: auto;
+  padding: 20px 24px 80px;
+  box-sizing: border-box;
+}
+
+.mobile-drawer[aria-hidden="false"],
+.mobile-drawer.active {
+  display: block;
+  animation: headerDropdownFade 0.25s ease-out;
+}
+
+.drawer-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.drawer-section-label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--header-gold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 16px 0 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 4px;
+}
+
+.drawer-section-label:first-child {
+  margin-top: 0;
+}
+
+.drawer-link {
+  display: block;
+  padding: 11px 0;
+  color: var(--header-text);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: var(--header-transition);
+}
+
+.drawer-link:hover,
+.drawer-link.highlight {
+  color: var(--header-gold);
+  padding-left: 6px;
+}
+
+.drawer-buttons-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.drawer-btn {
+  flex: 1;
+  background: rgba(24, 29, 38, 0.9);
+  border: 1px solid var(--header-border);
+  color: var(--header-text);
+  padding: 12px;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+.drawer-btn.gold {
+  background: var(--header-gold);
+  color: #000000;
+  border-color: var(--header-gold);
+}
+
+/* ==========================================================================
+   5. СТИЛИ МОДАЛЬНОГО ОКНА ПАСПОРТА МУЗЕЯ
+   ========================================================================== */
+.passport-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.passport-modal-wrapper.active {
+  display: flex;
+}
+
+.passport-dialog {
+  animation: passportModalSlide 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes passportModalSlide {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes headerDropdownFade {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   6. АДАПТИВНОСТЬ
+   ========================================================================== */
+@media (max-width: 1120px) {
+  .site-header .contest-badge {
+    display: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .site-header .main-nav {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .site-header {
+    height: var(--header-height-mobile);
+    min-height: var(--header-height-mobile);
+    max-height: var(--header-height-mobile);
+  }
+
+  .mobile-drawer {
+    top: var(--header-height-mobile);
+    height: calc(100vh - var(--header-height-mobile));
+  }
+
+  .site-header .modules-dropdown,
+  .site-header .header-dropdown,
+  .site-header .btn-header-cert,
+  .site-header .passport-btn,
+  .site-header .contest-badge {
+    display: none !important;
+  }
+
+  .site-header .mobile-burger-btn {
+    display: flex;
+  }
+
+  .site-header .org-name {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   7. СТАТУС БАЗЫ ДАННЫХ SUPABASE И ЦЕНТР УПРАВЛЕНИЯ
+   ========================================================================== */
+.supabase-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(18, 21, 28, 0.85);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #d8deea;
+  cursor: pointer;
+  transition: var(--header-transition);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.supabase-status-pill:hover {
+  background: rgba(28, 33, 44, 0.95);
+  border-color: var(--header-gold);
+  transform: translateY(-1px);
+}
+
+.supabase-status-pill .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: var(--header-transition);
+}
+
+.supabase-status-pill .status-dot.dot-online {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+}
+
+.supabase-status-pill .status-dot.dot-offline {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+}
+
+.supabase-status-pill .status-dot.dot-connecting {
+  background: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
+  animation: pulseDot 1.4s infinite ease-in-out;
+}
+
+.supabase-status-pill .status-dot.dot-error {
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* Модальное окно управления Supabase */
+.supabase-modal-wrapper .supabase-dialog {
+  max-width: 640px;
+  background: #12151c;
+  border: 1px solid rgba(197, 160, 89, 0.45);
+  padding: 28px;
+  border-radius: 6px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.95);
+  position: relative;
+  z-index: 1002;
+}
+
+.supabase-field-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.supabase-field-group label {
+  display: block;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #c5a059;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.supabase-field-group input {
+  width: 100%;
+  background: #0a0c10;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  padding: 9px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: monospace;
+  box-sizing: border-box;
+  transition: 0.2s ease;
+}
+
+.supabase-field-group input:focus {
+  outline: none;
+  border-color: #c5a059;
+  box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.2);
+}
+
+.supabase-status-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.supabase-actions-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.btn-supabase-action {
+  padding: 9px 16px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-supabase-primary {
+  background: #8a1c22;
+  color: #ffffff;
+  border-color: #c5a059;
+}
+.btn-supabase-primary:hover {
+  background: #a8232b;
+}
+
+.btn-supabase-secondary {
+  background: rgba(197, 160, 89, 0.12);
+  color: #dfba6d;
+  border-color: rgba(197, 160, 89, 0.35);
+}
+.btn-supabase-secondary:hover {
+  background: rgba(197, 160, 89, 0.22);
+}
+
+.btn-supabase-seed {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+.btn-supabase-seed:hover {
+  background: rgba(16, 185, 129, 0.25);
+}

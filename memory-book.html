@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Электронная Книга Памяти | «Быть воином — жить вечно» ГБПОУ СРМК</title>
+  <meta name="description" content="Электронная летопись и подробные архивные очерки о подвигах 20 героев-выпускников Ставропольского регионального многопрофильного колледжа.">
+  <meta name="theme-color" content="#0a0c0f">
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="css/site-common.css">
+  <link rel="stylesheet" href="css/header-common.css">
+  <link rel="stylesheet" href="css/memory-book.css">
+  <link rel="stylesheet" href="css/mobile-memory-book.css">
+</head>
+<body class="dark-theme">
+
+  <!-- ВЕРХНИЙ ИНДИКАТОР ПРОКРУТКИ ЧТЕНИЯ -->
+  <div class="reading-progress-bar" id="readingProgressBar"></div>
+
+  <!-- ЕДИНАЯ НАВИГАЦИОННАЯ ШАПКА -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-container">
+      
+      <!-- ЛОГОТИП И НАЗВАНИЕ -->
+      <a href="index.html" class="logo-group" aria-label="На главную страницу музея">
+        <div class="logo-badge">СРМК</div>
+        <div class="logo-text">
+          <span class="org-name">ГБПОУ СРМК • Ставрополь</span>
+          <span class="site-title">«Быть воином — жить вечно»</span>
+        </div>
+      </a>
+
+      <!-- КОМПАКТНЫЕ КНОПКИ НАВИГАЦИИ (МОДУЛИ, СТРАНИЦЫ И ЗАЛЫ СПРЯТАНЫ В ВЫПАДАЮЩИЕ МЕНЮ) -->
+      <div class="header-actions">
+        <!-- КНОПКА 1: ЗАЛЫ ЭКСПОЗИЦИИ -->
+        <div class="header-dropdown" id="dropdownHalls">
+          <button class="header-dropdown-btn" id="btnDropdownHalls" type="button" aria-expanded="false" aria-controls="menuHalls">
+            <span class="btn-icon">🏛</span>
+            <span class="btn-text">Залы</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-left" id="menuHalls" role="menu">
+            <div class="dropdown-header">Экспозиция музея</div>
+            <a href="index.html#memorial" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🏛</span>
+              <div><strong>Мемориал Славы</strong><small>Зал №1 • Стелы и 20 кавалеров</small></div>
+            </a>
+            <a href="index.html#heroes-grid" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🎓</span>
+              <div><strong>За партой Героя</strong><small>Зал №2 • 20 интерактивных парт</small></div>
+            </a>
+            <a href="index.html#battle-path" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🗺</span>
+              <div><strong>Хроника и Карта</strong><small>Зал №3 • Боевой путь и инфографика</small></div>
+            </a>
+            <a href="index.html#memory-hall" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🕯</span>
+              <div><strong>Эстафета поколений</strong><small>Зал №4 • Клятва и хроника</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 2: ЦИФРОВЫЕ МОДУЛИ -->
+        <div class="header-dropdown modules-dropdown" id="modulesDropdown">
+          <button class="header-dropdown-btn btn-dropdown-toggle" id="btnDropdownToggle" type="button" aria-expanded="false" aria-controls="dropdownMenu">
+            <span class="btn-icon">📖</span>
+            <span class="btn-text">Модули</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu" role="menu">
+            <div class="dropdown-header">Интерактивные модули</div>
+            <a href="memory-book.html" class="dropdown-item active" role="menuitem">
+              <span class="item-icon">📖</span>
+              <div><strong>Книга Памяти</strong><small>Электронная летопись 20 героев</small></div>
+            </a>
+            <a href="reader.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📚</span>
+              <div><strong>3D Фолиант</strong><small>Читалка книги с 3D перелистыванием</small></div>
+            </a>
+            <a href="quiz.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">⚔️</span>
+              <div><strong>Квест-викторина</strong><small>10 интерактивных вопросов</small></div>
+            </a>
+            <a href="desk-qr.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🪑</span>
+              <div><strong>Парта Героя</strong><small>Конструктор табличек и QR-кодов</small></div>
+            </a>
+            <a href="guestbook.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🕯</span>
+              <div><strong>Стена Памяти</strong><small>Поминальные лампады и отзывы</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 3: СЕРВИСЫ И СЕРТИФИКАТЫ -->
+        <div class="header-dropdown" id="dropdownServices">
+          <button class="header-dropdown-btn" id="btnDropdownServices" type="button" aria-expanded="false" aria-controls="menuServices">
+            <span class="btn-icon">📜</span>
+            <span class="btn-text">Сервисы</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" id="menuServices" role="menu">
+            <div class="dropdown-header">Документы и образование</div>
+            <a href="certificate.html" class="dropdown-item highlight-item" role="menuitem">
+              <span class="item-icon">📜</span>
+              <div><strong>Оформить Сертификат</strong><small>Именной наградной лист с печатью</small></div>
+            </a>
+            <a href="verify.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🛡</span>
+              <div><strong>Реестр верификации</strong><small>Проверка подлинности (SHA-256)</small></div>
+            </a>
+            <a href="methodology.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📑</span>
+              <div><strong>Методкабинет</strong><small>Банк уроков Мужества для учителей</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 4: О ПРОЕКТЕ И ПАСПОРТ -->
+        <div class="header-dropdown" id="dropdownAbout">
+          <button class="header-dropdown-btn" id="btnDropdownAbout" type="button" aria-expanded="false" aria-controls="menuAbout">
+            <span class="btn-icon">ℹ️</span>
+            <span class="btn-text">О проекте</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" id="menuAbout" role="menu">
+            <div class="dropdown-header">Информация и статус</div>
+            <button type="button" class="dropdown-item btn-open-passport-item" id="btnOpenPassport" data-open-passport="true" role="menuitem">
+              <span class="item-icon">📋</span>
+              <div><strong>Паспорт проекта</strong><small>Официальный документ комплекса</small></div>
+            </button>
+            <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🇷🇺</span>
+              <div><strong>Карта Доблести РФ</strong><small>Всероссийский портал акции ↗</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА МОБИЛЬНОГО МЕНЮ (БУРГЕР) -->
+        <button class="mobile-burger-btn" id="mobileBurgerBtn" aria-label="Открыть мобильное меню" aria-expanded="false" aria-controls="mobileDrawer" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ВЫДВИЖНАЯ МОБИЛЬНАЯ ПАНЕЛЬ МЕНЮ -->
+    <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+      <div class="drawer-content">
+        <div class="drawer-section-label">Залы экспозиции</div>
+        <a href="index.html#memorial" class="drawer-link">🏛 Мемориал Славы</a>
+        <a href="index.html#heroes-grid" class="drawer-link">🎓 За партой Героя</a>
+        <a href="index.html#battle-path" class="drawer-link">🗺 Хроника и Карта</a>
+        <a href="index.html#memory-hall" class="drawer-link">🕯 Эстафета памяти</a>
+
+        <div class="drawer-section-label">Цифровые модули</div>
+        <a href="memory-book.html" class="drawer-link highlight">📖 Электронная Книга Памяти</a>
+        <a href="reader.html" class="drawer-link">📚 3D Фолиант-читалка</a>
+        <a href="quiz.html" class="drawer-link">⚔️ Квест-викторина «Дорогами мужества»</a>
+        <a href="desk-qr.html" class="drawer-link">🪑 Конструктор «Парты Героя»</a>
+        <a href="guestbook.html" class="drawer-link">🕯 Стена Памяти и отзывы</a>
+
+        <div class="drawer-section-label">Страницы и сервисы</div>
+        <a href="certificate.html" class="drawer-link highlight">📜 Оформить Сертификат участника</a>
+        <a href="verify.html" class="drawer-link">🛡 Реестр верификации</a>
+        <a href="methodology.html" class="drawer-link">📑 Методический кабинет педагога</a>
+
+        <div class="drawer-buttons-row">
+          <button class="drawer-btn" id="drawerPassportBtn" type="button">Паспорт проекта</button>
+          <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="drawer-btn gold">Карта Доблести РФ</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ТИТУЛЬНЫЙ БАННЕР С МАГИСТРАЛЬНОЙ ОБЛОЖКОЙ 3:2 -->
+  <section class="book-hero">
+    <div class="container hero-content">
+      
+      <!-- РАМА МАГИСТРАЛЬНОЙ ОБЛОЖКИ 3:2 -->
+      <div class="master-cover-frame">
+        <img src="assets/images/cover-master.jpg" alt="Подвиг воинов-героев, защитников Отечества" class="master-cover-img">
+        <div class="cover-glow-overlay"></div>
+      </div>
+
+      <div class="hero-crest">⭐️</div>
+      <div class="hero-badge">Историко-мемориальный архив • 1973 — 2026</div>
+      <h1 class="hero-title">ЭЛЕКТРОННАЯ КНИГА ПАМЯТИ И СЛАВЫ</h1>
+      <p class="hero-quote">
+        «Они учились здесь. Они шагнули в вечность. Летопись ратного подвига и священной памяти 20 выпускников Ставропольского регионального многопрофильного колледжа.»
+      </p>
+
+      <div class="hero-stats-row">
+        <div class="stat-badge"><strong>21</strong> Глава летописи</div>
+        <div class="stat-badge"><strong>21</strong> Аудиогид (MP3)</div>
+        <div class="stat-badge"><strong>100%</strong> Достоверные архивы</div>
+        <div class="stat-badge"><strong>4</strong> Сектора ТВД</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПАНЕЛЬ ПОИСКА И ФИЛЬТРОВ -->
+  <nav class="book-controls-bar" aria-label="Поиск по Книге Памяти">
+    <div class="container controls-inner">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="search" id="bookSearchInput" class="search-input" aria-label="Поиск по Книге Памяти" placeholder="Поиск по имени, специальности, наградам или месту подвига...">
+        <button id="clearSearchBtn" class="clear-btn" style="display:none;" type="button" aria-label="Очистить поиск">&times;</button>
+      </div>
+
+      <div class="filters-pills" role="group" aria-label="Фильтры глав">
+        <button class="filter-pill active" data-filter="all" type="button">Все главы (21)</button>
+        <button class="filter-pill" data-filter="left" type="button">Левая плита мемориала (10)</button>
+        <button class="filter-pill" data-filter="right" type="button">Правая плита мемориала (10)</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ОСНОВНОЙ КОРПУС ЛЕТОПИСИ -->
+  <main class="container book-layout">
+    
+    <!-- БОКОВОЕ ОГЛАВЛЕНИЕ -->
+    <aside class="book-toc-sidebar">
+      <div class="toc-card">
+        <h3 class="toc-title">Оглавление глав</h3>
+        <div class="toc-scroll-list" id="tocList"></div>
+      </div>
+    </aside>
+
+    <!-- ЛЕНТА ГЛАВ -->
+    <section class="book-stories-feed" id="storiesFeed">
+      <!-- Динамически рендерится через memory-book.js -->
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       МОДАЛЬНЫЙ МАРКДАУН-РИДЕР (ПОЛНОЭКРАННОЕ ЧТЕНИЕ)
+       ========================================================================== -->
+  <div class="reader-modal" id="readerModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="readerHeroTag">
+    <div class="reader-overlay" onclick="MemoryBookApp.closeReader()"></div>
+    <div class="reader-dialog">
+      
+      <!-- Панель управления ридером -->
+      <div class="reader-topbar">
+        <div class="reader-hero-tag" id="readerHeroTag">Глава летописи</div>
+        <div class="reader-actions">
+          <button class="reader-btn" id="readerAudioBtn" type="button">🎧 Слушать аудиогид</button>
+          <button class="reader-btn" onclick="window.print()" type="button">🖨 Печать Справки</button>
+          <button class="reader-close" onclick="MemoryBookApp.closeReader()" type="button" aria-label="Закрыть">&times;</button>
+        </div>
+      </div>
+
+      <!-- Контейнер отрендеренного Markdown -->
+      <article class="markdown-body" id="markdownRenderContainer"></article>
+
+      <!-- Навигация по главам внутри ридера -->
+      <nav class="chapter-reader-nav" aria-label="Навигация по главам">
+        <button class="reader-nav-btn" id="prevChapterBtn" type="button">← Предыдущая глава</button>
+        <span class="chapter-reader-position" id="readerPosition">Глава 1 из 21</span>
+        <button class="reader-nav-btn" id="nextChapterBtn" type="button">Следующая глава →</button>
+      </nav>
+
+    </div>
+  </div>
+
+  <!-- ПЛАВАЮЩИЙ АУДИОПЛЕЕР -->
+  <div class="book-audio-bar" id="bookAudioBar">
+    <div class="container audio-bar-content">
+      <button class="audio-toggle-btn" id="bookAudioPlayBtn" type="button">▶</button>
+      <div class="audio-info">
+        <span class="audio-title" id="bookAudioTitle">Аудиогид Мемориала</span>
+        <span class="audio-hero" id="bookAudioHero">ГБПОУ СРМК</span>
+      </div>
+      <div class="audio-progress-wrap" id="bookAudioProgressWrap">
+        <div class="audio-progress-fill" id="bookAudioProgressFill"></div>
+      </div>
+      <span class="audio-timer" id="bookAudioTimer">0:00 / 0:00</span>
+      <button class="audio-close-btn" onclick="MemoryBookApp.stopAudio()" type="button">&times;</button>
+    </div>
+    <audio id="bookAudioPlayer" preload="metadata"></audio>
+  </div>
+
+  <!-- ПОДВАЛ -->
+  <footer class="book-footer">
+    <div class="container footer-content">
+      <div class="footer-col">
+        <h4>ГБПОУ СРМК</h4>
+        <p>Ставропольский региональный многопрофильный колледж</p>
+        <p>г. Ставрополь, проспект Юности, д. 3</p>
+      </div>
+      <div class="footer-col text-center">
+        <div class="memorial-crest-mini">⭐️</div>
+        <p class="footer-quote">«Быть воином — жить вечно»</p>
+      </div>
+      <div class="footer-col text-right">
+        <p>© 2026 Электронный фонд Мемориала Славы СРМК.</p>
+        <p>Всероссийская акция «Карта доблести: хранители подвигов».</p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="bookToast" class="book-toast"></div>
+
+  <!-- СКРИПТЫ -->
+  <script src="js/memorial-toast.js"></script>
+  <script src="js/achievements-engine.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/data.js"></script>
+  <script src="js/grand-memory-book-part-1.js"></script>
+  <script src="js/grand-memory-book-part-2.js"></script>
+  <script src="js/grand-memory-book-part-3.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cloud-sync.js"></script>
+  <script src="js/hall-analytics.js"></script>
+  <script src="js/memory-book.js"></script>
+  <script src="js/navigation.js"></script>
+</body>
+</html>

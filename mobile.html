@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Музей СРМК | Мобильное приложение</title>
+  <meta name="description" content="Мобильное веб-приложение Мемориального комплекса «Быть воином — жить вечно» ГБПОУ СРМК.">
+  <meta name="theme-color" content="#0a0c0f">
+
+  <!-- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМА УСТРОЙСТВА -->
+  <script>
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('view') === 'desktop') {
+        window.location.replace('index.html' + window.location.hash);
+      }
+    })();
+  </script>
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Стили -->
+  <link rel="stylesheet" href="css/site-common.css">
+  <link rel="stylesheet" href="css/header-common.css">
+  <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body class="dark-theme">
+
+  <!-- КОМПАКТНАЯ ШАПКА МОБИЛЬНОГО ПРИЛОЖЕНИЯ -->
+  <header class="header">
+    <div class="mobile-header-inner">
+      <a href="#heroIntro" class="logo-group" aria-label="На главную страницу музея">
+        <div class="logo-badge">СРМК</div>
+        <div class="logo-text">
+          <span class="org-name">ГБПОУ СРМК</span>
+          <span class="site-title">«Быть воином — жить вечно»</span>
+        </div>
+      </a>
+      <button class="mobile-menu-toggle" id="mobileModulesToggle" type="button" aria-expanded="false" aria-controls="mobileModulesPanel" aria-label="Открыть меню модулей">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- ВЕРХНЯЯ ШТОРКА ЦИФРОВЫХ МОДУЛЕЙ -->
+    <div class="mobile-modules-panel" id="mobileModulesPanel" aria-hidden="true">
+      <div class="mobile-panel-label">Цифровые модули музея</div>
+      <a href="memory-book.html" class="mobile-module-link">📖 <span><strong>Книга Памяти</strong><small>Летопись 20 героев</small></span></a>
+      <a href="reader.html" class="mobile-module-link">📚 <span><strong>3D Фолиант</strong><small>Интерактивная читалка</small></span></a>
+      <a href="quiz.html" class="mobile-module-link">⚔️ <span><strong>Квест-викторина</strong><small>Проверьте свои знания</small></span></a>
+      <a href="methodology.html" class="mobile-module-link">📑 <span><strong>Методический кабинет</strong><small>Материалы для педагогов</small></span></a>
+      <a href="certificate.html" class="mobile-module-link">📜 <span><strong>Сертификаты</strong><small>Оформить наградной документ</small></span></a>
+      <a href="verify.html" class="mobile-module-link">🛡 <span><strong>Проверка сертификата</strong><small>Реестр верификации</small></span></a>
+      <a href="desk-qr.html" class="mobile-module-link">🪑 <span><strong>Парта Героя</strong><small>Конструктор табличек А4</small></span></a>
+      <a href="guestbook.html" class="mobile-module-link">🕯 <span><strong>Стена Памяти</strong><small>Послания и лампады</small></span></a>
+      <a href="javascript:void(0)" onclick="NavigationEngine.openPassportModal()" class="mobile-module-link">🏛 <span><strong>Паспорт музея</strong><small>Сведения об экспозиции</small></span></a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ВВОДНЫЙ ЭКРАН HERO -->
+    <section class="hero-section" id="heroIntro">
+      <div class="hero-badge">Цифровой мемориал колледжа</div>
+      <h1 class="hero-title">ОНИ УЧИЛИСЬ ЗДЕСЬ.<br><span class="highlight">ОНИ ШАГНУЛИ В ВЕЧНОСТЬ.</span></h1>
+      <p class="hero-subtitle">Памяти 20 выпускников Ставропольского регионального многопрофильного колледжа, павших при защите Отечества.</p>
+      
+      <div class="hero-actions">
+        <button class="btn btn-primary" id="btnOpenGeneralTour" type="button">🎧 Слушать аудиоэкскурсию</button>
+        <a href="#memorial" class="btn btn-secondary">🏛 К Мемориалу Памяти</a>
+        <a href="memory-book.html" class="btn btn-secondary">📖 Открыть Книгу Памяти</a>
+        <a href="reader.html" class="btn btn-secondary">📚 Интерактивная 3D-читалка</a>
+        <a href="quiz.html" class="btn btn-secondary">⚔️ Пройти викторину</a>
+        <a href="certificate.html" class="btn btn-secondary">📜 Оформить Сертификат участника</a>
+      </div>
+    </section>
+
+    <!-- ЗАЛ I: МЕМОРИАЛ «ЗВЕЗДА ПАМЯТИ» -->
+    <section id="memorial" class="section">
+      <div class="container">
+        <span class="hall-tag">Зал I музея</span>
+        <h2 class="section-title">Мемориал Славы</h2>
+        <p class="section-desc">Выберите имя на гранитной плите для открытия архивного досье и аудиогида.</p>
+        
+        <div class="plaque-view-toggle" role="group" aria-label="Выбор плиты">
+          <button class="plaque-toggle-btn active" data-plaque-view="left" type="button">Левая плита (10)</button>
+          <button class="plaque-toggle-btn" data-plaque-view="right" type="button">Правая плита (10)</button>
+        </div>
+        
+        <div class="memorial-stand-container">
+          <div class="plaque-interactive-zone left-zone" id="leftPlaqueZone">
+            <div class="names-list" id="leftPlaqueNames"></div>
+          </div>
+          <div class="plaque-interactive-zone right-zone" id="rightPlaqueZone" style="display: none;">
+            <div class="names-list" id="rightPlaqueNames"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЗАЛ II: КАРТОЧКИ («ЗА ПАРТОЙ ГЕРОЯ») -->
+    <section id="heroes-grid" class="section">
+      <div class="container">
+        <span class="hall-tag">Зал II музея</span>
+        <h2 class="section-title">За партой Героя</h2>
+        <p class="section-desc">Студенческие годы и ратный подвиг 20 выпускников колледжа.</p>
+        
+        <div class="search-wrapper">
+          <input type="text" id="heroSearchInput" class="search-input" placeholder="Поиск по фамилии или специальности..." autocomplete="off">
+        </div>
+        
+        <div class="specialty-filters-bar" id="specialtyFiltersContainer"></div>
+        <div class="heroes-grid" id="heroesCardsContainer"></div>
+      </div>
+    </section>
+
+    <!-- ЗАЛ III: ХРОНИКА И ТОПОГРАФИЯ БОЕВ -->
+    <section id="battle-path" class="section">
+      <div class="container">
+        <span class="hall-tag">Зал III музея</span>
+        <h2 class="section-title">Хроника и Карта боев</h2>
+        <p class="section-desc">Интерактивная топография доблести выпускников СРМК.</p>
+
+        <div class="theatre-nav-bar" role="group" aria-label="Фильтр рубежей">
+          <button class="theatre-btn active" data-theatre="all" type="button">Все рубежи</button>
+          <button class="theatre-btn" data-theatre="dnieper" type="button">Днепр (5)</button>
+          <button class="theatre-btn" data-theatre="zaporozhye" type="button">Запорожье (4)</button>
+          <button class="theatre-btn" data-theatre="donbass" type="button">Донбасс (10)</button>
+          <button class="theatre-btn" data-theatre="kursk" type="button">Курск (1)</button>
+        </div>
+        
+        <div id="interactiveBattleMap" class="battle-map-wrapper"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- МОДАЛЬНОЕ ОКНО ДОСЬЕ ГЕРОЯ -->
+  <div class="modal" id="heroModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-dialog">
+      <button class="modal-close" id="modalCloseBtn" type="button" aria-label="Закрыть">&times;</button>
+      <div class="modal-body" id="modalHeroContent"></div>
+    </div>
+  </div>
+
+  <!-- МОБИЛЬНЫЙ АУДИОПЛЕЕР (ФИКСИРОВАН НАД TAB BAR) -->
+  <div class="audio-bar" id="audioPlayerBar" role="region" aria-label="Аудиоплеер">
+    <div class="audio-bar-inner">
+      <button class="audio-btn" id="audioPlayPauseBtn" type="button" aria-label="Воспроизведение">▶</button>
+      <div class="audio-titles">
+        <span class="audio-track-title" id="audioTrackTitle">Аудиогид музея</span>
+        <span class="audio-hero-name" id="audioHeroName">ГБПОУ СРМК</span>
+      </div>
+      <button class="audio-close" id="audioCloseBtn" type="button" aria-label="Закрыть плеер">&times;</button>
+    </div>
+    <audio id="mainAudioElement" preload="metadata"></audio>
+    <div class="audio-progress-container" id="audioProgressContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 3px;">
+      <div class="audio-progress" id="audioProgressBar"></div>
+    </div>
+  </div>
+
+  <!-- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ (BOTTOM APP TAB BAR) -->
+  <nav class="bottom-app-bar" aria-label="Нижнее меню приложения">
+    <a href="#memorial" class="app-tab active">
+      <span class="app-tab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 7v14M10 7v14M14 7v14M18 7v14M12 3L2 7h20L12 3z"/></svg>
+      </span>
+      <span>Мемориал</span>
+    </a>
+    <a href="#heroes-grid" class="app-tab">
+      <span class="app-tab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      </span>
+      <span>Герои</span>
+    </a>
+    <a href="#battle-path" class="app-tab">
+      <span class="app-tab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+      </span>
+      <span>Карта</span>
+    </a>
+    <a href="quiz.html" class="app-tab">
+      <span class="app-tab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9L12 3z"></path></svg>
+      </span>
+      <span>Квиз</span>
+    </a>
+    <a href="memory-book.html" class="app-tab">
+      <span class="app-tab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17z"></path><path d="M4 4.5v17A2.5 2.5 0 0 1 6.5 19H20"></path></svg>
+      </span>
+      <span>Книга</span>
+    </a>
+  </nav>
+
+  <div id="memorialToast" class="memorial-toast"></div>
+
+  <!-- ПОДКЛЮЧЕНИЕ СКРИПТОВ -->
+  <script src="js/memorial-toast.js"></script>
+  <script src="js/achievements-engine.js"></script>
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+  <script src="js/data.js"></script>
+  <script src="js/sources.js"></script>
+  <script src="js/tts-narrator.js"></script>
+  <script src="js/anti-cheat-tribute.js"></script>
+  <script src="js/heraldry-resolver.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cloud-sync.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/tech-modules.js"></script>
+  <!-- ЕДИНЫЙ НАВИГАЦИОННЫЙ ДИСПЕТЧЕР -->
+  <script src="js/navigation.js"></script>
+</body>
+</html>

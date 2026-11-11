@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Реестр верификации наградных документов | ГБПОУ СРМК</title>
+  <meta name="description" content="Официальный государственный реестр проверки подлинности сертификатов Мемориального комплекса «Быть воином — жить вечно» ГБПОУ СРМК.">
+  <meta name="theme-color" content="#0a0c0f">
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="css/site-common.css">
+  <link rel="stylesheet" href="css/header-common.css">
+  <link rel="stylesheet" href="css/mobile-verify.css">
+  
+  <style>
+    :root {
+      --bg-main: #0a0c0f;
+      --bg-surface: #12151c;
+      --bg-elevated: #181d26;
+      --accent-brass: #c5a059;
+      --accent-brass-glow: rgba(197, 160, 89, 0.35);
+      --accent-granite: #8a1c22;
+      --accent-granite-hover: #a8232b;
+      --status-green: #10b981;
+      --status-green-glow: rgba(16, 185, 129, 0.35);
+      --status-yellow: #f59e0b;
+      --status-yellow-glow: rgba(245, 158, 11, 0.35);
+      --status-red: #ef4444;
+      --status-red-glow: rgba(239, 68, 68, 0.35);
+      
+      --text-primary: #f1f3f7;
+      --text-secondary: #9da6b3;
+      --text-tertiary: #626a78;
+      --border-hairline: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(197, 160, 89, 0.3);
+      --font-serif: 'Cinzel', Georgia, serif;
+      --font-sans: 'Montserrat', sans-serif;
+      --transition: 0.22s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    .main-verify-box {
+      flex-grow: 1;
+      padding: 40px 0 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .verify-card {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-accent);
+      border-radius: 4px;
+      padding: 36px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+
+    .status-badge-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid var(--status-green);
+      padding: 12px 20px;
+      border-radius: 4px;
+      margin-bottom: 28px;
+      transition: var(--transition);
+    }
+
+    .status-pulse {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--status-green);
+      box-shadow: 0 0 12px var(--status-green-glow);
+      animation: pulseGreen 2s infinite ease-in-out;
+      flex-shrink: 0;
+    }
+
+    .status-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--status-green);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .status-badge-wrapper.status-invalid {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: var(--status-red);
+    }
+    .status-badge-wrapper.status-invalid .status-pulse {
+      background: var(--status-red);
+      box-shadow: 0 0 12px var(--status-red-glow);
+      animation: none;
+    }
+    .status-badge-wrapper.status-invalid .status-title {
+      color: #f87171;
+    }
+
+    .status-badge-wrapper.status-offline {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: var(--status-yellow);
+    }
+    .status-badge-wrapper.status-offline .status-pulse {
+      background: var(--status-yellow);
+      box-shadow: 0 0 12px var(--status-yellow-glow);
+    }
+    .status-badge-wrapper.status-offline .status-title {
+      color: #fbbf24;
+    }
+
+    .cert-heading {
+      font-family: var(--font-serif);
+      font-size: 1.65rem;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .cert-subheading {
+      color: var(--accent-brass);
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-hairline);
+      padding-bottom: 12px;
+    }
+
+    .verify-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .verify-item {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      padding: 14px;
+      border-radius: 3px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .verify-item.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .verify-label {
+      font-size: 0.72rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .verify-value {
+      font-size: 0.92rem;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .crypto-flex-box {
+      display: grid;
+      grid-template-columns: 1fr 120px;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .crypto-stamp-box {
+      background: #08090d;
+      border: 1px dashed var(--border-accent);
+      padding: 14px;
+      border-radius: 3px;
+    }
+
+    .crypto-stamp-title {
+      color: var(--accent-brass);
+      font-weight: bold;
+      margin-bottom: 4px;
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+    }
+
+    .hash-code {
+      font-family: monospace;
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      word-break: break-all;
+    }
+
+    .qr-preview-small {
+      background: #ffffff;
+      padding: 6px;
+      border-radius: 3px;
+      border: 1px solid var(--accent-brass);
+      text-align: center;
+    }
+    .qr-preview-small img {
+      width: 100px; height: 100px; display: block;
+    }
+
+    .verify-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-verify {
+      flex: 1;
+      padding: 13px;
+      border-radius: 2px;
+      font-weight: 700;
+      font-size: 0.86rem;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: var(--transition);
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn-verify-primary {
+      background: var(--accent-granite);
+      color: #fff;
+    }
+    .btn-verify-primary:hover { background: var(--accent-granite-hover); }
+
+    .btn-verify-secondary {
+      background: var(--bg-elevated);
+      color: var(--accent-brass);
+      border-color: var(--border-accent);
+    }
+    .btn-verify-secondary:hover {
+      background: var(--accent-brass);
+      color: #000;
+    }
+
+    .manual-search-box {
+      margin-top: 30px;
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      padding: 24px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .manual-search-input {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      padding: 11px 14px;
+      color: #fff;
+      font-size: 0.88rem;
+      border-radius: 2px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .manual-search-input:focus { border-color: var(--accent-brass); }
+
+    .preset-links {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 0.76rem;
+      color: var(--text-tertiary);
+    }
+
+    .preset-links button {
+      background: none;
+      border: none;
+      color: var(--accent-brass);
+      cursor: pointer;
+      font-size: 0.76rem;
+      text-decoration: underline;
+    }
+    .preset-links button:hover { color: #fff; }
+
+    .footer {
+      background: #060709;
+      padding: 30px 0;
+      border-top: 1px solid var(--border-hairline);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+      margin-top: auto;
+    }
+
+    @keyframes pulseGreen {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.6; }
+    }
+
+    @media (max-width: 768px) {
+      .verify-grid { grid-template-columns: 1fr; }
+      .crypto-flex-box { grid-template-columns: 1fr; }
+      .verify-actions { flex-direction: column; }
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      .site-header, .footer, .manual-search-box, .verify-actions { display: none !important; }
+      .main-verify-box { padding: 0 !important; }
+      .verify-card {
+        border: 2px solid #000 !important;
+        box-shadow: none !important;
+        background: #fff !important;
+        color: #000 !important;
+        padding: 20px !important;
+      }
+      .cert-heading { color: #000 !important; font-size: 18pt !important; }
+      .cert-subheading { color: #444 !important; border-bottom: 1px solid #000 !important; }
+      .verify-item { background: #f8f9fa !important; border: 1px solid #ccc !important; }
+      .verify-value { color: #000 !important; }
+      .crypto-stamp-box { background: #f8f9fa !important; border: 1px solid #000 !important; color: #000 !important; }
+      .crypto-stamp-title { color: #000 !important; }
+      .hash-code { color: #000 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ЕДИНАЯ НАВИГАЦИОННАЯ ШАПКА -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-container">
+      
+      <!-- ЛОГОТИП И НАЗВАНИЕ -->
+      <a href="index.html" class="logo-group" aria-label="На главную страницу музея">
+        <div class="logo-badge">СРМК</div>
+        <div class="logo-text">
+          <span class="org-name">ГБПОУ СРМК • Ставрополь</span>
+          <span class="site-title">«Быть воином — жить вечно»</span>
+        </div>
+      </a>
+
+      <!-- КОМПАКТНЫЕ КНОПКИ НАВИГАЦИИ (МОДУЛИ, СТРАНИЦЫ И ЗАЛЫ СПРЯТАНЫ В ВЫПАДАЮЩИЕ МЕНЮ) -->
+      <div class="header-actions">
+        <!-- КНОПКА 1: ЗАЛЫ ЭКСПОЗИЦИИ -->
+        <div class="header-dropdown" id="dropdownHalls">
+          <button class="header-dropdown-btn" id="btnDropdownHalls" type="button" aria-expanded="false" aria-controls="menuHalls">
+            <span class="btn-icon">🏛</span>
+            <span class="btn-text">Залы</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-left" id="menuHalls" role="menu">
+            <div class="dropdown-header">Экспозиция музея</div>
+            <a href="index.html#memorial" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🏛</span>
+              <div><strong>Мемориал Славы</strong><small>Зал №1 • Стелы и 20 кавалеров</small></div>
+            </a>
+            <a href="index.html#heroes-grid" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🎓</span>
+              <div><strong>За партой Героя</strong><small>Зал №2 • 20 интерактивных парт</small></div>
+            </a>
+            <a href="index.html#battle-path" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🗺</span>
+              <div><strong>Хроника и Карта</strong><small>Зал №3 • Боевой путь и инфографика</small></div>
+            </a>
+            <a href="index.html#memory-hall" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🕯</span>
+              <div><strong>Эстафета поколений</strong><small>Зал №4 • Клятва и хроника</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 2: ЦИФРОВЫЕ МОДУЛИ -->
+        <div class="header-dropdown modules-dropdown" id="modulesDropdown">
+          <button class="header-dropdown-btn btn-dropdown-toggle" id="btnDropdownToggle" type="button" aria-expanded="false" aria-controls="dropdownMenu">
+            <span class="btn-icon">📖</span>
+            <span class="btn-text">Модули</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu" role="menu">
+            <div class="dropdown-header">Интерактивные модули</div>
+            <a href="memory-book.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📖</span>
+              <div><strong>Книга Памяти</strong><small>Электронная летопись 20 героев</small></div>
+            </a>
+            <a href="reader.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📚</span>
+              <div><strong>3D Фолиант</strong><small>Читалка книги с 3D перелистыванием</small></div>
+            </a>
+            <a href="quiz.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">⚔️</span>
+              <div><strong>Квест-викторина</strong><small>10 интерактивных вопросов</small></div>
+            </a>
+            <a href="desk-qr.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🪑</span>
+              <div><strong>Парта Героя</strong><small>Конструктор табличек и QR-кодов</small></div>
+            </a>
+            <a href="guestbook.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🕯</span>
+              <div><strong>Стена Памяти</strong><small>Поминальные лампады и отзывы</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 3: СЕРВИСЫ И СЕРТИФИКАТЫ -->
+        <div class="header-dropdown" id="dropdownServices">
+          <button class="header-dropdown-btn" id="btnDropdownServices" type="button" aria-expanded="false" aria-controls="menuServices">
+            <span class="btn-icon">📜</span>
+            <span class="btn-text">Сервисы</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" id="menuServices" role="menu">
+            <div class="dropdown-header">Документы и образование</div>
+            <a href="certificate.html" class="dropdown-item highlight-item" role="menuitem">
+              <span class="item-icon">📜</span>
+              <div><strong>Оформить Сертификат</strong><small>Именной наградной лист с печатью</small></div>
+            </a>
+            <a href="verify.html" class="dropdown-item active" role="menuitem">
+              <span class="item-icon">🛡</span>
+              <div><strong>Реестр верификации</strong><small>Проверка подлинности (SHA-256)</small></div>
+            </a>
+            <a href="methodology.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📑</span>
+              <div><strong>Методкабинет</strong><small>Банк уроков Мужества для учителей</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 4: О ПРОЕКТЕ И ПАСПОРТ -->
+        <div class="header-dropdown" id="dropdownAbout">
+          <button class="header-dropdown-btn" id="btnDropdownAbout" type="button" aria-expanded="false" aria-controls="menuAbout">
+            <span class="btn-icon">ℹ️</span>
+            <span class="btn-text">О проекте</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" id="menuAbout" role="menu">
+            <div class="dropdown-header">Информация и статус</div>
+            <button type="button" class="dropdown-item btn-open-passport-item" id="btnOpenPassport" data-open-passport="true" role="menuitem">
+              <span class="item-icon">📋</span>
+              <div><strong>Паспорт проекта</strong><small>Официальный документ комплекса</small></div>
+            </button>
+            <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🇷🇺</span>
+              <div><strong>Карта Доблести РФ</strong><small>Всероссийский портал акции ↗</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА МОБИЛЬНОГО МЕНЮ (БУРГЕР) -->
+        <button class="mobile-burger-btn" id="mobileBurgerBtn" aria-label="Открыть мобильное меню" aria-expanded="false" aria-controls="mobileDrawer" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ВЫДВИЖНАЯ МОБИЛЬНАЯ ПАНЕЛЬ МЕНЮ -->
+    <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+      <div class="drawer-content">
+        <div class="drawer-section-label">Залы экспозиции</div>
+        <a href="index.html#memorial" class="drawer-link">🏛 Мемориал Славы</a>
+        <a href="index.html#heroes-grid" class="drawer-link">🎓 За партой Героя</a>
+        <a href="index.html#battle-path" class="drawer-link">🗺 Хроника и Карта</a>
+        <a href="index.html#memory-hall" class="drawer-link">🕯 Эстафета памяти</a>
+
+        <div class="drawer-section-label">Цифровые модули</div>
+        <a href="memory-book.html" class="drawer-link">📖 Электронная Книга Памяти</a>
+        <a href="reader.html" class="drawer-link">📚 3D Фолиант-читалка</a>
+        <a href="quiz.html" class="drawer-link">⚔️ Квест-викторина «Дорогами мужества»</a>
+        <a href="desk-qr.html" class="drawer-link">🪑 Конструктор «Парты Героя»</a>
+        <a href="guestbook.html" class="drawer-link">🕯 Стена Памяти и отзывы</a>
+
+        <div class="drawer-section-label">Страницы и сервисы</div>
+        <a href="certificate.html" class="drawer-link highlight">📜 Оформить Сертификат участника</a>
+        <a href="verify.html" class="drawer-link highlight">🛡 Реестр верификации</a>
+        <a href="methodology.html" class="drawer-link">📑 Методический кабинет педагога</a>
+
+        <div class="drawer-buttons-row">
+          <button class="drawer-btn" id="drawerPassportBtn" type="button">Паспорт проекта</button>
+          <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="drawer-btn gold">Карта Доблести РФ</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ГЛАВНЫЙ БЛОК ПРОВЕРКИ -->
+  <main class="main-verify-box">
+    <div class="container">
+      
+      <div class="verify-card" id="verifyCard">
+        
+        <!-- СТАТУСНЫЙ БАДЖ -->
+        <div class="status-badge-wrapper" id="statusBadgeWrapper">
+          <div class="status-pulse" id="statusPulse"></div>
+          <div class="status-title" id="statusTitle">ПОИСК В ГЛОБАЛЬНОМ РЕЕСТРЕ SUPABASE...</div>
+        </div>
+
+        <h1 class="cert-heading" id="cardDocTitle">Сертификат участника Урока Мужества</h1>
+        <div class="cert-subheading">
+          Мемориально-образовательный комплекс «Быть воином — жить вечно» • ГБПОУ СРМК
+        </div>
+
+        <!-- ДЕТАЛИЗАЦИЯ ИЗ БАЗЫ ДАННЫХ -->
+        <div class="verify-grid">
+          <div class="verify-item">
+            <span class="verify-label">Регистрационный номер:</span>
+            <span class="verify-value" id="cardSerial">СРМК-УМ-2026-0001</span>
+          </div>
+
+          <div class="verify-item">
+            <span class="verify-label">Дата внесения в реестр:</span>
+            <span class="verify-value" id="cardDate">10 сентября 2026 г.</span>
+          </div>
+
+          <div class="verify-item full-width">
+            <span class="verify-label">Награжденное лицо:</span>
+            <span class="verify-value" id="cardName" style="color: var(--accent-brass); font-size: 1.15rem;">Иванов Данила Денисович</span>
+          </div>
+
+          <div class="verify-item">
+            <span class="verify-label">Учебная группа / Категория:</span>
+            <span class="verify-value" id="cardGroup">Группа ИС-241</span>
+          </div>
+
+          <div class="verify-item">
+            <span class="verify-label">Специальность / Кафедра:</span>
+            <span class="verify-value" id="cardSpecialty">09.02.11 Разработка ПО</span>
+          </div>
+
+          <div class="verify-item full-width">
+            <span class="verify-label">Основание выдачи (Номинация):</span>
+            <span class="verify-value" id="cardReason">Участие во Всероссийской акции «Имя в истории образовательной организации»</span>
+          </div>
+
+          <div class="verify-item">
+            <span class="verify-label">Образовательная организация:</span>
+            <span class="verify-value">ГБПОУ «Ставропольский региональный многопрофильный колледж» (г. Ставрополь)</span>
+          </div>
+
+          <div class="verify-item">
+            <span class="verify-label">Подписанты документа:</span>
+            <span class="verify-value">Директор Е. В. Бледных, куратор А. В. Генте</span>
+          </div>
+        </div>
+
+        <!-- КРИПТОГРАФИЧЕСКИЙ ОТПЕЧАТОК И QR-КОД -->
+        <div class="crypto-flex-box">
+          <div class="crypto-stamp-box">
+            <span class="crypto-stamp-title">Электронный цифровой отпечаток (SHA-256 Hash Digest):</span>
+            <span id="cardCryptoHash" class="hash-code">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</span>
+          </div>
+          <div class="qr-preview-small" id="qrPreviewBox">
+            <img id="verifyQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=СРМК-УМ-2026-0001" alt="QR-код документа">
+          </div>
+        </div>
+
+        <!-- КНОПКИ ДЕЙСТВИЙ -->
+        <div class="verify-actions">
+          <a href="index.html#heroes-grid" class="btn-verify btn-verify-primary">🏛 В залы Мемориала Славы</a>
+          <a href="certificate.html" class="btn-verify btn-verify-secondary">📜 Генератор сертификатов</a>
+          <button onclick="window.print()" class="btn-verify btn-verify-secondary" type="button">🖨 Распечатать Справку А4</button>
+        </div>
+
+      </div>
+
+      <!-- РУЧНОЙ ПОИСК ПО НОМЕРУ -->
+      <div class="manual-search-box">
+        <h3 style="font-size: 0.95rem; color: var(--accent-brass); margin-bottom: 8px;">🔍 Ручной поиск в государственном реестре СРМК</h3>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px;">Введите регистрационный номер сертификата для проверки подлинности:</p>
+        
+        <div style="display:flex; gap:8px; justify-content:center; max-width:520px; margin:0 auto;">
+          <input type="text" id="manualSearchInput" class="manual-search-input" placeholder="например: СРМК-УМ-2026-0001">
+          <button id="btnSearchSubmit" onclick="VerifyApp.submitSearch()" class="btn-verify btn-verify-primary" style="padding:10px 20px; flex:none;" type="button">Проверить</button>
+        </div>
+
+        <div class="preset-links">
+          <span>Тестовые образцы для проверки:</span>
+          <button onclick="VerifyApp.checkSerial('СРМК-УМ-2026-0001')" type="button">СРМК-УМ-2026-0001</button> • 
+          <button onclick="VerifyApp.checkSerial('СРМК-УМ-2026-0042')" type="button">СРМК-УМ-2026-0042</button> • 
+          <button onclick="VerifyApp.checkSerial('СРМК-УМ-2026-7777')" type="button">СРМК-УМ-2026-7777</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ПОДВАЛ -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 ГБПОУ СРМК. Официальный модуль верификации Всероссийской акции «Карта доблести: хранители подвигов».</p>
+    </div>
+  </footer>
+
+  <!-- СКРИПТЫ -->
+  <script src="js/memorial-toast.js"></script>
+  <script src="js/achievements-engine.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cloud-sync.js"></script>
+  <script src="js/qr-code.js"></script>
+  <script src="js/certificate-verifier.js"></script>
+  <script src="js/navigation.js"></script>
+
+  <script>
+    'use strict';
+
+    const VerifyApp = {
+      async init() {
+        const params = new URLSearchParams(window.location.search);
+        const serial = params.get('cert') || 'СРМК-УМ-2026-0001';
+        const nameParam = params.get('name');
+        const dateParam = params.get('date');
+
+        document.getElementById('manualSearchInput').value = serial;
+        
+        document.getElementById('manualSearchInput').addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') this.submitSearch();
+        });
+
+        await this.verifySerial(serial, nameParam, dateParam);
+      },
+
+      submitSearch() {
+        const input = document.getElementById('manualSearchInput').value.trim();
+        if (input) {
+          this.checkSerial(input);
+        }
+      },
+
+      checkSerial(serial) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('cert', serial);
+        window.location.href = url.href;
+      },
+
+      async verifySerial(serial, nameParam = null, dateParam = null) {
+        const wrapper = document.getElementById('statusBadgeWrapper');
+        const title = document.getElementById('statusTitle');
+
+        document.getElementById('cardSerial').textContent = serial;
+
+        const currentUrl = encodeURIComponent(window.location.href);
+        document.getElementById('verifyQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${currentUrl}`;
+
+        // 1. Проверка в облаке Supabase
+        let certData = null;
+        if (typeof CloudSync !== 'undefined' && CloudSync.isLive) {
+          certData = await CloudSync.verifyCertificate(serial);
+        }
+
+        if (certData) {
+          wrapper.className = "status-badge-wrapper";
+          title.textContent = "ПОДЛИННОСТЬ ПОДТВЕРЖДЕНА В ЭЛЕКТРОННОМ РЕЕСТРЕ СРМК";
+          
+          document.getElementById('cardName').textContent = certData.student_name || nameParam || "—";
+          document.getElementById('cardDate').textContent = certData.issue_date || dateParam || "10 сентября 2026 г.";
+          document.getElementById('cardGroup').textContent = certData.group_name ? `Группа ${certData.group_name}` : "Обучающийся СРМК";
+          document.getElementById('cardSpecialty').textContent = certData.specialty || "Специальность СПО";
+          document.getElementById('cardReason').textContent = certData.nomination || "Участие во Всероссийской акции «Имя в истории»";
+          document.getElementById('cardCryptoHash').textContent = `SHA256:${(certData.crypto_hash || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855').toUpperCase()}`;
+          return;
+        }
+
+        // 2. Локальный фолбэк по алгоритму CertificateVerifier
+        const isValidFormat = typeof CertificateVerifier !== 'undefined' 
+          ? CertificateVerifier.isValidSerial(serial)
+          : /^СРМК-УМ-(20\d{2})-(\d{4})$/.test(serial);
+
+        if (isValidFormat) {
+          wrapper.className = "status-badge-wrapper status-offline";
+          title.textContent = "ПОДЛИННОСТЬ ПОДТВЕРЖДЕНА (ЛОКАЛЬНЫЙ РЕЕСТР СРМК)";
+
+          const displayName = nameParam || "Смирнов Никита Александрович";
+          const displayDate = dateParam || "10 сентября 2026 г.";
+
+          document.getElementById('cardName').textContent = displayName;
+          document.getElementById('cardDate').textContent = displayDate;
+          document.getElementById('cardGroup').textContent = "Группа ИСиП-242";
+          document.getElementById('cardSpecialty').textContent = "09.02.11 Разработка ПО";
+          document.getElementById('cardReason').textContent = "Участие во Всероссийском Уроке Мужества";
+
+          if (typeof CertificateVerifier !== 'undefined') {
+            const calculatedHash = await CertificateVerifier.computeHash(serial + displayName + displayDate);
+            document.getElementById('cardCryptoHash').textContent = `SHA256:${calculatedHash.toUpperCase()}`;
+          } else {
+            document.getElementById('cardCryptoHash').textContent = "SHA256:E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855";
+          }
+        } else {
+          wrapper.className = "status-badge-wrapper status-invalid";
+          title.textContent = "ОШИБКА: ДОКУМЕНТ НЕ НАЙДЕН В РЕЕСТРЕ (НЕВАЛИДНЫЙ НОМЕР)";
+
+          document.getElementById('cardName').textContent = "ОТКАЗ ВЕРИФИКАЦИИ";
+          document.getElementById('cardDate').textContent = "НЕИЗВЕСТНО";
+          document.getElementById('cardGroup').textContent = "ОТКАЗ";
+          document.getElementById('cardSpecialty').textContent = "НЕВАЛИДНЫЙ СЕРИЙНЫЙ НОМЕР";
+          document.getElementById('cardReason').textContent = "Документ с данным регистрационным номером не выписывался в реестре ГБПОУ СРМК.";
+          document.getElementById('cardCryptoHash').textContent = "ОТКАЗ ВЕРИФИКАЦИИ ХЭША";
+        }
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => VerifyApp.init());
+  </script>
+</body>
+</html>

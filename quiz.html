@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Исторический Квест «Дорогами мужества» | ГБПОУ СРМК</title>
+  <meta name="description" content="Интерактивная квест-викторина на знание подвигов 20 героев-выпускников Ставропольского регионального многопрофильного колледжа.">
+  <meta name="theme-color" content="#0a0c0f">
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Стили -->
+  <link rel="stylesheet" href="css/site-common.css">
+  <link rel="stylesheet" href="css/header-common.css">
+  <link rel="stylesheet" href="css/quiz.css">
+  <link rel="stylesheet" href="css/mobile-quiz.css">
+</head>
+<body class="dark-theme">
+
+  <!-- ЕДИНАЯ НАВИГАЦИОННАЯ ШАПКА -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-container">
+      
+      <!-- ЛОГОТИП И НАЗВАНИЕ -->
+      <a href="index.html" class="logo-group" aria-label="На главную страницу музея">
+        <div class="logo-badge">СРМК</div>
+        <div class="logo-text">
+          <span class="org-name">ГБПОУ СРМК • Ставрополь</span>
+          <span class="site-title">«Быть воином — жить вечно»</span>
+        </div>
+      </a>
+
+      <!-- КОМПАКТНЫЕ КНОПКИ НАВИГАЦИИ (МОДУЛИ, СТРАНИЦЫ И ЗАЛЫ СПРЯТАНЫ В ВЫПАДАЮЩИЕ МЕНЮ) -->
+      <div class="header-actions">
+        <!-- КНОПКА 1: ЗАЛЫ ЭКСПОЗИЦИИ -->
+        <div class="header-dropdown" id="dropdownHalls">
+          <button class="header-dropdown-btn" id="btnDropdownHalls" type="button" aria-expanded="false" aria-controls="menuHalls">
+            <span class="btn-icon">🏛</span>
+            <span class="btn-text">Залы</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-left" id="menuHalls" role="menu">
+            <div class="dropdown-header">Экспозиция музея</div>
+            <a href="index.html#memorial" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🏛</span>
+              <div><strong>Мемориал Славы</strong><small>Зал №1 • Стелы и 20 кавалеров</small></div>
+            </a>
+            <a href="index.html#heroes-grid" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🎓</span>
+              <div><strong>За партой Героя</strong><small>Зал №2 • 20 интерактивных парт</small></div>
+            </a>
+            <a href="index.html#battle-path" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🗺</span>
+              <div><strong>Хроника и Карта</strong><small>Зал №3 • Боевой путь и инфографика</small></div>
+            </a>
+            <a href="index.html#memory-hall" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🕯</span>
+              <div><strong>Эстафета поколений</strong><small>Зал №4 • Клятва и хроника</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 2: ЦИФРОВЫЕ МОДУЛИ -->
+        <div class="header-dropdown modules-dropdown" id="modulesDropdown">
+          <button class="header-dropdown-btn btn-dropdown-toggle" id="btnDropdownToggle" type="button" aria-expanded="false" aria-controls="dropdownMenu">
+            <span class="btn-icon">📖</span>
+            <span class="btn-text">Модули</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu" role="menu">
+            <div class="dropdown-header">Интерактивные модули</div>
+            <a href="memory-book.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📖</span>
+              <div><strong>Книга Памяти</strong><small>Электронная летопись 20 героев</small></div>
+            </a>
+            <a href="reader.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📚</span>
+              <div><strong>3D Фолиант</strong><small>Читалка книги с 3D перелистыванием</small></div>
+            </a>
+            <a href="quiz.html" class="dropdown-item active" role="menuitem">
+              <span class="item-icon">⚔️</span>
+              <div><strong>Квест-викторина</strong><small>10 интерактивных вопросов</small></div>
+            </a>
+            <a href="desk-qr.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🪑</span>
+              <div><strong>Парта Героя</strong><small>Конструктор табличек и QR-кодов</small></div>
+            </a>
+            <a href="guestbook.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🕯</span>
+              <div><strong>Стена Памяти</strong><small>Поминальные лампады и отзывы</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 3: СЕРВИСЫ И СЕРТИФИКАТЫ -->
+        <div class="header-dropdown" id="dropdownServices">
+          <button class="header-dropdown-btn" id="btnDropdownServices" type="button" aria-expanded="false" aria-controls="menuServices">
+            <span class="btn-icon">📜</span>
+            <span class="btn-text">Сервисы</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" id="menuServices" role="menu">
+            <div class="dropdown-header">Документы и образование</div>
+            <a href="certificate.html" class="dropdown-item highlight-item" role="menuitem">
+              <span class="item-icon">📜</span>
+              <div><strong>Оформить Сертификат</strong><small>Именной наградной лист с печатью</small></div>
+            </a>
+            <a href="verify.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🛡</span>
+              <div><strong>Реестр верификации</strong><small>Проверка подлинности (SHA-256)</small></div>
+            </a>
+            <a href="methodology.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📑</span>
+              <div><strong>Методкабинет</strong><small>Банк уроков Мужества для учителей</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 4: О ПРОЕКТЕ И ПАСПОРТ -->
+        <div class="header-dropdown" id="dropdownAbout">
+          <button class="header-dropdown-btn" id="btnDropdownAbout" type="button" aria-expanded="false" aria-controls="menuAbout">
+            <span class="btn-icon">ℹ️</span>
+            <span class="btn-text">О проекте</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" id="menuAbout" role="menu">
+            <div class="dropdown-header">Информация и статус</div>
+            <button type="button" class="dropdown-item btn-open-passport-item" id="btnOpenPassport" data-open-passport="true" role="menuitem">
+              <span class="item-icon">📋</span>
+              <div><strong>Паспорт проекта</strong><small>Официальный документ комплекса</small></div>
+            </button>
+            <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🇷🇺</span>
+              <div><strong>Карта Доблести РФ</strong><small>Всероссийский портал акции ↗</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА МОБИЛЬНОГО МЕНЮ (БУРГЕР) -->
+        <button class="mobile-burger-btn" id="mobileBurgerBtn" aria-label="Открыть мобильное меню" aria-expanded="false" aria-controls="mobileDrawer" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ВЫДВИЖНАЯ МОБИЛЬНАЯ ПАНЕЛЬ МЕНЮ -->
+    <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+      <div class="drawer-content">
+        <div class="drawer-section-label">Залы экспозиции</div>
+        <a href="index.html#memorial" class="drawer-link">🏛 Мемориал Славы</a>
+        <a href="index.html#heroes-grid" class="drawer-link">🎓 За партой Героя</a>
+        <a href="index.html#battle-path" class="drawer-link">🗺 Хроника и Карта</a>
+        <a href="index.html#memory-hall" class="drawer-link">🕯 Эстафета памяти</a>
+
+        <div class="drawer-section-label">Цифровые модули</div>
+        <a href="memory-book.html" class="drawer-link">📖 Электронная Книга Памяти</a>
+        <a href="reader.html" class="drawer-link">📚 3D Фолиант-читалка</a>
+        <a href="quiz.html" class="drawer-link highlight">⚔️ Квест-викторина «Дорогами мужества»</a>
+        <a href="desk-qr.html" class="drawer-link">🪑 Конструктор «Парты Героя»</a>
+        <a href="guestbook.html" class="drawer-link">🕯 Стена Памяти и отзывы</a>
+
+        <div class="drawer-section-label">Страницы и сервисы</div>
+        <a href="certificate.html" class="drawer-link highlight">📜 Оформить Сертификат участника</a>
+        <a href="verify.html" class="drawer-link">🛡 Реестр верификации</a>
+        <a href="methodology.html" class="drawer-link">📑 Методический кабинет педагога</a>
+
+        <div class="drawer-buttons-row">
+          <button class="drawer-btn" id="drawerPassportBtn" type="button">Паспорт проекта</button>
+          <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="drawer-btn gold">Карта Доблести РФ</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ОСНОВНОЙ КОНТЕНТ КВЕСТА -->
+  <main class="quiz-screen">
+    
+    <!-- 1. СТАРТОВЫЙ ЭКРАН -->
+    <section id="startScreen" class="quiz-card">
+      <div class="crest-icon" style="font-size: 2.8rem; margin-bottom: 8px;">⚔️</div>
+      <h1 style="color: var(--primary-gold); font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 8px;">
+        Исторический Квест «Дорогами мужества»
+      </h1>
+      <p class="quiz-intro" style="margin-bottom: 20px;">
+        Проверьте свои знания о бессмертном подвиге 20 героев-выпускников Ставропольского регионального многопрофильного колледжа.<br>
+        <strong>Наберите 8 или более баллов (80%), чтобы получить именной Сертификат Победителя и повысить свой воинский ранг!</strong>
+      </p>
+
+      <!-- Индикатор воинского чина и прогресса XP -->
+      <div class="quiz-rank-banner" id="userRankWidget">
+        <div class="quiz-rank-header">
+          <div class="quiz-rank-left">
+            <span class="quiz-rank-label">Ваш текущий статус:</span>
+            <span class="quiz-rank-title" id="userRankTitle">🎖 Рядовой</span>
+          </div>
+          <div class="quiz-rank-right">
+            <span class="quiz-rank-xp" id="userRankXP">0 XP</span>
+          </div>
+        </div>
+        <div class="quiz-rank-track">
+          <div class="quiz-rank-fill" id="userRankProgressBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- ВЫБОР РЕЖИМА КВЕСТА -->
+      <div class="quiz-setup-block" style="margin: 24px 0 16px; text-align: left;">
+        <label style="display:block; font-size: 0.85rem; font-weight: 700; color: #c5a059; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+          1. Выберите боевое направление квеста:
+        </label>
+        <div class="quiz-modes-grid">
+          <button type="button" class="quiz-mode-btn active" data-mode="exam">
+            <span class="mode-icon">📜</span>
+            <span class="mode-name">Урок Мужества</span>
+            <span class="mode-meta">10 вопросов • Базовый зачет</span>
+          </button>
+          <button type="button" class="quiz-mode-btn" data-mode="front">
+            <span class="mode-icon">🗺</span>
+            <span class="mode-name">Боевые рубежи</span>
+            <span class="mode-meta">Днепр • Запорожье • Курск</span>
+          </button>
+          <button type="button" class="quiz-mode-btn" data-mode="skills">
+            <span class="mode-icon">🛠</span>
+            <span class="mode-name">Профессия как щит</span>
+            <span class="mode-meta">Сварка • IT • Спасатели • ТО</span>
+          </button>
+          <button type="button" class="quiz-mode-btn" data-mode="marathon">
+            <span class="mode-icon">⚔️</span>
+            <span class="mode-name">Марафон 20 героев</span>
+            <span class="mode-meta">Все 20 выпускников колледжа</span>
+          </button>
+        </div>
+        <div class="quiz-mode-desc-box" id="quizModeDescText">
+          Классический экзамен Всероссийского Урока Мужества: 10 сбалансированных вопросов. 8+ баллов дают допуск к именному Сертификату Победителя.
+        </div>
+      </div>
+
+      <!-- ВЫБОР УРОВНЯ СЛОЖНОСТИ -->
+      <div class="quiz-setup-block" style="margin: 16px 0 24px; text-align: left;">
+        <label style="display:block; font-size: 0.85rem; font-weight: 700; color: #c5a059; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+          2. Уровень боевой готовности:
+        </label>
+        <div class="quiz-diff-grid">
+          <button type="button" class="quiz-diff-btn" data-diff="cadet">
+            <span class="diff-icon">🔰</span>
+            <span class="diff-name">Курсант</span>
+            <span class="diff-meta">Без таймера • 4 подсказки</span>
+          </button>
+          <button type="button" class="quiz-diff-btn active" data-diff="standard">
+            <span class="diff-icon">🛡</span>
+            <span class="diff-name">Воин</span>
+            <span class="diff-meta">30 секунд • 2 подсказки</span>
+          </button>
+          <button type="button" class="quiz-diff-btn" data-diff="expert">
+            <span class="diff-icon">⚡</span>
+            <span class="diff-name">Гвардеец</span>
+            <span class="diff-meta">15 секунд • Без подсказок (+бонус XP)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- АНКЕТА УЧАСТНИКА -->
+      <div class="student-reg-form" style="max-width: 540px; margin: 0 auto 24px; text-align: left;">
+        <label style="display:block; font-size: 0.85rem; font-weight: 700; color: #c5a059; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+          3. Данные участника:
+        </label>
+        <div class="input-group">
+          <label for="participantName">ФИО обучающегося (для наградного листа):*</label>
+          <input type="text" id="participantName" placeholder="например: Иванов Данила Денисович" required maxlength="60">
+        </div>
+
+        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label for="participantGroup">Учебная группа:*</label>
+            <input type="text" id="participantGroup" placeholder="например: ИС-241" required maxlength="20">
+          </div>
+
+          <div class="input-group">
+            <label for="participantSpecialty">Специальность СПО:*</label>
+            <select id="participantSpecialty" style="width:100%; padding:1rem; border:2px solid var(--border-dark); border-radius:8px; background:rgba(0,0,0,0.3); color:var(--text-main); font-family:var(--font-body);">
+              <option value="09.02.11 Разработка ПО" selected>09.02.11 Разработка ПО</option>
+              <option value="15.02.19 Сварочное производство">15.02.19 Сварочное производство</option>
+              <option value="20.02.04 Пожарная безопасность">20.02.04 Пожарная безопасность</option>
+              <option value="13.02.13 Электрооборудование">13.02.13 Электрооборудование</option>
+              <option value="23.02.07 ТО Автотранспорта">23.02.07 ТО Автотранспорта</option>
+              <option value="15.02.16 Технология машиностроения">15.02.16 Машиностроение</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button id="startQuestBtn" class="primary-btn btn-start-quest" type="button" style="font-size: 1.05rem; padding: 14px 32px;">
+        ⚔️ Начать боевое испытание ➔
+      </button>
+
+      <!-- Достижения игрока -->
+      <div style="margin-top: 36px; border-top: 1px solid var(--border-dark); padding-top: 24px;">
+        <h3 class="badges-section-title" style="text-align: center;">Ваши боевые награды и бейджи (16 испытаний)</h3>
+        <div id="startBadges" class="badges-grid">
+          <!-- Загружается из JS через AchievementsEngine -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ЭКРАН ВОПРОСА -->
+    <section id="questionScreen" class="question-card" style="display: none;">
+      <div class="quiz-header">
+        <div class="progress-container" style="flex: 1; margin-right: 16px;">
+          <div id="quizProgressBar" class="progress-bar"></div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <span id="streakBadge" class="streak-flame-badge" style="display: none;">🔥 Серия x2!</span>
+          <span id="qNumberDisplay" style="font-weight: 700; color: var(--primary-gold); font-size: 0.9rem;">Вопрос 1 из 10</span>
+          <span id="qScoreDisplay" style="font-size: 0.85rem; color: var(--text-muted);">Баллы: 0</span>
+        </div>
+      </div>
+
+      <!-- Таймер вопроса -->
+      <div class="quiz-timer-container">
+        <div class="quiz-timer-track">
+          <div id="questionTimerBar" class="quiz-timer-bar"></div>
+        </div>
+        <span id="questionTimerText" class="quiz-timer-text">⏱ 30 сек</span>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; flex-wrap:wrap; gap:8px;">
+        <span id="qThemeBadge" style="background: rgba(197, 160, 89, 0.15); color: var(--primary-gold); font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(197, 160, 89, 0.3);">
+          Тема вопроса
+        </span>
+
+        <!-- Панель подсказок -->
+        <div class="quiz-hints-panel">
+          <button type="button" id="btnHint5050" class="quiz-hint-btn" title="Исключить два неверных ответа">
+            💡 50/50 (1)
+          </button>
+          <button type="button" id="btnHintQuote" class="quiz-hint-btn" title="Открыть историческую подсказку из архива">
+            📜 Цитата героя (1)
+          </button>
+        </div>
+      </div>
+
+      <!-- Окно отображения подсказки-цитаты -->
+      <div id="hintQuoteDisplay" class="hint-quote-box" style="display: none;"></div>
+
+      <h2 id="questionTextDisplay" class="question-text">
+        Загрузка вопроса...
+      </h2>
+
+      <div id="optionsContainer" class="options-grid">
+        <!-- Варианты ответов генерируются через JS -->
+      </div>
+
+      <!-- Историческая справка после ответа -->
+      <div id="explanationBox" class="explanation-box" style="display: none; margin-top: 24px; padding: 18px; border-radius: 8px; background: rgba(0,0,0,0.35); border-left: 4px solid var(--primary-gold); text-align: left;">
+        <div id="expStatusText" class="exp-status" style="font-weight: 800; font-size: 1.1rem; margin-bottom: 6px;"></div>
+        <p id="expDescriptionText" style="color: var(--text-main); font-size: 0.92rem; line-height: 1.6; margin-bottom: 14px;"></p>
+        <button id="nextQuestionBtn" class="primary-btn btn-next-question" style="max-width: 220px;" type="button">
+          Следующий вопрос ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. ЭКРАН РЕЗУЛЬТАТОВ -->
+    <section id="resultScreen" class="result-card" style="display: none;">
+      <div id="resultCrest" style="font-size: 3.5rem; margin-bottom: 8px;">🏆</div>
+      <h2 id="resultTitle" class="result-title" style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: var(--primary-gold);">
+        Результаты квеста
+      </h2>
+      
+      <div class="final-score" id="finalScoreDigits">0/10</div>
+      <div style="font-size: 1.1rem; color: var(--primary-gold); font-weight: 700; margin-bottom: 12px;" id="finalPercentDigits">0%</div>
+      <p id="resultMessageText" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-main); max-width: 620px; margin: 0 auto 24px;"></p>
+
+      <!-- Блок победителя: Кнопка Сертификата -->
+      <div id="winnerBox" class="winner-actions-box" style="display: none; background: rgba(197, 160, 89, 0.1); border: 1px solid var(--primary-gold); padding: 24px; border-radius: 8px; margin-bottom: 24px;">
+        <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 8px;">🎉 Поздравляем! Норматив сдан!</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px;">
+          Ваш результат внесен в реестр Зала Славы. Вы можете сформировать официальный наградной сертификат с уникальным номером и QR-кодом.
+        </p>
+        <button id="btnClaimCert" class="primary-btn btn-claim-cert" style="max-width: 380px; margin: 0 auto;" type="button">
+          📜 Оформить именной Сертификат
+        </button>
+      </div>
+
+      <!-- Кнопка разбора ответов («Работа над ошибками») -->
+      <div style="margin: 16px 0 24px;">
+        <button id="btnReviewAnswers" class="secondary-btn" style="max-width: 320px; margin: 0 auto; display: block;" type="button">
+          🔍 Работа над ошибками (разбор вопросов)
+        </button>
+      </div>
+
+      <!-- Блок детального разбора ответов -->
+      <div id="reviewSection" class="review-section" style="display: none; margin: 20px 0 28px; text-align: left; background: rgba(0,0,0,0.25); border-radius: 8px; padding: 20px; border: 1px solid var(--border-dark);">
+        <h3 style="color: var(--primary-gold); font-family: 'Cinzel', serif; font-size: 1.2rem; margin-bottom: 14px;">
+          📖 Исторический анализ ваших ответов
+        </h3>
+        <div id="reviewQuestionsList">
+          <!-- Заполняется динамически через QuizEngine.renderReviewBreakdown() -->
+        </div>
+      </div>
+
+      <!-- Блок пересдачи -->
+      <div id="retryBox" class="retry-btn-group" style="display: none; margin-bottom: 28px;">
+        <button id="restartQuestBtn" class="primary-btn" style="max-width: 280px;" type="button">
+          🔄 Попробовать снова
+        </button>
+        <a href="memory-book.html" class="secondary-btn" style="display: inline-block; line-height: 48px; text-decoration: none; max-width: 280px; margin-top: 10px;">
+          📖 Повторить в Книге Памяти
+        </a>
+      </div>
+
+      <div class="action-buttons" style="margin-top: 20px;">
+        <a href="index.html" class="secondary-btn" style="text-decoration: none; display: inline-block; line-height: 48px;">
+          ← Вернуться в музей
+        </a>
+      </div>
+    </section>
+
+    <!-- 4. ЗАЛ СЛАВЫ (РЕЙТИНГ ИГРОКОВ) -->
+    <section class="hall-of-fame-section">
+      <h2 style="text-align: center; color: var(--primary-gold); font-family: 'Cinzel', serif;">
+        🏛 Зал Славы знатоков СРМК
+      </h2>
+      <p style="text-align: center; color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px;">
+        Лучшие результаты прохождения Всероссийского Урока Мужества
+      </p>
+
+      <div class="leaderboard-table-wrapper">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th style="width: 60px; text-align: center;">Место</th>
+              <th>ФИО участника</th>
+              <th>Группа</th>
+              <th style="text-align: center;">Баллы</th>
+              <th style="text-align: right;">Дата</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Загружается через CloudSync / LocalStorage -->
+          </tbody>
+        </table>
+      </div>
+      <p id="cloudStatus" style="font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; text-align: center;">
+        Синхронизация с сервером...
+      </p>
+    </section>
+
+  </main>
+
+  <!-- ПОДВАЛ -->
+  <footer class="site-footer">
+    <div class="container footer-container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <strong style="color: var(--primary-gold);">ГБПОУ СРМК</strong> • г. Ставрополь, пр. Юности, 3
+      </div>
+      <div>
+        © 2026 Мемориальный комплекс «Быть воином — жить вечно».
+      </div>
+    </div>
+  </footer>
+
+  <div id="quizToast" class="memorial-toast"></div>
+
+  <!-- ПОДКЛЮЧЕНИЕ СКРИПТОВ -->
+  <script src="js/memorial-toast.js"></script>
+  <script src="js/achievements-engine.js"></script>
+  <script src="js/anti-cheat-tribute.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/data.js"></script>
+  <script src="js/sources.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cloud-sync.js"></script>
+  <script src="js/hall-analytics.js"></script>
+  <script src="js/qr-code.js"></script>
+  <script src="js/certificate-verifier.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/navigation.js"></script>
+</body>
+</html>

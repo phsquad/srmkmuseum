@@ -1,0 +1,835 @@
+/* =========================================
+   QUIZ.CSS - Стили для Викторины "Герои СРМК"
+   Версия: 3.0 (Dark Theme - matching index.html)
+   ========================================= */
+
+:root {
+    --primary-gold: #d4af37;
+    --primary-gold-hover: #f9df86;
+    --bg-dark: #0a0c0f;
+    --bg-card: #1a1f29;
+    --text-main: #e0e0e0;
+    --text-muted: #8899a6;
+    --border-dark: #2a3f5f;
+    --shadow-soft: 0 4px 20px rgba(0,0,0,0.4);
+    --shadow-gold: 0 4px 15px rgba(212, 175, 55, 0.4);
+    --danger-red: #f44336;
+    --success-green: #4caf50;
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Montserrat', sans-serif;
+}
+
+/* Темная тема по умолчанию */
+body.dark-theme .quiz-container,
+body.dark-theme .quiz-card,
+body.dark-theme .question-card,
+body.dark-theme .result-card {
+    background: var(--bg-card);
+    color: var(--text-main);
+    border-color: var(--border-dark);
+}
+
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3 {
+    color: var(--primary-gold);
+}
+
+body.dark-theme .quiz-intro,
+body.dark-theme .rules-box,
+body.dark-theme .input-group label {
+    color: var(--text-muted);
+}
+
+body.dark-theme .input-group input {
+    background: #0a0c0f;
+    border-color: var(--border-dark);
+    color: var(--text-main);
+}
+
+body.dark-theme .input-group input:focus {
+    border-color: var(--primary-gold);
+}
+
+body.dark-theme .option-btn {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border-dark);
+    color: var(--text-main);
+}
+
+body.dark-theme .option-btn:hover:not([disabled]) {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: var(--primary-gold);
+}
+
+body.dark-theme .leaderboard-table th {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--primary-gold);
+}
+
+body.dark-theme .leaderboard-table td {
+    border-bottom-color: var(--border-dark);
+    color: var(--text-muted);
+}
+
+body.dark-theme .badge-card {
+    background: var(--bg-card);
+    border-color: var(--border-dark);
+}
+
+body.dark-theme .badge-card.unlocked {
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(212, 175, 55, 0.1) 100%);
+    border-color: var(--primary-gold);
+}
+
+body.dark-theme .filter-btn {
+    background: var(--bg-card);
+    border-color: var(--border-dark);
+    color: var(--text-muted);
+}
+
+body.dark-theme .filter-btn:hover,
+body.dark-theme .filter-btn.active {
+    border-color: var(--primary-gold);
+    color: var(--primary-gold);
+}
+
+body.dark-theme .verify-section {
+    background: rgba(212, 175, 55, 0.05);
+    border-left-color: var(--primary-gold);
+}
+
+/* Общие контейнеры экранов */
+.quiz-screen {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Карточки */
+.quiz-card, .question-card, .result-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-dark);
+    text-align: center;
+    color: var(--text-main);
+}
+
+/* Типографика */
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--primary-gold);
+    margin-bottom: 1.5rem;
+}
+
+.quiz-intro {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+/* Поля ввода */
+.input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border-dark);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    background: rgba(0,0,0,0.2);
+    color: var(--text-main);
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+/* Блок правил */
+.rules-box {
+    background: rgba(212, 175, 55, 0.05);
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: left;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--primary-gold);
+}
+
+.rules-box ul {
+    padding-left: 1.2rem;
+    color: var(--text-muted);
+}
+
+.rules-box li {
+    margin-bottom: 0.5rem;
+}
+
+/* Кнопки */
+.primary-btn, .secondary-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, var(--primary-gold) 0%, #f9df86 100%);
+    color: #0a0c0f;
+    box-shadow: var(--shadow-gold);
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+}
+
+.secondary-btn:hover {
+    background: var(--primary-gold);
+    color: #0a0c0f;
+}
+
+/* --- ЭКРАН ИГРЫ --- */
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.progress-container {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    margin-right: 1rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--primary-gold);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.timer-display {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    min-width: 80px;
+    text-align: right;
+}
+
+.timer-display.warning {
+    color: var(--danger-red);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.question-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    line-height: 1.4;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.option-btn {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid var(--border-dark);
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    font-family: var(--font-body);
+    position: relative;
+    overflow: hidden;
+    color: var(--text-main);
+}
+
+.option-btn:hover {
+    border-color: var(--primary-gold);
+    background: rgba(212, 175, 55, 0.15);
+}
+
+.option-btn.correct {
+    background: rgba(76, 175, 80, 0.2);
+    border-color: var(--success-green);
+    color: #81c784;
+    font-weight: bold;
+}
+
+.option-btn.wrong {
+    background: rgba(244, 67, 54, 0.2);
+    border-color: var(--danger-red);
+    color: #e57373;
+    opacity: 0.7;
+}
+
+.score-display {
+    margin-top: 2rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* --- ЭКРАН РЕЗУЛЬТАТОВ --- */
+.final-score {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--primary-gold);
+    font-family: var(--font-heading);
+    margin: 1rem 0;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+#resultMessage {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: var(--text-main);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.action-buttons button {
+    width: auto;
+    min-width: 200px;
+}
+
+/* --- ДОСТИЖЕНИЯ (BADGES) --- */
+.badges-section-title {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-dark);
+    padding-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.badge-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+    filter: grayscale(100%);
+}
+
+.badge-card.unlocked {
+    opacity: 1;
+    filter: grayscale(0%);
+    border-color: var(--primary-gold);
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(212, 175, 55, 0.1) 100%);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-gold);
+}
+
+.badge-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.badge-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.badge-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+/* --- ЗАЛ СЛАВЫ (LEADERBOARD) --- */
+.hall-of-fame-section {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 3rem auto;
+    max-width: 900px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-dark);
+}
+
+.leaderboard-controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-btn {
+    padding: 0.5rem 1.2rem;
+    border: 1px solid var(--border-dark);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    font-family: var(--font-body);
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-gold);
+    color: var(--primary-gold);
+}
+
+.filter-btn.active {
+    background: var(--primary-gold);
+    color: #0a0c0f;
+    border-color: var(--primary-gold);
+}
+
+.leaderboard-table-wrapper {
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px;
+}
+
+.leaderboard-table th {
+    text-align: left;
+    padding: 1rem;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--primary-gold);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-bottom: 2px solid var(--primary-gold);
+}
+
+.leaderboard-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-dark);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.leaderboard-table tr:last-child td {
+    border-bottom: none;
+}
+
+.rank-cell {
+    font-weight: 700;
+    width: 50px;
+    text-align: center;
+}
+
+.rank-1 { color: #d4af37; font-size: 1.2rem; }
+.rank-2 { color: #c0c0c0; font-size: 1.2rem; }
+.rank-3 { color: #cd7f32; font-size: 1.2rem; }
+
+/* --- ПРОВЕРКА СЕРТИФИКАТА --- */
+.verify-section {
+    background: rgba(212, 175, 55, 0.05);
+    padding: 2rem;
+    border-radius: 12px;
+    margin: 2rem auto 4rem;
+    max-width: 900px;
+    border-left: 5px solid var(--primary-gold);
+}
+
+.verify-input-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.verify-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 0.8rem;
+    border: 1px solid var(--border-dark);
+    border-radius: 6px;
+    font-family: var(--font-body);
+    background: rgba(0,0,0,0.2);
+    color: var(--text-main);
+}
+
+.verify-btn {
+    padding: 0.8rem 1.5rem;
+    background: var(--primary-gold);
+    color: #0a0c0f;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.verify-btn:hover {
+    background: #f9df86;
+}
+
+.verify-result {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 6px;
+    display: none;
+    font-weight: 600;
+}
+
+.verify-valid {
+    background: rgba(76, 175, 80, 0.2);
+    color: #81c784;
+    border: 1px solid var(--success-green);
+}
+
+.verify-invalid {
+    background: rgba(244, 67, 54, 0.2);
+    color: #e57373;
+    border: 1px solid var(--danger-red);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 600px) {
+    .quiz-card, .question-card, .result-card, .hall-of-fame-section, .verify-section {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.2rem; }
+    
+    .final-score { font-size: 3rem; }
+    
+    .options-grid { gap: 0.8rem; }
+    .option-btn { padding: 0.8rem; font-size: 0.9rem; }
+    
+    .leaderboard-controls { justify-content: flex-start; }
+    .filter-btn { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+    
+    .badges-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ==========================================================================
+   НОВЫЕ СТИЛИ ДЛЯ РАСШИРЕННОГО КВЕСТА И ДОСТИЖЕНИЙ (v4.0)
+   ========================================================================== */
+
+/* Баннер ранга в квесте */
+.quiz-rank-banner {
+    background: linear-gradient(135deg, rgba(197, 160, 89, 0.12), rgba(18, 22, 30, 0.85));
+    border: 1px solid rgba(197, 160, 89, 0.35);
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.quiz-rank-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.quiz-rank-label {
+    font-size: 0.72rem;
+    color: #9da6b3;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+.quiz-rank-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.quiz-rank-xp {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #c5a059;
+}
+
+.quiz-rank-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.quiz-rank-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c5a059, #f59e0b);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Сетка режимов квеста */
+.quiz-modes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.quiz-mode-btn {
+    background: #141822;
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quiz-mode-btn:hover {
+    border-color: rgba(197, 160, 89, 0.5);
+    background: rgba(197, 160, 89, 0.08);
+}
+
+.quiz-mode-btn.active {
+    border-color: #c5a059;
+    background: rgba(197, 160, 89, 0.15);
+    box-shadow: 0 0 12px rgba(197, 160, 89, 0.25);
+}
+
+.mode-icon {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+.mode-name {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.mode-meta {
+    font-size: 0.7rem;
+    color: #9da6b3;
+    line-height: 1.2;
+}
+
+.quiz-mode-desc-box {
+    font-size: 0.82rem;
+    color: #cbd5e1;
+    background: rgba(0, 0, 0, 0.25);
+    border-left: 3px solid #c5a059;
+    padding: 8px 14px;
+    border-radius: 4px;
+    line-height: 1.4;
+}
+
+/* Сетка уровней сложности */
+.quiz-diff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.quiz-diff-btn {
+    background: #141822;
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quiz-diff-btn:hover {
+    border-color: rgba(197, 160, 89, 0.5);
+}
+
+.quiz-diff-btn.active {
+    border-color: #c5a059;
+    background: rgba(197, 160, 89, 0.15);
+    box-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+}
+
+.diff-icon {
+    font-size: 1.3rem;
+    margin-bottom: 3px;
+}
+
+.diff-name {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.diff-meta {
+    font-size: 0.68rem;
+    color: #9da6b3;
+    line-height: 1.2;
+}
+
+/* Таймер вопроса */
+.quiz-timer-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0 14px;
+}
+
+.quiz-timer-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quiz-timer-bar {
+    height: 100%;
+    background: var(--primary-gold, #c5a059);
+    border-radius: 3px;
+    transition: width 1s linear, background-color 0.3s;
+}
+
+.quiz-timer-text {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #c5a059;
+    white-space: nowrap;
+}
+
+/* Панель подсказок */
+.quiz-hints-panel {
+    display: flex;
+    gap: 8px;
+}
+
+.quiz-hint-btn {
+    background: rgba(197, 160, 89, 0.12);
+    border: 1px solid rgba(197, 160, 89, 0.4);
+    color: #f1f3f7;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quiz-hint-btn:hover:not([disabled]) {
+    background: rgba(197, 160, 89, 0.25);
+    border-color: #c5a059;
+}
+
+.quiz-hint-btn[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.hint-quote-box {
+    background: rgba(197, 160, 89, 0.08);
+    border-left: 3px solid #c5a059;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 0.86rem;
+    color: #e2e8f0;
+    font-style: italic;
+    text-align: left;
+    line-height: 1.4;
+}
+
+/* Плашка комбо-серии */
+.streak-flame-badge {
+    background: linear-gradient(135deg, #ef4444, #f59e0b);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+    animation: streakPulse 1.2s infinite ease-in-out;
+}
+
+@keyframes streakPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+

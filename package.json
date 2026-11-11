@@ -1,0 +1,23 @@
+{
+  "name": "srmk-memorial-museum",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Виртуальный мемориальный комплекс ГБПОУ СРМК «Быть воином — жить вечно» для GitHub Pages с интеграцией Supabase",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve:py": "python -m http.server 3000",
+    "build": "echo 'Static build ready for GitHub Pages'",
+    "deploy:help": "echo 'Deploy to GitHub Pages: push repository and enable GitHub Pages in Settings -> Pages -> Source: Deploy from a branch (main / root)'"
+  },
+  "keywords": [
+    "memorial",
+    "museum",
+    "srmk",
+    "github-pages",
+    "supabase"
+  ],
+  "author": "ГБПОУ СРМК",
+  "license": "CC-BY-4.0"
+}

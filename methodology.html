@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Методический кабинет педагога | Мемориальный комплекс СРМК</title>
+  <meta name="description" content="Интерактивный конструктор технологических карт Урока Мужества по ФГОС СПО и защищенный эталонный образец ГБПОУ СРМК.">
+  <meta name="theme-color" content="#0a0c0f">
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="css/site-common.css">
+  <link rel="stylesheet" href="css/header-common.css">
+  <link rel="stylesheet" href="css/methodology.css">
+  <link rel="stylesheet" href="css/mobile-methodology.css">
+</head>
+<body class="dark-theme">
+
+  <!-- ЕДИНАЯ НАВИГАЦИОННАЯ ШАПКА -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-container">
+      
+      <!-- ЛОГОТИП И НАЗВАНИЕ -->
+      <a href="index.html" class="logo-group" aria-label="На главную страницу музея">
+        <div class="logo-badge">СРМК</div>
+        <div class="logo-text">
+          <span class="org-name">ГБПОУ СРМК • Ставрополь</span>
+          <span class="site-title">«Быть воином — жить вечно»</span>
+        </div>
+      </a>
+
+      <!-- КОМПАКТНЫЕ КНОПКИ НАВИГАЦИИ (МОДУЛИ, СТРАНИЦЫ И ЗАЛЫ СПРЯТАНЫ В ВЫПАДАЮЩИЕ МЕНЮ) -->
+      <div class="header-actions">
+        <!-- КНОПКА 1: ЗАЛЫ ЭКСПОЗИЦИИ -->
+        <div class="header-dropdown" id="dropdownHalls">
+          <button class="header-dropdown-btn" id="btnDropdownHalls" type="button" aria-expanded="false" aria-controls="menuHalls">
+            <span class="btn-icon">🏛</span>
+            <span class="btn-text">Залы</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-left" id="menuHalls" role="menu">
+            <div class="dropdown-header">Экспозиция музея</div>
+            <a href="index.html#memorial" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🏛</span>
+              <div><strong>Мемориал Славы</strong><small>Зал №1 • Стелы и 20 кавалеров</small></div>
+            </a>
+            <a href="index.html#heroes-grid" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🎓</span>
+              <div><strong>За партой Героя</strong><small>Зал №2 • 20 интерактивных парт</small></div>
+            </a>
+            <a href="index.html#battle-path" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🗺</span>
+              <div><strong>Хроника и Карта</strong><small>Зал №3 • Боевой путь и инфографика</small></div>
+            </a>
+            <a href="index.html#memory-hall" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🕯</span>
+              <div><strong>Эстафета поколений</strong><small>Зал №4 • Клятва и хроника</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 2: ЦИФРОВЫЕ МОДУЛИ -->
+        <div class="header-dropdown modules-dropdown" id="modulesDropdown">
+          <button class="header-dropdown-btn btn-dropdown-toggle" id="btnDropdownToggle" type="button" aria-expanded="false" aria-controls="dropdownMenu">
+            <span class="btn-icon">📖</span>
+            <span class="btn-text">Модули</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu" role="menu">
+            <div class="dropdown-header">Интерактивные модули</div>
+            <a href="memory-book.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📖</span>
+              <div><strong>Книга Памяти</strong><small>Электронная летопись 20 героев</small></div>
+            </a>
+            <a href="reader.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">📚</span>
+              <div><strong>3D Фолиант</strong><small>Читалка книги с 3D перелистыванием</small></div>
+            </a>
+            <a href="quiz.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">⚔️</span>
+              <div><strong>Квест-викторина</strong><small>10 интерактивных вопросов</small></div>
+            </a>
+            <a href="desk-qr.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🪑</span>
+              <div><strong>Парта Героя</strong><small>Конструктор табличек и QR-кодов</small></div>
+            </a>
+            <a href="guestbook.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🕯</span>
+              <div><strong>Стена Памяти</strong><small>Поминальные лампады и отзывы</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 3: СЕРВИСЫ И СЕРТИФИКАТЫ -->
+        <div class="header-dropdown" id="dropdownServices">
+          <button class="header-dropdown-btn" id="btnDropdownServices" type="button" aria-expanded="false" aria-controls="menuServices">
+            <span class="btn-icon">📜</span>
+            <span class="btn-text">Сервисы</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" id="menuServices" role="menu">
+            <div class="dropdown-header">Документы и образование</div>
+            <a href="certificate.html" class="dropdown-item highlight-item" role="menuitem">
+              <span class="item-icon">📜</span>
+              <div><strong>Оформить Сертификат</strong><small>Именной наградной лист с печатью</small></div>
+            </a>
+            <a href="verify.html" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🛡</span>
+              <div><strong>Реестр верификации</strong><small>Проверка подлинности (SHA-256)</small></div>
+            </a>
+            <a href="methodology.html" class="dropdown-item active" role="menuitem">
+              <span class="item-icon">📑</span>
+              <div><strong>Методкабинет</strong><small>Банк уроков Мужества для учителей</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА 4: О ПРОЕКТЕ И ПАСПОРТ -->
+        <div class="header-dropdown" id="dropdownAbout">
+          <button class="header-dropdown-btn" id="btnDropdownAbout" type="button" aria-expanded="false" aria-controls="menuAbout">
+            <span class="btn-icon">ℹ️</span>
+            <span class="btn-text">О проекте</span>
+            <span class="arrow-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" id="menuAbout" role="menu">
+            <div class="dropdown-header">Информация и статус</div>
+            <button type="button" class="dropdown-item btn-open-passport-item" id="btnOpenPassport" data-open-passport="true" role="menuitem">
+              <span class="item-icon">📋</span>
+              <div><strong>Паспорт проекта</strong><small>Официальный документ комплекса</small></div>
+            </button>
+            <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="dropdown-item" role="menuitem">
+              <span class="item-icon">🇷🇺</span>
+              <div><strong>Карта Доблести РФ</strong><small>Всероссийский портал акции ↗</small></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- КНОПКА МОБИЛЬНОГО МЕНЮ (БУРГЕР) -->
+        <button class="mobile-burger-btn" id="mobileBurgerBtn" aria-label="Открыть мобильное меню" aria-expanded="false" aria-controls="mobileDrawer" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ВЫДВИЖНАЯ МОБИЛЬНАЯ ПАНЕЛЬ МЕНЮ -->
+    <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+      <div class="drawer-content">
+        <div class="drawer-section-label">Залы экспозиции</div>
+        <a href="index.html#memorial" class="drawer-link">🏛 Мемориал Славы</a>
+        <a href="index.html#heroes-grid" class="drawer-link">🎓 За партой Героя</a>
+        <a href="index.html#battle-path" class="drawer-link">🗺 Хроника и Карта</a>
+        <a href="index.html#memory-hall" class="drawer-link">🕯 Эстафета памяти</a>
+
+        <div class="drawer-section-label">Цифровые модули</div>
+        <a href="memory-book.html" class="drawer-link">📖 Электронная Книга Памяти</a>
+        <a href="reader.html" class="drawer-link">📚 3D Фолиант-читалка</a>
+        <a href="quiz.html" class="drawer-link">⚔️ Квест-викторина «Дорогами мужества»</a>
+        <a href="desk-qr.html" class="drawer-link">🪑 Конструктор «Парты Героя»</a>
+        <a href="guestbook.html" class="drawer-link">🕯 Стена Памяти и отзывы</a>
+
+        <div class="drawer-section-label">Страницы и сервисы</div>
+        <a href="certificate.html" class="drawer-link highlight">📜 Оформить Сертификат участника</a>
+        <a href="verify.html" class="drawer-link">🛡 Реестр верификации</a>
+        <a href="methodology.html" class="drawer-link highlight">📑 Методический кабинет педагога</a>
+
+        <div class="drawer-buttons-row">
+          <button class="drawer-btn" id="drawerPassportBtn" type="button">Паспорт проекта</button>
+          <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="drawer-btn gold">Карта Доблести РФ</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- БАННЕР HERO МЕТОДКАБИНЕТА -->
+  <section class="method-hero">
+    <div class="container hero-content">
+      <div class="hero-badge">ФГОС СПО • Конструктор урока • Реестр образцов</div>
+      <h1 class="hero-title">ЦИФРОВОЙ МЕТОДИЧЕСКИЙ КАБИНЕТ<br><span class="highlight">КОНСТРУКТОР И ЭТАЛОННЫЙ ОБРАЗЕЦ</span></h1>
+      <p class="hero-desc">
+        Создайте свой собственный план занятия по ФГОС СПО с экспортом в Microsoft Word или изучите официальный эталонный образец ГБПОУ СРМК.
+      </p>
+
+      <div class="hero-quick-stats" aria-label="Возможности кабинета">
+        <span class="stat-pill"><strong>4</strong> учебных контура</span>
+        <span class="stat-pill"><strong>20</strong> историй выпускников</span>
+        <span class="stat-pill"><strong>1-клик</strong> экспорт в MS Word</span>
+      </div>
+
+      <!-- ПАНЕЛЬ ВЫБОРА РЕЖИМА -->
+      <div class="mode-selection-bar" role="group" aria-label="Режим работы">
+        <button class="mode-btn active" id="btnModeConstructor" aria-pressed="true" onclick="Methodology.switchMode('constructor')" type="button">
+          ✏️ Свой конструктор урока (Свои данные)
+        </button>
+        <button class="mode-btn" id="btnModeMaster" aria-pressed="false" onclick="Methodology.switchMode('master')" type="button">
+          👑 Эталонный образец СРМК (Только просмотр)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- НАВИГАЦИОННЫЕ ВКЛАДКИ -->
+  <nav class="tabs-nav-wrapper" aria-label="Разделы методкабинета">
+    <div class="container tabs-container">
+      <button class="tab-btn active" data-tab="constructor-view" type="button">
+        <span class="tab-icon">🛠</span> Свой конструктор
+      </button>
+      <button class="tab-btn" data-tab="cards-view" type="button">
+        <span class="tab-icon">📋</span> Карточки заданий
+      </button>
+      <button class="tab-btn" data-tab="integration-view" type="button">
+        <span class="tab-icon">💼</span> Интеграция в спецкурсы
+      </button>
+      <button class="tab-btn" data-tab="fgos-view" type="button">
+        <span class="tab-icon">📖</span> ФГОС и Паспорт ОК
+      </button>
+    </div>
+  </nav>
+
+  <main class="container method-main">
+
+    <!-- ==========================================================================
+         КОНТУР 1: КОНСТРУКТОР С НУЛЯ (ПОЛЬЗОВАТЕЛЬСКИЙ ВВОД)
+         ========================================================================== -->
+    <section class="tab-content active" id="tab-constructor-view">
+      
+      <div class="constructor-card">
+        <div class="constructor-header">
+          <div>
+            <h3 class="block-title">Создание технологической карты Урока Мужества</h3>
+            <p class="block-subtitle">Заполните поля формы — система сформирует индивидуальную карту с правом экспорта в Word (.doc)</p>
+          </div>
+          <div class="constructor-actions">
+            <button class="btn-clear-form" onclick="Methodology.clearConstructorForm()" type="button">
+              🧹 Очистить форму
+            </button>
+            <button class="btn-generate-plan" onclick="Methodology.generateCustomPlan()" type="button">
+              ⚡ Сформировать мой план
+            </button>
+          </div>
+        </div>
+
+        <form id="customLessonForm" onsubmit="event.preventDefault(); Methodology.generateCustomPlan();">
+          <div class="form-grid">
+            
+            <div class="form-group">
+              <label class="form-label" for="inputTeacher">ФИО Преподавателя / Разработчика:*</label>
+              <input type="text" id="inputTeacher" class="form-input" placeholder="например: Иванов Иван Иванович" value="Иванов Иван Иванович" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputRole">Должность и категория:*</label>
+              <input type="text" id="inputRole" class="form-input" placeholder="например: Преподаватель истории высшей категории" value="Преподаватель социально-гуманитарных дисциплин" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputDiscipline">Учебная дисциплина / Курс:*</label>
+              <input type="text" id="inputDiscipline" class="form-input" placeholder="например: История России / Основы безопасности и защиты Родины" value="История России • «Разговоры о важном»" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputGroup">Учебная группа и курс:*</label>
+              <input type="text" id="inputGroup" class="form-input" placeholder="например: Группа ИС-241 (1 курс)" value="Группа ИС-241 (1 курс)" required>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label" for="inputTopic">Тема патриотического занятия:*</label>
+              <input type="text" id="inputTopic" class="form-input" placeholder="например: Они учились здесь. Они шагнули в вечность: подвиг 20 выпускников СРМК" value="Они учились здесь. Они шагнули в вечность: ратный подвиг выпускников колледжа" required>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label gold" for="inputQ1">Ваш исследовательский вопрос к Группе №1 (Днепровский рубеж):</label>
+              <input type="text" id="inputQ1" class="form-input" placeholder="например: Почему водовоз Шамиля Назырова называли «Машиной жизни»?">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label gold" for="inputQ2">Ваш исследовательский вопрос к Группе №2 (Запорожский рубеж):</label>
+              <input type="text" id="inputQ2" class="form-input" placeholder="например: Как профессиональная подготовка спасателя помогала на передовой?">
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- Результат сгенерированного плана -->
+      <div class="user-plan-result-box" id="userPlanResult" style="display:none; margin-top:28px;">
+        <div class="section-topbar">
+          <div>
+            <h3 class="block-title" style="color:var(--accent-brass);">Ваша технологическая карта занятия готова</h3>
+            <p class="block-subtitle">Вы можете скопировать текст или скачать оформленный документ Microsoft Word</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="action-btn" onclick="Methodology.copyText('userPlanContent', 'План скопирован в буфер обмена!')" type="button">📋 Копировать текст</button>
+            <button class="action-btn btn-export" onclick="Methodology.exportToWord('userPlanContent', 'Технологическая_карта_Урока_Мужества_СРМК')" type="button">📥 Скачать Word (.doc)</button>
+          </div>
+        </div>
+
+        <div class="paper-card" id="userPlanContent">
+          <!-- Заполняется динамически через generateCustomPlan() -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================================================
+         КОНТУР 2: ЭТАЛОННЫЙ ОБРАЗЕЦ СРМК (ЗАЩИЩЕННЫЙ РЕЖИМ)
+         ========================================================================== -->
+    <section id="masterExampleContainer" class="master-example" hidden>
+      
+      <div class="section-topbar">
+        <div>
+          <h3 class="block-title" style="color:var(--accent-brass);">👑 Официальный эталонный план ГБПОУ СРМК</h3>
+          <p class="block-subtitle">Авторская разработка высшей категории • Защищено авторским правом ГБПОУ СРМК</p>
+        </div>
+        <div class="protected-status-badge">
+          🔒 ЗАЩИЩЕННЫЙ РЕЖИМ (ТОЛЬКО ПРОСМОТР)
+        </div>
+      </div>
+
+      <div class="paper-card" id="masterPlanContent">
+        <div class="master-watermark-layer">
+          <div class="watermark-stamp">ЭТАЛОННЫЙ ОБРАЗЕЦ ГБПОУ СРМК<br>БЕЗ ПРАВА КОПИРОВАНИЯ И СКАЧИВАНИЯ</div>
+        </div>
+
+        <div class="meta-doc-header">
+          <div><strong>Организация:</strong> ГБПОУ «Ставропольский региональный многопрофильный колледж»</div>
+          <div><strong>Разработчик эталона:</strong> Генте А. В. (Преподаватель высшей категории)</div>
+          <div><strong>Дисциплина / Группа:</strong> История России • Группа ИС-241 (1 курс)</div>
+          <div><strong>Тема:</strong> «Они учились здесь. Они шагнули в вечность: ратный подвиг 20 выпускников СРМК»</div>
+          <div><strong>Методическая база:</strong> Цифровой комплекс «Быть воином — жить вечно» (Всероссийская акция «Карта доблести»)</div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="method-table">
+            <thead>
+              <tr>
+                <th style="width: 14%;">Этап и время</th>
+                <th style="width: 28%;">Деятельность преподавателя</th>
+                <th style="width: 25%;">Деятельность студентов</th>
+                <th style="width: 20%;">Интеграция модулей музея</th>
+                <th style="width: 13%;">Компетенции</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Организационный</strong><br><small>3 мин</small></td>
+                <td>Включение синтезатора Колокола Памяти. Вступительное слово о 50-летней истории колледжа.</td>
+                <td>Настраиваются на восприятие темы. Считывают вводный QR-код стенда.</td>
+                <td>Web Audio Synthesizer (220–554 Гц). Открытие <code>index.html</code>.</td>
+                <td><strong>Личностные:</strong> сопереживание.</td>
+              </tr>
+              <tr>
+                <td><strong>2. Вводная экскурсия</strong><br><small>7 мин</small></td>
+                <td>Демонстрация 2.5D-модели монумента колледжа. Запуск обзорного аудиогида MP3.</td>
+                <td>Слушают аудиогид. На смартфонах переключают плиты, находят выпускников своего отделения.</td>
+                <td>Модуль <code>memorialStand</code> и аудиогид <code>general-tour.mp3</code>.</td>
+                <td><strong>ОК 06:</strong> патриотическая позиция.</td>
+              </tr>
+              <tr>
+                <td><strong>3. Исследование в группах</strong><br><small>18 мин</small></td>
+                <td>Делит группу на 4 сектора ТВД (Днепр, Запорожье, Донбасс, Курск). Выдает карточки заданий.</td>
+                <td>Работают с досье: слушают очерки, изучают наградные листы и приказы.</td>
+                <td>Модуль <code>memory-book.html</code> и аудиогиды MP3.</td>
+                <td><strong>ОК 04, ОК 01:</strong> работа с архивами.</td>
+              </tr>
+              <tr>
+                <td><strong>4. Топография подвига</strong><br><small>7 мин</small></td>
+                <td>Модерирует защиту результатов группами. Активирует сектор ТВД на Яндекс Карте.</td>
+                <td>Спикеры показывают траекторию подвига от Ставрополя до точек боев на карте.</td>
+                <td>Яндекс Карты API v2.1: векторные лучи подвига.</td>
+                <td><strong>Метапредметные:</strong> гео-анализ.</td>
+              </tr>
+              <tr>
+                <td><strong>5. Цифровой трибьют</strong><br><small>5 мин</small></td>
+                <td>Организует Вахту Памяти: объясняет работу криптографической защиты свечей (Proof-of-Work).</td>
+                <td>Нажимают «Зажечь Свечу Памяти» и «Возложить живые гвоздики». Смотрят глобальный счетчик.</td>
+                <td>Модуль <code>TributeSecurity</code> и облако <code>CloudSync</code> (Supabase).</td>
+                <td><strong>Личностные:</strong> память.</td>
+              </tr>
+              <tr>
+                <td><strong>6. Рефлексия и сертификация</strong><br><small>5 мин</small></td>
+                <td>Минута молчания под метроном. Направляет на генерацию сертификатов.</td>
+                <td>Чтят память героев. Вводят свои данные в генератор, получают именной наградной лист.</td>
+                <td>Модули <code>certificate.html</code> и <code>verify.html</code>.</td>
+                <td><strong>ОК 06:</strong> гражданская зрелость.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ДРУГИЕ ВКЛАДКИ -->
+    <section class="tab-content" id="tab-cards-view">
+      <div class="section-topbar">
+        <div>
+          <h3 class="block-title">Карточки исследовательских заданий</h3>
+          <p class="block-subtitle">Готовые точки входа в архив, Книгу Памяти и аудиогиды музея.</p>
+        </div>
+        <a class="action-btn btn-primary" href="memory-book.html">Открыть Книгу Памяти →</a>
+      </div>
+      <div class="cards-grid-layout">
+        <article class="task-card">
+          <div class="task-card-header"><span class="group-tag">Группа №1</span><span class="tvd-tag">Днепровский плацдарм</span></div>
+          <div class="task-card-body">
+            <p><strong>Объекты исследования:</strong> Шамиль Назыров, Николай Вечёрка, Максим Елагин, Никита Горлов, Иван Сербиенко.</p>
+            <p id="cardQ1Display" style="margin-top:8px; color:var(--accent-brass);">1. Почему водовоз Шамиля Назырова называли «Машиной жизни»?</p>
+          </div>
+          <div class="task-card-footer"><a class="mini-btn" href="memory-book.html#nazyrov-sh-r">Досье и аудиогид</a><a class="mini-btn" href="reader.html">Открыть фолиант</a></div>
+        </article>
+        <article class="task-card">
+          <div class="task-card-header"><span class="group-tag">Группа №2</span><span class="tvd-tag">Запорожский рубеж</span></div>
+          <div class="task-card-body">
+            <p><strong>Объекты исследования:</strong> Дмитрий Самохин, Николай Сополев, Константин Луценко, Иван Пономарчук.</p>
+            <p id="cardQ2Display" style="margin-top:8px; color:var(--accent-brass);">2. Как профессиональная подготовка помогала выпускникам спасать товарищей?</p>
+          </div>
+          <div class="task-card-footer"><a class="mini-btn" href="memory-book.html#sopolev-n-s">Досье и аудиогид</a><a class="mini-btn" href="desk-qr.html">Парта Героя</a></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-integration-view">
+      <div class="section-topbar"><div><h3 class="block-title">Матрица интеграции в спецкурсы СПО</h3><p class="block-subtitle">Подберите музейный ресурс под профиль группы и цель занятия.</p></div><a class="action-btn btn-primary" href="desk-qr.html">Создать QR-маршрут →</a></div>
+      <div class="integration-grid">
+        <article class="integration-card"><span class="integration-icon">🚒</span><h4>Пожарная безопасность</h4><p>Действия спасателя, цена решения и эвакуация раненых.</p><a href="reader.html">Аудиоочерки →</a></article>
+        <article class="integration-card"><span class="integration-icon">⚡</span><h4>Сварка и энергетика</h4><p>Надёжность, дисциплина и инженерная ответственность через биографии выпускников.</p><a href="memory-book.html">Архивные досье →</a></article>
+        <article class="integration-card"><span class="integration-icon">💻</span><h4>IT и цифровые профессии</h4><p>Проверка источников, цифровой след памяти и этика работы с данными.</p><a href="verify.html">Реестр документов →</a></article>
+        <article class="integration-card"><span class="integration-icon">🚗</span><h4>Автодело и механика</h4><p>Логистика, техническая точность и командная работа в полевых условиях.</p><a href="quiz.html">Закрепить викториной →</a></article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-fgos-view">
+      <div class="section-topbar"><div><h3 class="block-title">Паспорт компетенций (ФГОС СПО)</h3><p class="block-subtitle">Наблюдаемые результаты, которые можно включить в план и оценить на рефлексии.</p></div><a class="action-btn btn-export" href="certificate.html">Оформить сертификат →</a></div>
+      <div class="competence-list">
+        <article class="competence-box"><span class="comp-badge">ОК 01</span><div><h4>Выбирать способы решения задач</h4><p>Формулирует исследовательский вопрос, выделяет факты и сопоставляет версии источников.</p></div><span class="assessment-mark">Наблюдение + защита</span></article>
+        <article class="competence-box"><span class="comp-badge">ОК 04</span><div><h4>Работать в команде</h4><p>Распределяет роли в микрогруппе, корректно использует архивные материалы и представляет общий результат.</p></div><span class="assessment-mark">Карточка группы</span></article>
+        <article class="competence-box"><span class="comp-badge">ОК 06</span><div><h4>Гражданская позиция</h4><p>Осмысляет связь истории колледжа с личной ответственностью и участвует в цифровом трибьюте.</p></div><span class="assessment-mark">Рефлексия</span></article>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="methodToast" class="method-toast"></div>
+
+  <footer class="method-footer">
+    <div class="container">
+      <p>© 2026 ГБПОУ СРМК. Цифровой методический комплекс Всероссийской акции «Карта доблести».</p>
+    </div>
+  </footer>
+
+  <!-- СКРИПТЫ -->
+  <script src="js/memorial-toast.js"></script>
+  <script src="js/achievements-engine.js"></script>
+  <script src="js/anti-copy-master.js"></script>
+  <script src="js/methodology.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cloud-sync.js"></script>
+  <script src="js/navigation.js"></script>
+</body>
+</html>
