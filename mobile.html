@@ -46,6 +46,8 @@
   <!-- Стили -->
   <link rel="stylesheet" href="css/site-common.css">
   <link rel="stylesheet" href="css/header-common.css">
+  <link rel="stylesheet" href="css/interactivity-sprint2.css">
+  <link rel="stylesheet" href="css/edtech-sprint3.css">
   <link rel="stylesheet" href="css/mobile.css">
 </head>
 <body class="dark-theme">
@@ -76,7 +78,11 @@
     <!-- ВЕРХНЯЯ ШТОРКА ЦИФРОВЫХ МОДУЛЕЙ -->
     <div class="mobile-modules-panel" id="mobileModulesPanel" aria-hidden="true">
       <div class="mobile-panel-label">Цифровые модули музея</div>
-      <a href="javascript:void(0)" onclick="AchievementsEngine.openModal()" class="mobile-module-link">🎖 <span><strong>Наградная палата</strong><small>Воинский ранг и 16 орденов</small></span></a>
+      <a href="javascript:void(0)" onclick="if(window.AchievementsEngine) AchievementsEngine.openModal()" class="mobile-module-link">🎖 <span><strong>Наградная палата</strong><small>Воинский ранг и 27 орденов</small></span></a>
+      <a href="javascript:void(0)" onclick="if(window.SpotlightSearch) SpotlightSearch.open()" class="mobile-module-link">🔍 <span><strong>Быстрый поиск</strong><small>Герои, залы и сервисы (Ctrl+K)</small></span></a>
+      <a href="javascript:void(0)" onclick="if(window.MemorialCeremony) MemorialCeremony.start()" class="mobile-module-link">⏱ <span><strong>Минута молчания</strong><small>Всероссийский метроном 60 сек</small></span></a>
+      <a href="javascript:void(0)" onclick="if(window.LessonCinema) LessonCinema.start()" class="mobile-module-link">🎬 <span><strong>Урок Мужества (Cinema)</strong><small>Полноэкранный кинорежим 16:9</small></span></a>
+      <a href="javascript:void(0)" onclick="if(window.MemorialCardGenerator) MemorialCardGenerator.openModal()" class="mobile-module-link">🖼 <span><strong>Открытка памяти</strong><small>Генератор для соцсетей (9:16)</small></span></a>
       <a href="javascript:void(0)" id="mobileInstallPwaLink" style="display:none;" class="mobile-module-link">📥 <span><strong>Установить приложение</strong><small>Добавить Музей на экран</small></span></a>
       <a href="memory-book.html" class="mobile-module-link">📖 <span><strong>Книга Памяти</strong><small>Летопись 20 героев</small></span></a>
       <a href="reader.html" class="mobile-module-link">📚 <span><strong>3D Фолиант</strong><small>Интерактивная читалка</small></span></a>
