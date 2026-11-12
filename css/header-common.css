@@ -558,6 +558,120 @@
 }
 
 /* ==========================================================================
+   6. ВИДЖЕТЫ ШАПКИ: ЖИВОЙ ОНЛАЙН (PRESENCE), НАГРАДЫ И PWA
+   ========================================================================== */
+
+/* Индикатор живого присутствия в залах (Live Presence) */
+.header-presence-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: var(--header-transition);
+  white-space: nowrap;
+}
+
+.header-presence-pill:hover {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: #34d399;
+  transform: translateY(-1px);
+}
+
+.header-presence-pill .presence-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: presencePulse 2.4s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes presencePulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 10px #34d399; }
+}
+
+/* Кнопка наградного ранга и достижений в шапке */
+.btn-header-achievements {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(197, 160, 89, 0.12);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #f1f3f7;
+  cursor: pointer;
+  transition: var(--header-transition);
+  white-space: nowrap;
+}
+
+.btn-header-achievements:hover {
+  background: rgba(197, 160, 89, 0.24);
+  border-color: var(--header-gold);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 12px rgba(197, 160, 89, 0.25);
+}
+
+.btn-header-achievements .rank-xp-badge {
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--header-gold);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+/* Кнопка установки PWA */
+.btn-header-pwa-install {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #93c5fd;
+  cursor: pointer;
+  transition: var(--header-transition);
+  white-space: nowrap;
+}
+
+.btn-header-pwa-install:hover {
+  background: rgba(59, 130, 246, 0.28);
+  border-color: #60a5fa;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .header-presence-pill .presence-label-full {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .btn-header-achievements .rank-btn-title {
+    display: none;
+  }
+}
+
+/* ==========================================================================
    7. СТАТУС БАЗЫ ДАННЫХ SUPABASE И ЦЕНТР УПРАВЛЕНИЯ
    ========================================================================== */
 .supabase-status-pill {

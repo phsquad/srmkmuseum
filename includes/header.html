@@ -117,6 +117,25 @@
         </div>
       </div>
 
+      <!-- ВИДЖЕТ ЖИВОГО ПРИСУТСТВИЯ (PRESENCE) -->
+      <div class="header-presence-pill" id="hdrLivePresence" title="Посетители в залах памяти прямо сейчас">
+        <span class="presence-dot"></span>
+        <span class="presence-text"><strong id="hdrPresenceCount">1</strong> <span class="presence-label-full">в залах</span></span>
+      </div>
+
+      <!-- КНОПКА НАГРАДНОГО РАНГА И ДОСТИЖЕНИЙ -->
+      <button class="btn-header-achievements" id="btnHeaderRankBadge" type="button" title="Воинский ранг и наградные ордена (нажмите для открытия)">
+        <span class="rank-btn-icon">🎖</span>
+        <span class="rank-btn-title">Награды</span>
+        <span class="rank-xp-badge" id="hdrRankXp">0 XP</span>
+      </button>
+
+      <!-- КНОПКА УСТАНОВКИ PWA (ПОЯВЛЯЕТСЯ ПРИ ПОДДЕРЖКЕ БРАУЗЕРОМ) -->
+      <button class="btn-header-pwa-install" id="btnInstallPwa" type="button" style="display:none;" title="Установить Музей на телефон или рабочий стол">
+        <span class="pwa-icon">📥</span>
+        <span class="pwa-text">Установить</span>
+      </button>
+
       <!-- КНОПКА МОБИЛЬНОГО МЕНЮ (БУРГЕР) -->
       <button class="mobile-burger-btn" id="mobileBurgerBtn" aria-label="Открыть мобильное меню" aria-expanded="false" aria-controls="mobileDrawer" type="button">
         <span></span><span></span><span></span>
@@ -142,10 +161,12 @@
 
       <div class="drawer-section-label">Страницы и сервисы</div>
       <a href="certificate.html" class="drawer-link highlight">📜 Оформить Сертификат участника</a>
+      <a href="javascript:void(0)" class="drawer-link drawer-rank-link" id="drawerAchievementsLink">🎖 Наградная палата (ранг и медали)</a>
       <a href="verify.html" class="drawer-link">🛡 Реестр верификации</a>
       <a href="methodology.html" class="drawer-link">📑 Методический кабинет педагога</a>
 
       <div class="drawer-buttons-row">
+        <button class="drawer-btn" id="drawerInstallPwaBtn" type="button" style="display:none; border-color:#3b82f6; color:#93c5fd;">📥 Приложение</button>
         <button class="drawer-btn" id="drawerPassportBtn" type="button">Паспорт проекта</button>
         <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="drawer-btn gold">Карта Доблести РФ</a>
       </div>

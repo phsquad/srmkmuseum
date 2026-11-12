@@ -233,6 +233,7 @@ const CloudSync = {
           if (window.HallAnalytics && typeof HallAnalytics.handlePresenceSync === 'function') {
             HallAnalytics.handlePresenceSync(state);
           }
+          window.dispatchEvent(new CustomEvent('srmk-presence-updated', { detail: { state } }));
         })
         .subscribe(async (status) => {
           if (status === 'SUBSCRIBED') {

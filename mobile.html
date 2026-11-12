@@ -3,9 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Музей СРМК | Мобильное приложение</title>
-  <meta name="description" content="Мобильное веб-приложение Мемориального комплекса «Быть воином — жить вечно» ГБПОУ СРМК.">
+  <title>Музей СРМК | Мобильное PWA-приложение</title>
+  <meta name="description" content="Мобильная интерактивная экспозиция памяти 20 героев колледжа с сенсорным управлением, аудиоплеером и поминальными свечами.">
   <meta name="theme-color" content="#0a0c0f">
+
+  <!-- PWA & Favicon -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/images/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Музей СРМК">
+
+  <!-- Open Graph & Социальные мета-теги -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Мемориальный комплекс ГБПОУ СРМК">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:url" content="https://phsquad.github.io/srmkmuseum/mobile.html">
+  <meta property="og:title" content="Музей СРМК | Мобильное PWA-приложение">
+  <meta property="og:description" content="Мобильная интерактивная экспозиция памяти 20 героев колледжа с сенсорным управлением, аудиоплеером и поминальными свечами.">
+  <meta property="og:image" content="https://phsquad.github.io/srmkmuseum/assets/images/cover-master.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Музей СРМК | Мобильное PWA-приложение">
+  <meta name="twitter:description" content="Мобильная интерактивная экспозиция памяти 20 героев колледжа с сенсорным управлением, аудиоплеером и поминальными свечами.">
+  <meta name="twitter:image" content="https://phsquad.github.io/srmkmuseum/assets/images/cover-master.jpg">
 
   <!-- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМА УСТРОЙСТВА -->
   <script>
@@ -39,6 +60,14 @@
           <span class="site-title">«Быть воином — жить вечно»</span>
         </div>
       </a>
+      <div class="header-presence-pill" id="hdrLivePresence" title="Посетители в залах прямо сейчас" style="margin-left:auto; margin-right:6px;">
+        <span class="presence-dot"></span>
+        <span class="presence-text"><strong id="hdrPresenceCount">1</strong> <span class="presence-label-full">в залах</span></span>
+      </div>
+      <button class="btn-header-achievements" id="btnHeaderRankBadge" type="button" title="Награды и ранг" style="margin-right:6px; padding:3px 8px;">
+        <span class="rank-btn-icon">🎖</span>
+        <span class="rank-xp-badge" id="hdrRankXp">0 XP</span>
+      </button>
       <button class="mobile-menu-toggle" id="mobileModulesToggle" type="button" aria-expanded="false" aria-controls="mobileModulesPanel" aria-label="Открыть меню модулей">
         <span></span><span></span><span></span>
       </button>
@@ -47,6 +76,8 @@
     <!-- ВЕРХНЯЯ ШТОРКА ЦИФРОВЫХ МОДУЛЕЙ -->
     <div class="mobile-modules-panel" id="mobileModulesPanel" aria-hidden="true">
       <div class="mobile-panel-label">Цифровые модули музея</div>
+      <a href="javascript:void(0)" onclick="AchievementsEngine.openModal()" class="mobile-module-link">🎖 <span><strong>Наградная палата</strong><small>Воинский ранг и 16 орденов</small></span></a>
+      <a href="javascript:void(0)" id="mobileInstallPwaLink" style="display:none;" class="mobile-module-link">📥 <span><strong>Установить приложение</strong><small>Добавить Музей на экран</small></span></a>
       <a href="memory-book.html" class="mobile-module-link">📖 <span><strong>Книга Памяти</strong><small>Летопись 20 героев</small></span></a>
       <a href="reader.html" class="mobile-module-link">📚 <span><strong>3D Фолиант</strong><small>Интерактивная читалка</small></span></a>
       <a href="quiz.html" class="mobile-module-link">⚔️ <span><strong>Квест-викторина</strong><small>Проверьте свои знания</small></span></a>
