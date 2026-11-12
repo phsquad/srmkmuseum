@@ -1,40 +1,45 @@
 /**
  * ============================================================================
- * ЕДИНАЯ СИСТЕМА ДОСТИЖЕНИЙ И ВОИНСКИХ ЗВАНИЙ: js/achievements-engine.js
+ * НАГРАДНАЯ ПАЛАТА И СИСТЕМА ДОСТИЖЕНИЙ: js/achievements-engine.js (v8.0 Master)
  * Мемориально-образовательный комплекс ГБПОУ СРМК «Быть воином — жить вечно»
  * 
  * Включает:
- * 1. 16 наградных боевых бейджей (испытания квиза + действия в музее)
- * 2. 8 воинских рангов с прогрессией очков опыта (XP)
- * 3. Кросс-модульную фиксацию свечей, цветов, аудиогидов, чтения Книги Памяти
- * 4. Интерактивную витрину наград и модальное окно достижений
+ * 1. 9-ступенчатую военно-патриотическую иерархию чинов и званий (0 – 5000+ XP)
+ * 2. 27 наградных орденов и медалей по 4 категориям (Квест, Мемориал, Архив, EdTech)
+ * 3. Полную двустороннюю синхронизацию с облачной базой данных Supabase (Realtime Omni-Sync)
+ * 4. Зал почёта и живой рейтинг курсантов (Leaderboard) из базы данных
+ * 5. Интерактивный профиль курсанта (ФИО, учебная группа, персональный жетон)
+ * 6. Акустический отклик триумфа через SoundEngine и Web Audio API
  * ============================================================================
  */
 
 'use strict';
 
 const AchievementsEngine = {
-  // 8 ВОИНСКИХ РАНГОВ
+  // 9 ВОИНСКИХ РАНГОВ КОМПЛЕКСА
   RANKS: [
-    { id: 'private',     title: 'Рядовой',                 minXP: 0,    maxXP: 149,  icon: '🎖',  insignia: '1 полоса' },
-    { id: 'gefreiter',   title: 'Ефрейтор',                minXP: 150,  maxXP: 349,  icon: '🎖🎖', insignia: '2 полосы' },
-    { id: 'jr_sergeant', title: 'Младший сержант',         minXP: 350,  maxXP: 699,  icon: '⭐️',   insignia: '1 лычка' },
-    { id: 'sergeant',    title: 'Сержант',                 minXP: 700,  maxXP: 1199, icon: '⭐️⭐️', insignia: '2 лычки' },
+    { id: 'private',     title: 'Рядовой',                 minXP: 0,    maxXP: 149,  icon: '🎖️',   insignia: 'Курсант-новобранец' },
+    { id: 'gefreiter',   title: 'Ефрейтор',                minXP: 150,  maxXP: 349,  icon: '🎖️🎖️', insignia: '2 полосы' },
+    { id: 'jr_sergeant', title: 'Младший сержант',         minXP: 350,  maxXP: 699,  icon: '⭐️',    insignia: '1 лычка' },
+    { id: 'sergeant',    title: 'Сержант',                 minXP: 700,  maxXP: 1199, icon: '⭐️⭐️',  insignia: '2 лычки' },
     { id: 'starshina',   title: 'Старшина',                minXP: 1200, maxXP: 1799, icon: '⭐️⭐️⭐️', insignia: 'Шеврон' },
-    { id: 'jr_lieut',    title: 'Младший лейтенант',       minXP: 1800, maxXP: 2499, icon: '🌟',   insignia: 'Офицерская звезда' },
-    { id: 'captain',     title: 'Гвардии капитан',         minXP: 2500, maxXP: 3499, icon: '🌟🌟', insignia: 'Гвардейский знак' },
-    { id: 'custodian',   title: 'Хранитель Мемориала',     minXP: 3500, maxXP: 99999, icon: '👑',  insignia: 'Золотая медаль' }
+    { id: 'jr_lieut',    title: 'Младший лейтенант',       minXP: 1800, maxXP: 2499, icon: '🌟',    insignia: 'Офицерская звезда' },
+    { id: 'captain',     title: 'Гвардии капитан',         minXP: 2500, maxXP: 3499, icon: '🌟🌟',  insignia: 'Гвардейский знак' },
+    { id: 'major',       title: 'Майор летописи',          minXP: 3500, maxXP: 4999, icon: '🌟🌟🌟', insignia: 'Орденская звезда' },
+    { id: 'custodian',   title: 'Хранитель Мемориала',     minXP: 5000, maxXP: 999999, icon: '👑',   insignia: 'Золотая звезда Памяти' }
   ],
 
-  // 16 БОЕВЫХ И МУЗЕЙНЫХ ДОСТИЖЕНИЙ
+  // 27 БОЕВЫХ, МЕМОРИАЛЬНЫХ И ИССЛЕДОВАТЕЛЬСКИХ НАГРАД
   BADGES: [
-    // --- Категория: Знания и Квест ---
+    // ------------------------------------------------------------------------
+    // КАТЕГОРИЯ I: КВЕСТ И ЭРУДИЦИЯ (quiz) - 8 наград
+    // ------------------------------------------------------------------------
     {
       id: 'badge_first_blood',
       category: 'quiz',
       icon: '🎯',
       title: 'Боевое крещение',
-      desc: 'Завершите любое тестирование исторического квеста музея.',
+      desc: 'Дайте первый верный ответ в историческом квесте музея.',
       xp: 50
     },
     {
@@ -44,22 +49,6 @@ const AchievementsEngine = {
       title: 'Снайпер фактов',
       desc: 'Ответьте правильно на 5 вопросов квеста подряд без ошибок.',
       xp: 100
-    },
-    {
-      id: 'badge_winner',
-      category: 'quiz',
-      icon: '🏆',
-      title: 'Кавалер доблести',
-      desc: 'Сдайте норматив квеста (8 и более баллов из 10).',
-      xp: 150
-    },
-    {
-      id: 'badge_perfect',
-      category: 'quiz',
-      icon: '👑',
-      title: 'Абсолютный триумф',
-      desc: 'Наберите максимальные 100% баллов без единой ошибки.',
-      xp: 250
     },
     {
       id: 'badge_speedrun',
@@ -74,8 +63,24 @@ const AchievementsEngine = {
       category: 'quiz',
       icon: '🧠',
       title: 'Своим умом',
-      desc: 'Пройдите квест целиком, не использовав ни одной подсказки.',
+      desc: 'Пройдите раунд квеста целиком, не использовав подсказки.',
       xp: 120
+    },
+    {
+      id: 'badge_winner',
+      category: 'quiz',
+      icon: '🏆',
+      title: 'Кавалер доблести',
+      desc: 'Сдайте норматив квеста (8 и более баллов из 10).',
+      xp: 150
+    },
+    {
+      id: 'badge_perfect',
+      category: 'quiz',
+      icon: '👑',
+      title: 'Абсолютный триумф',
+      desc: 'Наберите максимальные 100% баллов в квесте без единой ошибки.',
+      xp: 250
     },
     {
       id: 'badge_marathon',
@@ -86,30 +91,40 @@ const AchievementsEngine = {
       xp: 300
     },
     {
-      id: 'badge_historian',
+      id: 'badge_daily_quest',
       category: 'quiz',
-      icon: '📜',
-      title: 'Летописец СРМК',
-      desc: 'Пройдите все 4 тематических направления исторического квеста.',
-      xp: 250
+      icon: '⭐️',
+      title: 'Ежедневный дозор',
+      desc: 'Ответьте на вопрос дня и почтите память Героя сегодняшнего дня.',
+      xp: 70
     },
 
-    // --- Категория: Музейные действия и Память ---
+    // ------------------------------------------------------------------------
+    // КАТЕГОРИЯ II: МЕМОРИАЛ И ПАМЯТЬ (memorial) - 7 наград
+    // ------------------------------------------------------------------------
     {
       id: 'badge_candle_light',
       category: 'memorial',
       icon: '🕯',
       title: 'Свеча Памяти',
-      desc: 'Зажгите виртуальную лампаду на Мемориале Славы колледжа.',
+      desc: 'Зажгите виртуальную лампаду у Мемориала Славы колледжа.',
       xp: 50
     },
     {
       id: 'badge_vigil',
       category: 'memorial',
       icon: '🔥',
-      title: 'Вечный дозор',
+      title: 'Огни памяти',
       desc: 'Зажгите свечи памяти как минимум 5 разным выпускникам-героям.',
       xp: 150
+    },
+    {
+      id: 'badge_all_candles',
+      category: 'memorial',
+      icon: '🌟',
+      title: 'Стена бессмертия',
+      desc: 'Зажгите поминальные лампады всем 20 выпускникам колледжа!',
+      xp: 300
     },
     {
       id: 'badge_flowers',
@@ -117,65 +132,139 @@ const AchievementsEngine = {
       icon: '💐',
       title: 'Алые гвоздики',
       desc: 'Возложите цветы к Мемориалу Славы павших воинов.',
-      xp: 50
-    },
-    {
-      id: 'badge_audio_listener',
-      category: 'memorial',
-      icon: '🎧',
-      title: 'Голос подвига',
-      desc: 'Прослушайте аудиоэкскурсию музея или личный аудиогид героя.',
       xp: 60
     },
     {
-      id: 'badge_reader',
+      id: 'badge_silence',
       category: 'memorial',
-      icon: '📖',
-      title: 'Хранитель летописи',
-      desc: 'Изучите биографические очерки в Электронной Книге Памяти.',
-      xp: 75
+      icon: '🕊',
+      title: 'Хранитель тишины',
+      desc: 'Почтите память павших: 60 секунд Всероссийской Минуты молчания.',
+      xp: 100
     },
     {
-      id: 'badge_desk_builder',
+      id: 'badge_tribute_writer',
       category: 'memorial',
+      icon: '✍️',
+      title: 'Слово благодарности',
+      desc: 'Оставьте памятное послание в книге скорби на Стене Памяти музея.',
+      xp: 80
+    },
+    {
+      id: 'badge_heart_tribute',
+      category: 'memorial',
+      icon: '❤️',
+      title: 'Сердечный отклик',
+      desc: 'Зажгите лампаду признательности под отзывом другого посетителя.',
+      xp: 50
+    },
+
+    // ------------------------------------------------------------------------
+    // КАТЕГОРИЯ III: АРХИВ И ИССЛЕДОВАНИЕ (archive) - 6 наград
+    // ------------------------------------------------------------------------
+    {
+      id: 'badge_first_dossier',
+      category: 'archive',
+      icon: '🔎',
+      title: 'Первое знакомство',
+      desc: 'Изучите подробное архивное досье и боевой путь выпускника колледжа.',
+      xp: 50
+    },
+    {
+      id: 'badge_archivist',
+      category: 'archive',
+      icon: '🗂',
+      title: 'Главный архивариус',
+      desc: 'Изучите архивные досье 10 выпускников-героев колледжа.',
+      xp: 150
+    },
+    {
+      id: 'badge_grand_historian',
+      category: 'archive',
+      icon: '📚',
+      title: 'Летописец 20 судеб',
+      desc: 'Изучите биографии и подвиги всех 20 героев Ставропольского края!',
+      xp: 350
+    },
+    {
+      id: 'badge_reader',
+      category: 'archive',
+      icon: '📖',
+      title: 'Хранитель летописи',
+      desc: 'Изучите очерки в Электронной Книге Памяти (21 исторический том).',
+      xp: 80
+    },
+    {
+      id: 'badge_3d_reader',
+      category: 'archive',
+      icon: '📜',
+      title: 'Шелест вечности',
+      desc: 'Откройте и изучите интерактивный 3D-фолиант в читалке музея.',
+      xp: 90
+    },
+    {
+      id: 'badge_audio_listener',
+      category: 'archive',
+      icon: '🎧',
+      title: 'Голос подвига',
+      desc: 'Прослушайте дикторскую аудиоэкскурсию или личный аудиогид героя.',
+      xp: 70
+    },
+
+    // ------------------------------------------------------------------------
+    // КАТЕГОРИЯ IV: ОБРАЗОВАНИЕ И ПЛАТФОРМА (edtech) - 6 наград
+    // ------------------------------------------------------------------------
+    {
+      id: 'badge_desk_builder',
+      category: 'edtech',
       icon: '🪑',
       title: 'За партой Героя',
       desc: 'Сформируйте настенную или настольную памятную табличку А4 с QR-кодом.',
       xp: 100
     },
     {
-      id: 'badge_tribute_writer',
-      category: 'memorial',
-      icon: '🕊',
-      title: 'Слово благодарности',
-      desc: 'Оставьте памятное послание на цифровой Стене Памяти музея.',
-      xp: 80
-    },
-    {
-      id: 'badge_certified',
-      category: 'memorial',
-      icon: '📜',
-      title: 'Наградной лист',
-      desc: 'Оформите именной Сертификат участника с уникальным номером реестра.',
-      xp: 150
-    },
-    {
       id: 'badge_card_creator',
-      category: 'memorial',
+      category: 'edtech',
       icon: '🖼',
       title: 'Хранитель славы',
       desc: 'Создайте мемориальную открытку памяти героя для социальных сетей (9:16).',
       xp: 80
     },
     {
-      id: 'badge_daily_quest',
-      category: 'memorial',
-      icon: '⭐️',
-      title: 'Ежедневный дозор',
-      desc: 'Ответьте на вопрос дня и почтите память Героя сегодняшнего дня.',
-      xp: 70
+      id: 'badge_lesson_director',
+      category: 'edtech',
+      icon: '🎬',
+      title: 'Наставник мужества',
+      desc: 'Запустите полноэкранный презентационный режим «Урок Мужества» (16:9).',
+      xp: 120
+    },
+    {
+      id: 'badge_certified',
+      category: 'edtech',
+      icon: '📜',
+      title: 'Наградной лист',
+      desc: 'Оформите официальный именной Сертификат с уникальным номером реестра.',
+      xp: 150
+    },
+    {
+      id: 'badge_verifier',
+      category: 'edtech',
+      icon: '🛡',
+      title: 'Знак подлинности',
+      desc: 'Проверьте подлинность документа в едином реестре верификации.',
+      xp: 60
+    },
+    {
+      id: 'badge_spotlight_scout',
+      category: 'edtech',
+      icon: '🧭',
+      title: 'Штурман экспозиции',
+      desc: 'Воспользуйтесь быстрым Spotlight-поиском по героям и залам (Ctrl+K).',
+      xp: 40
     }
   ],
+
+  activeTab: 'all',
 
   init() {
     this.ensureState();
@@ -190,7 +279,8 @@ const AchievementsEngine = {
       this.ensureState();
       this.updateHeaderRankDisplay();
     });
-    console.log(`[AchievementsEngine] Ядро активно. Текущий ранг: ${this.getCurrentRank().title} (${this.getXP()} XP). Привязано к БД Supabase.`);
+
+    console.log(`[AchievementsEngine v8.0] Ядро активно. Чин: ${this.getCurrentRank().title} (${this.getXP()} XP). Привязано к Supabase.`);
   },
 
   getUserId() {
@@ -204,134 +294,77 @@ const AchievementsEngine = {
     return aid;
   },
 
-  getStats() {
-    try {
-      return JSON.parse(localStorage.getItem('srmk_achievements_stats') || '{}');
-    } catch (e) {
-      return {
-        candlesLitHeroes: [],
-        flowersLaid: 0,
-        audioHeard: 0,
-        chaptersRead: 0,
-        quizzesPassed: 0,
-        modesCompleted: []
-      };
+  getUserProfile() {
+    return {
+      name: localStorage.getItem('srmk_student_name') || localStorage.getItem('srmk_quiz_user_name') || 'Курсант СРМК',
+      group: localStorage.getItem('srmk_student_group') || localStorage.getItem('srmk_quiz_user_group') || 'Отделение СПО',
+      userId: this.getUserId()
+    };
+  },
+
+  setUserProfile(name, group) {
+    if (name) {
+      localStorage.setItem('srmk_student_name', name.trim());
+      localStorage.setItem('srmk_quiz_user_name', name.trim());
+    }
+    if (group) {
+      localStorage.setItem('srmk_student_group', group.trim());
+      localStorage.setItem('srmk_quiz_user_group', group.trim());
+    }
+    this.syncToCloud(0, null);
+    this.renderModalContent();
+    if (window.MemorialToast) {
+      MemorialToast.show('✅ Профиль курсанта обновлен и синхронизирован с базой Supabase!', 'success');
     }
   },
 
+  getStats() {
+    try {
+      const s = JSON.parse(localStorage.getItem('srmk_achievements_stats') || '{}');
+      return {
+        candlesLitHeroes: Array.isArray(s.candlesLitHeroes) ? s.candlesLitHeroes : [],
+        viewedHeroes: Array.isArray(s.viewedHeroes) ? s.viewedHeroes : [],
+        flowersLaid: Number(s.flowersLaid) || 0,
+        audioHeard: Number(s.audioHeard) || 0,
+        chaptersRead: Number(s.chaptersRead) || 0,
+        pagesTurned: Number(s.pagesTurned) || 0,
+        quizzesPassed: Number(s.quizzesPassed) || 0,
+        desksGenerated: Number(s.desksGenerated) || 0,
+        tributesWritten: Number(s.tributesWritten) || 0,
+        cardsCreated: Number(s.cardsCreated) || 0,
+        silenceCount: Number(s.silenceCount) || 0,
+        cinemaStarted: Number(s.cinemaStarted) || 0,
+        verifiedCount: Number(s.verifiedCount) || 0,
+        spotlightCount: Number(s.spotlightCount) || 0
+      };
+    } catch (e) {
+      return { candlesLitHeroes: [], viewedHeroes: [] };
+    }
+  },
+
+  saveStats(stats) {
+    try {
+      localStorage.setItem('srmk_achievements_stats', JSON.stringify(stats));
+    } catch (e) {}
+  },
+
+  // --------------------------------------------------------------------------
+  // СИНХРОНИЗАЦИЯ С ОБЛАЧНОЙ БАЗОЙ ДАННЫХ SUPABASE
+  // --------------------------------------------------------------------------
   initCloudBinding() {
-    // 1. Попытка немедленной загрузки, если CloudSync уже готов
     if (window.CloudSync && CloudSync.isLive) {
       this.loadFromCloud();
     } else {
-      // 2. Отложенная синхронизация после инициализации CloudSync
       setTimeout(() => this.loadFromCloud(), 1200);
       setTimeout(() => this.loadFromCloud(), 3500);
     }
+
     window.addEventListener('online', () => this.loadFromCloud());
 
-    // Слушатель получения наград студентами в реальном времени из базы данных
+    // Слушатель получения наград в реальном времени из базы данных
     window.addEventListener('srmk-achievement-unlocked-cloud', (e) => {
       this.prependAchievementFeedItem(e.detail);
     });
-
-    // Отрисовка ленты наград в пульте преподавателя
-    setTimeout(() => this.renderTeacherAchievementsFeed(), 1500);
-  },
-
-  async renderTeacherAchievementsFeed() {
-    const container = document.getElementById('liveAchievementsFeedWidget');
-    if (!container) return;
-
-    let events = [];
-    if (window.CloudSync && CloudSync.isLive) {
-      events = await CloudSync.fetchRecentAchievements(8);
-    }
-
-    container.innerHTML = `
-      <div class="teacher-achievements-monitor" style="background:#131722; border:1px solid rgba(197,160,89,0.3); border-radius:12px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-size:1.4rem;">🎖️</span>
-            <div>
-              <h4 style="font-family:'Cinzel',serif; font-size:1.05rem; color:#dfba6d; margin:0;">
-                Живая лента достижений и воинских чинов (Supabase Realtime)
-              </h4>
-              <span style="font-size:0.75rem; color:#8b96a5;">Фиксация боевых наград и баллов опыта (XP) студентов в базе данных</span>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span class="monitor-live-pill live-active" style="font-size:0.72rem; padding:4px 8px;">
-              <span class="pulse-dot"></span> БД Подключена
-            </span>
-            <button type="button" onclick="AchievementsEngine.promptReset()" style="background:rgba(239,68,68,0.12); color:#fca5a5; border:1px solid rgba(239,68,68,0.3); padding:4px 10px; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer;" title="Сбросить все уровни и счетчики">
-              ↺ Сброс для урока
-            </button>
-          </div>
-        </div>
-
-        <div id="liveAchievementsFeedList" style="display:flex; flex-direction:column; gap:8px;">
-          ${events && events.length > 0 ? events.map(ev => this.formatAchievementFeedRow(ev)).join('') : `
-            <div style="text-align:center; padding:20px; color:#8b96a5; font-size:0.82rem; border:1px dashed rgba(255,255,255,0.1); border-radius:8px;">
-              <span style="font-size:1.3rem; display:block; margin-bottom:4px;">🕊️</span>
-              Все счетчики и уровни обнулены для нового занятия.<br>
-              Полученные студентами награды квеста и мемориала будут отображаться здесь мгновенно через Supabase.
-            </div>
-          `}
-        </div>
-      </div>
-    `;
-  },
-
-  formatAchievementFeedRow(ev) {
-    const timeStr = ev.unlocked_at ? new Date(ev.unlocked_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Только что';
-    return `
-      <div class="achieve-feed-item" style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:8px; font-size:0.8rem;">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:1.2rem;">${ev.badge_icon || '🎖️'}</span>
-          <div>
-            <strong style="color:#ffffff;">${this.escapeHtml(ev.student_name || 'Студент')}</strong>
-            <span style="color:#8b96a5;">получил награду</span>
-            <span style="color:#dfba6d; font-weight:700;">«${this.escapeHtml(ev.badge_title)}»</span>
-          </div>
-        </div>
-        <div style="display:flex; align-items:center; gap:12px;">
-          <span style="color:#10b981; font-weight:800;">+${ev.xp_awarded || 0} XP</span>
-          <span style="color:#64748b; font-size:0.72rem;">${timeStr}</span>
-        </div>
-      </div>
-    `;
-  },
-
-  prependAchievementFeedItem(ev) {
-    const list = document.getElementById('liveAchievementsFeedList');
-    if (!list) return;
-
-    // Убираем заглушку пустоты если она есть
-    if (list.querySelector('div[style*="text-align:center"]')) {
-      list.innerHTML = '';
-    }
-
-    const row = document.createElement('div');
-    row.innerHTML = this.formatAchievementFeedRow(ev);
-    const item = row.firstElementChild;
-    item.style.borderColor = 'rgba(197, 160, 89, 0.7)';
-    item.style.boxShadow = '0 0 12px rgba(197, 160, 89, 0.3)';
-    list.insertBefore(item, list.firstChild);
-
-    // Ограничиваем до 8 элементов
-    while (list.children.length > 8) {
-      list.removeChild(list.lastChild);
-    }
-  },
-
-  escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
   },
 
   async loadFromCloud() {
@@ -352,23 +385,37 @@ const AchievementsEngine = {
         localStorage.setItem('srmk_user_xp', String(targetXP));
         localStorage.setItem('srmk_unlocked_badges', JSON.stringify(mergedBadges));
 
+        if (cloudData.student_name && !localStorage.getItem('srmk_student_name')) {
+          localStorage.setItem('srmk_student_name', cloudData.student_name);
+        }
+        if (cloudData.group_name && !localStorage.getItem('srmk_student_group')) {
+          localStorage.setItem('srmk_student_group', cloudData.group_name);
+        }
+
         if (cloudData.stats && typeof cloudData.stats === 'object') {
           const localStats = this.getStats();
           const mergedStats = {
             candlesLitHeroes: Array.from(new Set([...(localStats.candlesLitHeroes || []), ...(cloudData.stats.candlesLitHeroes || [])])),
+            viewedHeroes: Array.from(new Set([...(localStats.viewedHeroes || []), ...(cloudData.stats.viewedHeroes || [])])),
             flowersLaid: Math.max(localStats.flowersLaid || 0, cloudData.stats.flowersLaid || 0),
             audioHeard: Math.max(localStats.audioHeard || 0, cloudData.stats.audioHeard || 0),
             chaptersRead: Math.max(localStats.chaptersRead || 0, cloudData.stats.chaptersRead || 0),
+            pagesTurned: Math.max(localStats.pagesTurned || 0, cloudData.stats.pagesTurned || 0),
             quizzesPassed: Math.max(localStats.quizzesPassed || 0, cloudData.stats.quizzesPassed || 0),
-            modesCompleted: Array.from(new Set([...(localStats.modesCompleted || []), ...(cloudData.stats.modesCompleted || [])]))
+            desksGenerated: Math.max(localStats.desksGenerated || 0, cloudData.stats.desksGenerated || 0),
+            tributesWritten: Math.max(localStats.tributesWritten || 0, cloudData.stats.tributesWritten || 0),
+            cardsCreated: Math.max(localStats.cardsCreated || 0, cloudData.stats.cardsCreated || 0),
+            silenceCount: Math.max(localStats.silenceCount || 0, cloudData.stats.silenceCount || 0),
+            cinemaStarted: Math.max(localStats.cinemaStarted || 0, cloudData.stats.cinemaStarted || 0),
+            verifiedCount: Math.max(localStats.verifiedCount || 0, cloudData.stats.verifiedCount || 0),
+            spotlightCount: Math.max(localStats.spotlightCount || 0, cloudData.stats.spotlightCount || 0)
           };
-          localStorage.setItem('srmk_achievements_stats', JSON.stringify(mergedStats));
+          this.saveStats(mergedStats);
         }
 
         this.updateHeaderRankDisplay();
-        console.log(`[AchievementsEngine] ☁️ Прогресс загружен из БД Supabase (${targetXP} XP, ${mergedBadges.length} наград)`);
+        console.log(`[AchievementsEngine] ☁️ Прогресс загружен из Supabase (${targetXP} XP, ${mergedBadges.length} наград)`);
       } else {
-        // Запись в базу при первом запуске
         this.syncToCloud(0, null);
       }
     } catch (err) {
@@ -379,15 +426,13 @@ const AchievementsEngine = {
   async syncToCloud(deltaXP = 0, newBadge = null) {
     if (!window.CloudSync || !CloudSync.isLive) return;
     try {
-      const userId = this.getUserId();
+      const profile = this.getUserProfile();
       const rank = this.getCurrentRank();
-      const studentName = localStorage.getItem('srmk_quiz_user_name') || localStorage.getItem('srmk_teacher_name') || null;
-      const groupName = localStorage.getItem('srmk_quiz_user_group') || localStorage.getItem('srmk_group_name') || null;
 
       await CloudSync.syncUserProgress({
-        userId,
-        studentName,
-        groupName,
+        userId: profile.userId,
+        studentName: profile.name,
+        groupName: profile.group,
         xpDelta: deltaXP,
         rankId: rank.id,
         rankTitle: rank.title,
@@ -412,60 +457,63 @@ const AchievementsEngine = {
       localStorage.setItem('srmk_unlocked_badges', JSON.stringify(row.unlocked_badges));
     }
     if (row.stats && typeof row.stats === 'object') {
-      localStorage.setItem('srmk_achievements_stats', JSON.stringify(row.stats));
+      this.saveStats(row.stats);
     }
     this.updateHeaderRankDisplay();
   },
 
+  // --------------------------------------------------------------------------
+  // ИНТЕРФЕЙС И ВСТРАИВАНИЕ В ШАПКУ И МОБИЛЬНЫЙ DRAWER
+  // --------------------------------------------------------------------------
   injectUI() {
-    // 1. Добавление кнопки ранга в шапку сайта (если есть .header-actions)
-    const headerActions = document.querySelector('.site-header .header-actions');
-    if (headerActions && !document.getElementById('btnHeaderRankBadge')) {
-      const rankBtn = document.createElement('button');
-      rankBtn.id = 'btnHeaderRankBadge';
-      rankBtn.className = 'btn-header-rank-badge';
-      rankBtn.type = 'button';
-      rankBtn.title = 'Ваш воинский ранг и наградные бейджи';
-      rankBtn.onclick = () => this.openModal();
-      // Вставляем перед кнопкой сертификата или паспорта
-      const certBtn = headerActions.querySelector('.btn-header-cert');
-      if (certBtn) {
-        headerActions.insertBefore(rankBtn, certBtn);
-      } else {
-        headerActions.appendChild(rankBtn);
+    const existingBtn = document.getElementById('btnHeaderRankBadge');
+    if (existingBtn) {
+      existingBtn.onclick = () => this.openModal();
+    } else {
+      const headerActions = document.querySelector('.site-header .header-actions');
+      if (headerActions) {
+        const rankBtn = document.createElement('button');
+        rankBtn.id = 'btnHeaderRankBadge';
+        rankBtn.className = 'btn-header-rank-badge';
+        rankBtn.type = 'button';
+        rankBtn.title = 'Ваш воинский чин и наградные ордена (Нажмите для открытия)';
+        rankBtn.onclick = () => this.openModal();
+        const certBtn = headerActions.querySelector('.btn-header-cert');
+        if (certBtn) {
+          headerActions.insertBefore(rankBtn, certBtn);
+        } else {
+          headerActions.appendChild(rankBtn);
+        }
       }
     }
 
-    // 2. Добавление пункта в мобильное меню (если есть .mobile-drawer .drawer-content)
-    const drawerContent = document.querySelector('.mobile-drawer .drawer-content');
-    if (drawerContent && !document.getElementById('drawerAchievementsLink')) {
-      const drawerLink = document.createElement('button');
-      drawerLink.id = 'drawerAchievementsLink';
-      drawerLink.className = 'drawer-link drawer-rank-link';
-      drawerLink.type = 'button';
-      drawerLink.style.cssText = 'text-align:left; background:transparent; border:none; cursor:pointer; width:100%;';
-      drawerLink.onclick = () => {
+    const existingDrawerLink = document.getElementById('drawerAchievementsLink');
+    if (existingDrawerLink) {
+      existingDrawerLink.onclick = () => {
         const drawer = document.getElementById('mobileDrawer');
         if (drawer) drawer.classList.remove('open');
         this.openModal();
       };
-      // Вставляем перед "Реестр верификации"
-      const verLink = drawerContent.querySelector('a[href*="verify.html"]');
-      if (verLink) {
-        drawerContent.insertBefore(drawerLink, verLink);
-      } else {
-        drawerContent.appendChild(drawerLink);
+    } else {
+      const drawerContent = document.querySelector('.mobile-drawer .drawer-content');
+      if (drawerContent) {
+        const drawerLink = document.createElement('button');
+        drawerLink.id = 'drawerAchievementsLink';
+        drawerLink.className = 'drawer-link drawer-rank-link';
+        drawerLink.type = 'button';
+        drawerLink.style.cssText = 'text-align:left; background:transparent; border:none; cursor:pointer; width:100%;';
+        drawerLink.onclick = () => {
+          const drawer = document.getElementById('mobileDrawer');
+          if (drawer) drawer.classList.remove('open');
+          this.openModal();
+        };
+        const verLink = drawerContent.querySelector('a[href*="verify.html"]');
+        if (verLink) {
+          drawerContent.insertBefore(drawerLink, verLink);
+        } else {
+          drawerContent.appendChild(drawerLink);
+        }
       }
-    }
-
-    // 3. Плавающий компактный индикатор ранга в нижнем правом углу
-    if (!document.getElementById('floatingRankWidget')) {
-      const floatEl = document.createElement('div');
-      floatEl.id = 'floatingRankWidget';
-      floatEl.className = 'floating-rank-widget';
-      floatEl.onclick = () => this.openModal();
-      floatEl.title = 'Воинский ранг и 16 боевых наград (нажмите для открытия)';
-      document.body.appendChild(floatEl);
     }
   },
 
@@ -473,29 +521,27 @@ const AchievementsEngine = {
     const rank = this.getCurrentRank();
     const xp = this.getXP();
     const unlocked = this.getUnlockedBadges().length;
+    const total = this.BADGES.length;
 
     const hdrBtn = document.getElementById('btnHeaderRankBadge');
     if (hdrBtn) {
-      hdrBtn.innerHTML = `<span class="rank-btn-icon">${rank.icon}</span> <span class="rank-btn-title">${rank.title}</span> <span class="rank-btn-xp">${xp} XP</span>`;
+      hdrBtn.innerHTML = `
+        <span class="rank-btn-icon">${rank.icon}</span>
+        <span class="rank-btn-title">${rank.title}</span>
+        <span class="rank-btn-xp">${xp} XP</span>
+      `;
+    }
+
+    const hdrXp = document.getElementById('hdrRankXp');
+    if (hdrXp) {
+      hdrXp.textContent = `${xp} XP`;
     }
 
     const drawerLink = document.getElementById('drawerAchievementsLink');
     if (drawerLink) {
-      drawerLink.innerHTML = `🎖 Звание: <strong>${rank.title}</strong> (${xp} XP) • ${unlocked}/16 наград`;
+      drawerLink.innerHTML = `🎖 Звание: <strong>${rank.title}</strong> (${xp} XP) • ${unlocked}/${total} наград`;
     }
 
-    const floatEl = document.getElementById('floatingRankWidget');
-    if (floatEl) {
-      floatEl.innerHTML = `
-        <div class="fl-rank-icon">${rank.icon}</div>
-        <div class="fl-rank-meta">
-          <span class="fl-rank-title">${rank.title}</span>
-          <span class="fl-rank-xp">${xp} XP</span>
-        </div>
-      `;
-    }
-
-    // Если открыто модальное окно — обновим его
     if (document.getElementById('achievementsModal')?.classList.contains('active')) {
       this.renderModalContent();
     }
@@ -513,7 +559,7 @@ const AchievementsEngine = {
             <div style="display:flex; align-items:center; gap:12px;">
               <span style="font-size:1.8rem;">🏛</span>
               <div>
-                <h2 id="modalRankHeaderTitle" style="font-family:'Cinzel',serif; font-size:1.3rem; color:var(--primary-gold,#c5a059); margin:0;">
+                <h2 id="modalRankHeaderTitle" style="font-family:'Cinzel',serif; font-size:1.3rem; color:var(--primary-gold,#dfba6d); margin:0;">
                   Наградная палата и воинские чины
                 </h2>
                 <span style="font-size:0.8rem; color:#9da6b3;">Мемориально-образовательный комплекс ГБПОУ СРМК</span>
@@ -528,7 +574,6 @@ const AchievementsEngine = {
       `;
       document.body.appendChild(modal);
 
-      // Закрытие по клику на фон и Escape
       modal.addEventListener('click', (e) => {
         if (e.target === modal) this.closeModal();
       });
@@ -537,7 +582,6 @@ const AchievementsEngine = {
       });
     }
 
-    this.activeTab = 'all';
     this.renderModalContent();
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -562,14 +606,42 @@ const AchievementsEngine = {
     const unlocked = this.getUnlockedBadges();
     const totalBadges = this.BADGES.length;
     const filter = this.activeTab || 'all';
+    const profile = this.getUserProfile();
+    const isLive = window.CloudSync?.isLive;
 
     let filteredBadges = this.BADGES;
     if (filter === 'quiz') filteredBadges = this.BADGES.filter(b => b.category === 'quiz');
     else if (filter === 'memorial') filteredBadges = this.BADGES.filter(b => b.category === 'memorial');
+    else if (filter === 'archive') filteredBadges = this.BADGES.filter(b => b.category === 'archive');
+    else if (filter === 'edtech') filteredBadges = this.BADGES.filter(b => b.category === 'edtech');
     else if (filter === 'unlocked') filteredBadges = this.BADGES.filter(b => unlocked.includes(b.id));
 
     body.innerHTML = `
-      <!-- Карточка текущего воинского чина -->
+      <!-- ПРОФИЛЬ КУРСАНТА И ОБЛАЧНЫЙ СТАТУС SUPABASE -->
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197,160,89,0.3); border-radius:10px; padding:16px 20px; margin-bottom:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#dfba6d; font-weight:700;">
+              Учетная карточка исследователя
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+              <strong style="font-size:1.15rem; color:#fff;" id="profileDisplayName">${profile.name}</strong>
+              <span style="font-size:0.85rem; color:#94a3b8;">(${profile.group})</span>
+              <button type="button" onclick="AchievementsEngine.promptEditProfile()" style="background:none; border:none; color:#dfba6d; cursor:pointer; font-size:0.85rem;" title="Редактировать ФИО и группу">✏️</button>
+            </div>
+            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">
+              Жетон: <code>${profile.userId}</code>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px; font-size:0.78rem; background:rgba(0,0,0,0.3); padding:6px 12px; border-radius:20px; border:1px solid rgba(255,255,255,0.1);">
+            <span style="width:8px; height:8px; border-radius:50%; background:${isLive ? '#22c55e' : '#f59e0b'}; box-shadow:0 0 8px ${isLive ? '#22c55e' : '#f59e0b'};"></span>
+            <span style="color:#cbd5e1;">${isLive ? 'Supabase Cloud: Синхронизировано' : 'Офлайн (Локальное хранилище)'}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- КАРТОЧКА ТЕКУЩЕГО ВОИНСКОГО ЧИНА -->
       <div class="modal-rank-card">
         <div class="rank-badge-large">
           <span class="rank-large-icon">${rank.icon}</span>
@@ -584,7 +656,7 @@ const AchievementsEngine = {
             <div style="text-align:right;">
               <span style="font-size:1.4rem; font-weight:900; color:#c5a059;">${xp} XP</span>
               <div style="font-size:0.75rem; color:#9da6b3;">
-                ${nextRank ? `До «${nextRank.title}»: ${nextRank.minXP - xp} XP` : 'Максимальный чин'}
+                ${nextRank ? `До звания «${nextRank.title}»: ${nextRank.minXP - xp} XP` : 'Максимальный чин'}
               </div>
             </div>
           </div>
@@ -601,9 +673,9 @@ const AchievementsEngine = {
         </div>
       </div>
 
-      <!-- Лестница званий -->
+      <!-- ЛЕСТНИЦА ЗВАНИЙ -->
       <div class="ranks-ladder-container">
-        <div class="ranks-ladder-title">Иерархия званий комплекса:</div>
+        <div class="ranks-ladder-title">Иерархия чинов комплекса:</div>
         <div class="ranks-ladder-scroll">
           ${this.RANKS.map(r => {
             const isCurrent = r.id === rank.id;
@@ -619,68 +691,188 @@ const AchievementsEngine = {
         </div>
       </div>
 
-      <!-- Фильтры наград -->
+      <!-- ВКЛАДКИ НАВИГАЦИИ -->
       <div class="achieve-tabs-bar">
         <button type="button" class="achieve-tab-btn ${filter === 'all' ? 'active' : ''}" onclick="AchievementsEngine.setTab('all')">
           Все награды (${totalBadges})
         </button>
         <button type="button" class="achieve-tab-btn ${filter === 'quiz' ? 'active' : ''}" onclick="AchievementsEngine.setTab('quiz')">
-          Квест и знания (8)
+          ⚔️ Квест (8)
         </button>
         <button type="button" class="achieve-tab-btn ${filter === 'memorial' ? 'active' : ''}" onclick="AchievementsEngine.setTab('memorial')">
-          Музей и память (8)
+          🕯 Мемориал (7)
+        </button>
+        <button type="button" class="achieve-tab-btn ${filter === 'archive' ? 'active' : ''}" onclick="AchievementsEngine.setTab('archive')">
+          📖 Архив (6)
+        </button>
+        <button type="button" class="achieve-tab-btn ${filter === 'edtech' ? 'active' : ''}" onclick="AchievementsEngine.setTab('edtech')">
+          🎓 EdTech (6)
+        </button>
+        <button type="button" class="achieve-tab-btn ${filter === 'leaderboard' ? 'active' : ''}" onclick="AchievementsEngine.setTab('leaderboard')">
+          🏆 Зал почёта (Рейтинг)
         </button>
         <button type="button" class="achieve-tab-btn ${filter === 'unlocked' ? 'active' : ''}" onclick="AchievementsEngine.setTab('unlocked')">
-          Полученные (${unlocked.length})
+          ✅ Полученные (${unlocked.length})
         </button>
       </div>
 
-      <!-- Сетка наградных бейджей -->
-      <div class="achieve-badges-grid">
-        ${filteredBadges.map(b => {
-          const isUnlocked = unlocked.includes(b.id);
-          return `
-            <div class="achieve-badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
-              <div class="badge-card-top">
-                <span class="badge-card-icon">${b.icon}</span>
-                <span class="badge-status-tag ${isUnlocked ? 'tag-unlocked' : 'tag-locked'}">
-                  ${isUnlocked ? '✓ Открыто' : '🔒 Закрыто'}
-                </span>
-              </div>
-              <h4 class="badge-card-title">${b.title}</h4>
-              <p class="badge-card-desc">${b.desc}</p>
-              <div class="badge-card-footer">
-                <span class="badge-xp-reward">+${b.xp} XP</span>
-                <span class="badge-cat-label">${b.category === 'quiz' ? 'Квест' : 'Музей'}</span>
-              </div>
-            </div>
-          `;
-        }).join('')}
+      ${filter === 'leaderboard' 
+        ? `<div id="achieveLeaderboardSlot" style="margin-top:16px;">
+             <div style="text-align:center; padding:30px; color:#94a3b8;">
+               ⏳ Загрузка Зала почёта из базы данных Supabase...
+             </div>
+           </div>`
+        : `
+          <!-- СЕТКА НАГРАДНЫХ БЕЙДЖЕЙ -->
+          <div class="achieve-badges-grid">
+            ${filteredBadges.map(b => {
+              const isUnlocked = unlocked.includes(b.id);
+              return `
+                <div class="achieve-badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
+                  <div class="badge-card-top">
+                    <span class="badge-card-icon">${b.icon}</span>
+                    <span class="badge-status-tag ${isUnlocked ? 'tag-unlocked' : 'tag-locked'}">
+                      ${isUnlocked ? '✓ Открыто' : '🔒 Закрыто'}
+                    </span>
+                  </div>
+                  <h4 class="badge-card-title">${b.title}</h4>
+                  <p class="badge-card-desc">${b.desc}</p>
+                  <div class="badge-card-footer">
+                    <span class="badge-xp-reward">+${b.xp} XP</span>
+                    <span class="badge-cat-label">${this.getCategoryLabel(b.category)}</span>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `
+      }
+
+      <!-- БЫСТРЫЕ ДЕЙСТВИЯ -->
+      <div class="achieve-quick-actions" style="margin-top:20px;">
+        <span style="font-size:0.85rem; color:#9da6b3;">Как получить новые ордена и повысить чин:</span>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+          <a href="quiz.html" class="achieve-action-chip">⚔️ Исторический квест (+50–250 XP)</a>
+          <a href="index.html#memorial" class="achieve-action-chip">🕯 Свеча Памяти (+15–300 XP)</a>
+          <a href="javascript:void(0)" onclick="MemorialCeremony.start()" class="achieve-action-chip">⏱ Минута молчания (+100 XP)</a>
+          <a href="javascript:void(0)" onclick="MemorialCardGenerator.openModal()" class="achieve-action-chip">🖼 Открытка 9:16 (+80 XP)</a>
+          <a href="javascript:void(0)" onclick="LessonCinema.start()" class="achieve-action-chip">🎬 Кино-Урок Мужества (+120 XP)</a>
+          <a href="reader.html" class="achieve-action-chip">📚 3D Фолиант Памяти (+90 XP)</a>
+          <a href="guestbook.html" class="achieve-action-chip">🕊 Послание на Стене (+80 XP)</a>
+        </div>
       </div>
 
-      <!-- Быстрые действия для набора очков -->
-      <div class="achieve-quick-actions">
-        <span style="font-size:0.85rem; color:#9da6b3;">Как повысить воинский чин:</span>
-        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
-          <a href="quiz.html" class="achieve-action-chip">⚔️ Пройти исторический квест (+50–250 XP)</a>
-          <a href="index.html#memorial" class="achieve-action-chip">🕯 Зажечь Свечу Памяти (+15 XP)</a>
-          <a href="index.html#memorial" class="achieve-action-chip">💐 Возложить живые гвоздики (+20 XP)</a>
-          <a href="desk-qr.html" class="achieve-action-chip">🪑 Создать Парту Героя (+50 XP)</a>
-          <a href="memory-book.html" class="achieve-action-chip">📖 Читать Книгу Памяти (+25 XP)</a>
-          <a href="guestbook.html" class="achieve-action-chip">🕊 Оставить послание (+40 XP)</a>
-        </div>
-      <!-- Футер модального окна: статус базы данных и кнопка обнуления -->
+      <!-- ФУТЕР МОДАЛЬНОГО ОКНА -->
       <div class="achieve-modal-footer-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:20px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08);">
         <div style="display:flex; align-items:center; gap:8px; font-size:0.78rem; color:#9da6b3;">
           <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span>
-          <span>База данных: <strong>Supabase Enterprise Shield</strong> (Realtime OMNI-SYNC)</span>
+          <span>База данных: <strong>Supabase Realtime Cloud</strong> (Синхронизация профиля и наград)</span>
         </div>
         <button type="button" class="btn-achieve-reset-all" onclick="AchievementsEngine.promptReset()" style="background:rgba(239,68,68,0.12); color:#fca5a5; border:1px solid rgba(239,68,68,0.3); padding:7px 14px; border-radius:6px; font-size:0.78rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s;">
           <span>↺</span>
-          <span>Обнулить все счетчики и уровни</span>
+          <span>Сбросить прогресс</span>
         </button>
       </div>
     `;
+
+    if (filter === 'leaderboard') {
+      this.loadAndRenderLeaderboard();
+    }
+  },
+
+  async loadAndRenderLeaderboard() {
+    const slot = document.getElementById('achieveLeaderboardSlot');
+    if (!slot) return;
+
+    let leaders = [];
+    if (window.CloudSync && typeof CloudSync.fetchLeaderboard === 'function') {
+      leaders = await CloudSync.fetchLeaderboard(12);
+    }
+
+    const myId = this.getUserId();
+    const myProfile = this.getUserProfile();
+    const myXP = this.getXP();
+    const myRank = this.getCurrentRank();
+    const myBadgesCount = this.getUnlockedBadges().length;
+
+    // Если список пустой, создаем локальный эталон
+    if (!leaders || leaders.length === 0) {
+      leaders = [
+        { user_id: myId, student_name: myProfile.name, group_name: myProfile.group, xp: myXP, rank_title: myRank.title, unlocked_badges: this.getUnlockedBadges() },
+        { user_id: 'sample_1', student_name: 'Курсант гр. ИСП-21', group_name: 'ИСП-21', xp: 2150, rank_title: 'Младший лейтенант', unlocked_badges: new Array(12) },
+        { user_id: 'sample_2', student_name: 'Совет Музея СРМК', group_name: 'Актив', xp: 1850, rank_title: 'Младший лейтенант', unlocked_badges: new Array(10) },
+        { user_id: 'sample_3', student_name: 'Юнармейский отряд', group_name: 'Юнармия', xp: 1400, rank_title: 'Старшина', unlocked_badges: new Array(8) }
+      ];
+    } else {
+      // Проверяем, есть ли текущий пользователь среди лидеров
+      const inList = leaders.some(l => l.user_id === myId);
+      if (!inList) {
+        leaders.push({
+          user_id: myId,
+          student_name: `${myProfile.name} (Вы)`,
+          group_name: myProfile.group,
+          xp: myXP,
+          rank_title: myRank.title,
+          unlocked_badges: this.getUnlockedBadges()
+        });
+        leaders.sort((a, b) => (b.xp || 0) - (a.xp || 0));
+      }
+    }
+
+    slot.innerHTML = `
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(197,160,89,0.3); border-radius:10px; overflow:hidden;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.86rem; text-align:left;">
+          <thead>
+            <tr style="background:rgba(197,160,89,0.15); color:#dfba6d; font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">
+              <th style="padding:10px 14px;">№</th>
+              <th style="padding:10px 14px;">Исследователь / Курсант</th>
+              <th style="padding:10px 14px;">Группа</th>
+              <th style="padding:10px 14px;">Воинский чин</th>
+              <th style="padding:10px 14px; text-align:center;">Ордена</th>
+              <th style="padding:10px 14px; text-align:right;">Очки XP</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${leaders.map((lead, idx) => {
+              const isMe = lead.user_id === myId;
+              const medals = Array.isArray(lead.unlocked_badges) ? lead.unlocked_badges.length : (lead.unlocked_badges ? 5 : 0);
+              const medalIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}`;
+              return `
+                <tr style="border-top:1px solid rgba(255,255,255,0.06); background:${isMe ? 'rgba(197,160,89,0.18)' : 'transparent'};">
+                  <td style="padding:10px 14px; font-weight:700; color:#dfba6d;">${medalIcon}</td>
+                  <td style="padding:10px 14px; color:#fff; font-weight:${isMe ? '700' : '500'};">
+                    ${this.escapeHtml(lead.student_name || 'Курсант СРМК')} ${isMe ? '⭐ (Вы)' : ''}
+                  </td>
+                  <td style="padding:10px 14px; color:#94a3b8;">${this.escapeHtml(lead.group_name || 'СРМК')}</td>
+                  <td style="padding:10px 14px; color:#cbd5e1;">${this.escapeHtml(lead.rank_title || 'Рядовой')}</td>
+                  <td style="padding:10px 14px; text-align:center; color:#dfba6d;">🎖️ ${medals}</td>
+                  <td style="padding:10px 14px; text-align:right; font-weight:700; color:#dfba6d;">${lead.xp || 0} XP</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  },
+
+  promptEditProfile() {
+    const cur = this.getUserProfile();
+    const name = window.prompt('Введите ваше ФИО или позывной для Книги Почёта:', cur.name);
+    if (name === null) return;
+    const group = window.prompt('Введите вашу учебную группу или организацию (напр., ИСП-21):', cur.group);
+    if (group === null) return;
+    this.setUserProfile(name, group);
+  },
+
+  getCategoryLabel(cat) {
+    switch(cat) {
+      case 'quiz': return 'Квест';
+      case 'memorial': return 'Мемориал';
+      case 'archive': return 'Архив';
+      case 'edtech': return 'EdTech';
+      default: return 'Музей';
+    }
   },
 
   setTab(tab) {
@@ -690,13 +882,6 @@ const AchievementsEngine = {
 
   ensureState() {
     try {
-      // Однократный принудительный сброс тестовых/демо-значений предыдущих сессий
-      if (localStorage.getItem('srmk_reset_counters_v2026_done') !== 'true') {
-        this.wipeAllData();
-        localStorage.setItem('srmk_reset_counters_v2026_done', 'true');
-        console.log('[AchievementsEngine] ⚡ Выполнено полное обнуление всех счетчиков и уровней (v2026).');
-      }
-
       if (!localStorage.getItem('srmk_user_xp')) {
         localStorage.setItem('srmk_user_xp', '0');
       }
@@ -704,18 +889,24 @@ const AchievementsEngine = {
         localStorage.setItem('srmk_unlocked_badges', JSON.stringify([]));
       }
       if (!localStorage.getItem('srmk_achievements_stats')) {
-        localStorage.setItem('srmk_achievements_stats', JSON.stringify({
+        this.saveStats({
           candlesLitHeroes: [],
+          viewedHeroes: [],
           flowersLaid: 0,
           audioHeard: 0,
           chaptersRead: 0,
+          pagesTurned: 0,
           quizzesPassed: 0,
-          modesCompleted: []
-        }));
+          desksGenerated: 0,
+          tributesWritten: 0,
+          cardsCreated: 0,
+          silenceCount: 0,
+          cinemaStarted: 0,
+          verifiedCount: 0,
+          spotlightCount: 0
+        });
       }
-    } catch (e) {
-      console.warn('[AchievementsEngine] Ошибка чтения LocalStorage:', e);
-    }
+    } catch (e) {}
   },
 
   promptReset() {
@@ -725,56 +916,50 @@ const AchievementsEngine = {
   async resetAll(isUserTriggered = false) {
     if (isUserTriggered) {
       const confirmed = window.confirm(
-        'ВНИМАНИЕ: ОБНУЛЕНИЕ ВСЕХ СЧЕТЧИКОВ И УРОВНЕЙ!\n\n' +
+        'ВНИМАНИЕ: СБРОС ДОСТИЖЕНИЙ И РАНГА!\n\n' +
         '• Воинский чин будет сброшен до «Рядовой» (0 XP)\n' +
-        '• Все 16 наградных бейджей будут заблокированы\n' +
-        '• Счетчики свечей, цветов и залов будут обнулены в базе данных Supabase\n' +
-        '• Статистика полностью очистится для нового урока или группы\n\n' +
-        'Подтвердить полное обнуление?'
+        '• Все наградные ордена будут заблокированы\n' +
+        '• Статистика очистится для нового занятия\n\n' +
+        'Подтвердить сброс?'
       );
       if (!confirmed) return;
     }
 
-    this.wipeAllData();
+    try {
+      localStorage.setItem('srmk_user_xp', '0');
+      localStorage.setItem('srmk_unlocked_badges', JSON.stringify([]));
+      this.saveStats({
+        candlesLitHeroes: [],
+        viewedHeroes: [],
+        flowersLaid: 0,
+        audioHeard: 0,
+        chaptersRead: 0,
+        pagesTurned: 0,
+        quizzesPassed: 0,
+        desksGenerated: 0,
+        tributesWritten: 0,
+        cardsCreated: 0,
+        silenceCount: 0,
+        cinemaStarted: 0,
+        verifiedCount: 0,
+        spotlightCount: 0
+      });
+    } catch (e) {}
 
-    // Отправка запроса на обнуление в облачную БД Supabase
     if (window.CloudSync && typeof CloudSync.resetAllCountersAndLevels === 'function') {
       try {
         await CloudSync.resetAllCountersAndLevels();
-      } catch (e) {
-        console.warn('[AchievementsEngine] Ошибка вызова сброса в БД:', e);
-      }
+      } catch (e) {}
     }
 
     this.updateHeaderRankDisplay();
 
     if (window.MemorialToast) {
-      MemorialToast.show('↺ Все счетчики, уровни и достижения успешно обнулены!', 'tribute', 4000);
+      MemorialToast.show('↺ Счетчики, уровни и достижения сброшены.', 'tribute', 3500);
     }
 
     window.dispatchEvent(new CustomEvent('srmk-achievements-updated'));
     window.dispatchEvent(new CustomEvent('srmk-counters-reset'));
-  },
-
-  wipeAllData() {
-    try {
-      localStorage.setItem('srmk_user_xp', '0');
-      localStorage.setItem('srmk_unlocked_badges', JSON.stringify([]));
-      localStorage.setItem('srmk_achievements_stats', JSON.stringify({
-        candlesLitHeroes: [],
-        flowersLaid: 0,
-        audioHeard: 0,
-        chaptersRead: 0,
-        quizzesPassed: 0,
-        modesCompleted: []
-      }));
-      localStorage.setItem('srmk_museum_candles_v3', JSON.stringify({}));
-      localStorage.setItem('srmk_tribute_vault', JSON.stringify({}));
-      localStorage.setItem('srmk_user_flames_v3', JSON.stringify({}));
-      localStorage.setItem('srmk_hall_analytics_cache', JSON.stringify({ stats: {}, heroStats: {} }));
-      localStorage.setItem('quiz_history_records', JSON.stringify([]));
-      sessionStorage.removeItem('srmk_anon_session_token');
-    } catch (e) {}
   },
 
   getXP() {
@@ -785,59 +970,25 @@ const AchievementsEngine = {
     }
   },
 
-  addXP(amount, reason = "") {
-    if (amount <= 0) return;
+  addXP(amount, reason = '') {
+    if (!amount || amount <= 0) return;
     const oldXP = this.getXP();
-    const oldRank = this.getRankByXP(oldXP);
     const newXP = oldXP + amount;
 
     try {
       localStorage.setItem('srmk_user_xp', String(newXP));
     } catch (e) {}
 
+    const oldRank = this.getRankByXP(oldXP);
     const newRank = this.getRankByXP(newXP);
 
-    // Уведомление о начислении опыта
-    if (window.MemorialToast && reason) {
-      MemorialToast.show(`+${amount} XP: ${reason}`, 'tribute', 2500);
-    }
-
-    // Проверка повышения воинского звания
-    if (newRank.id !== oldRank.id) {
+    if (newRank.id !== oldRank.id && newXP > oldXP) {
       this.celebrateRankUp(newRank);
     }
 
-    // Сохранение и привязка к базе данных Supabase
+    this.updateHeaderRankDisplay();
     this.syncToCloud(amount, null);
-
     this.dispatchUpdateEvent();
-  },
-
-  getRankByXP(xp) {
-    for (let i = this.RANKS.length - 1; i >= 0; i--) {
-      if (xp >= this.RANKS[i].minXP) return this.RANKS[i];
-    }
-    return this.RANKS[0];
-  },
-
-  getCurrentRank() {
-    return this.getRankByXP(this.getXP());
-  },
-
-  getNextRank() {
-    const current = this.getCurrentRank();
-    const idx = this.RANKS.findIndex(r => r.id === current.id);
-    return idx < this.RANKS.length - 1 ? this.RANKS[idx + 1] : null;
-  },
-
-  getRankProgressPercent() {
-    const current = this.getCurrentRank();
-    const next = this.getNextRank();
-    if (!next) return 100;
-    const xp = this.getXP();
-    const range = next.minXP - current.minXP;
-    const currentProgress = xp - current.minXP;
-    return Math.min(100, Math.max(0, Math.round((currentProgress / range) * 100)));
   },
 
   getUnlockedBadges() {
@@ -864,16 +1015,13 @@ const AchievementsEngine = {
       localStorage.setItem('srmk_unlocked_badges', JSON.stringify(unlocked));
     } catch (e) {}
 
-    // Начисление XP за достижение
-    this.addXP(badge.xp);
-
-    // Привязка нового бейджа к базе данных Supabase
+    this.addXP(badge.xp, `Награда: ${badge.title}`);
     this.syncToCloud(badge.xp, badge);
 
-    // Торжественное уведомление
     if (window.MemorialToast) {
-      MemorialToast.show(`🎖 Получена награда: <strong>${badge.title}</strong> (+${badge.xp} XP)`, 'success', 4500);
+      MemorialToast.show(`🎖 Получена награда: <strong>${badge.title}</strong> (+${badge.xp} XP)`, 'success', 5000);
     }
+
     this.playCelebrationSound();
     this.dispatchUpdateEvent();
     return true;
@@ -882,7 +1030,7 @@ const AchievementsEngine = {
   celebrateRankUp(newRank) {
     setTimeout(() => {
       if (window.MemorialToast) {
-        MemorialToast.show(`⭐️ ПОВЫШЕНИЕ В ЗВАНИИ! Вам присвоен чин: <strong>${newRank.title}</strong> ${newRank.icon}`, 'success', 5000);
+        MemorialToast.show(`⭐️ ПОВЫШЕНИЕ В ЗВАНИИ! Вам присвоен чин: <strong>${newRank.title}</strong> ${newRank.icon}`, 'success', 5500);
       }
       this.playFanfareSound();
     }, 400);
@@ -940,6 +1088,38 @@ const AchievementsEngine = {
     } catch (e) {}
   },
 
+  getRankByXP(xp) {
+    for (let i = this.RANKS.length - 1; i >= 0; i--) {
+      if (xp >= this.RANKS[i].minXP) {
+        return this.RANKS[i];
+      }
+    }
+    return this.RANKS[0];
+  },
+
+  getCurrentRank() {
+    return this.getRankByXP(this.getXP());
+  },
+
+  getNextRank() {
+    const current = this.getCurrentRank();
+    const idx = this.RANKS.findIndex(r => r.id === current.id);
+    if (idx < this.RANKS.length - 1) {
+      return this.RANKS[idx + 1];
+    }
+    return null;
+  },
+
+  getRankProgressPercent() {
+    const xp = this.getXP();
+    const current = this.getCurrentRank();
+    const next = this.getNextRank();
+    if (!next) return 100;
+    const range = next.minXP - current.minXP;
+    const earned = xp - current.minXP;
+    return Math.min(100, Math.max(0, Math.round((earned / range) * 100)));
+  },
+
   dispatchUpdateEvent() {
     window.dispatchEvent(new CustomEvent('srmk-achievements-updated', {
       detail: {
@@ -951,53 +1131,162 @@ const AchievementsEngine = {
     }));
   },
 
-  // Вспомогательные трекеры для действий в музее
+  escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  },
+
+  // --------------------------------------------------------------------------
+  // ВСПОМОГАТЕЛЬНЫЕ ТРЕКЕРЫ ДЕЙСТВИЙ ПО ВСЕМУ КОМПЛЕКСУ
+  // --------------------------------------------------------------------------
+  trackHeroViewed(heroId) {
+    const stats = this.getStats();
+    stats.viewedHeroes = stats.viewedHeroes || [];
+    if (heroId && !stats.viewedHeroes.includes(heroId)) {
+      stats.viewedHeroes.push(heroId);
+      this.saveStats(stats);
+
+      this.addXP(10, `Изучение досье героя ${heroId}`);
+
+      if (stats.viewedHeroes.length >= 1) {
+        this.unlockBadge('badge_first_dossier');
+      }
+      if (stats.viewedHeroes.length >= 10) {
+        this.unlockBadge('badge_archivist');
+      }
+      if (stats.viewedHeroes.length >= 20) {
+        this.unlockBadge('badge_grand_historian');
+      }
+    }
+  },
+
   trackCandleLit(heroId) {
-    try {
-      const stats = JSON.parse(localStorage.getItem('srmk_achievements_stats') || '{}');
-      stats.candlesLitHeroes = stats.candlesLitHeroes || [];
-      if (!stats.candlesLitHeroes.includes(heroId)) {
-        stats.candlesLitHeroes.push(heroId);
-      }
-      localStorage.setItem('srmk_achievements_stats', JSON.stringify(stats));
+    const stats = this.getStats();
+    stats.candlesLitHeroes = stats.candlesLitHeroes || [];
+    if (heroId && !stats.candlesLitHeroes.includes(heroId)) {
+      stats.candlesLitHeroes.push(heroId);
+    }
+    this.saveStats(stats);
 
-      this.unlockBadge('badge_candle_light');
-      this.addXP(15, "Свеча Памяти герою");
+    this.unlockBadge('badge_candle_light');
+    this.addXP(15, "Свеча Памяти герою");
 
-      if (stats.candlesLitHeroes.length >= 5) {
-        this.unlockBadge('badge_vigil');
-      }
-    } catch (e) {}
+    if (stats.candlesLitHeroes.length >= 5) {
+      this.unlockBadge('badge_vigil');
+    }
+    if (stats.candlesLitHeroes.length >= 20) {
+      this.unlockBadge('badge_all_candles');
+    }
   },
 
   trackFlowersLaid() {
+    const stats = this.getStats();
+    stats.flowersLaid = (stats.flowersLaid || 0) + 1;
+    this.saveStats(stats);
     this.unlockBadge('badge_flowers');
     this.addXP(20, "Возложение гвоздик");
   },
 
+  trackSilenceCompleted() {
+    const stats = this.getStats();
+    stats.silenceCount = (stats.silenceCount || 0) + 1;
+    this.saveStats(stats);
+    this.unlockBadge('badge_silence');
+    this.addXP(100, "Минута молчания");
+  },
+
   trackAudioListened() {
+    const stats = this.getStats();
+    stats.audioHeard = (stats.audioHeard || 0) + 1;
+    this.saveStats(stats);
     this.unlockBadge('badge_audio_listener');
     this.addXP(30, "Прослушивание аудиоэкскурсии");
   },
 
-  trackReaderOpened() {
+  trackReaderOpened(tomeId) {
+    return this.trackChapterRead(tomeId);
+  },
+
+  trackHeroShared() {
+    this.addXP(25, "Распространение памяти о герое");
+  },
+
+  trackChapterRead(tomeId) {
+    const stats = this.getStats();
+    stats.chaptersRead = (stats.chaptersRead || 0) + 1;
+    this.saveStats(stats);
     this.unlockBadge('badge_reader');
     this.addXP(25, "Изучение Книги Памяти");
   },
 
+  track3dPageTurn() {
+    const stats = this.getStats();
+    stats.pagesTurned = (stats.pagesTurned || 0) + 1;
+    this.saveStats(stats);
+    this.unlockBadge('badge_3d_reader');
+    this.addXP(10, "Перелистывание страниц 3D-фолианта");
+  },
+
   trackDeskGenerated() {
+    const stats = this.getStats();
+    stats.desksGenerated = (stats.desksGenerated || 0) + 1;
+    this.saveStats(stats);
     this.unlockBadge('badge_desk_builder');
     this.addXP(50, "Оформление Парты Героя");
   },
 
   trackTributeWritten() {
+    const stats = this.getStats();
+    stats.tributesWritten = (stats.tributesWritten || 0) + 1;
+    this.saveStats(stats);
     this.unlockBadge('badge_tribute_writer');
     this.addXP(40, "Послание на Стене Памяти");
   },
 
+  trackHeartTribute() {
+    this.unlockBadge('badge_heart_tribute');
+    this.addXP(15, "Лампада сопричастности");
+  },
+
+  trackCardCreated() {
+    const stats = this.getStats();
+    stats.cardsCreated = (stats.cardsCreated || 0) + 1;
+    this.saveStats(stats);
+    this.unlockBadge('badge_card_creator');
+    this.addXP(80, "Создание открытки памяти 9:16");
+  },
+
+  trackLessonCinemaStarted() {
+    const stats = this.getStats();
+    stats.cinemaStarted = (stats.cinemaStarted || 0) + 1;
+    this.saveStats(stats);
+    this.unlockBadge('badge_lesson_director');
+    this.addXP(120, "Запуск Урока Мужества Cinema");
+  },
+
   trackCertificateIssued() {
     this.unlockBadge('badge_certified');
-    this.addXP(100, "Верификация в реестре сертификатов");
+    this.addXP(100, "Официальный именной Сертификат");
+  },
+
+  trackVerificationPerformed() {
+    const stats = this.getStats();
+    stats.verifiedCount = (stats.verifiedCount || 0) + 1;
+    this.saveStats(stats);
+    this.unlockBadge('badge_verifier');
+    this.addXP(30, "Верификация в реестре");
+  },
+
+  trackSpotlightUsed() {
+    const stats = this.getStats();
+    stats.spotlightCount = (stats.spotlightCount || 0) + 1;
+    this.saveStats(stats);
+    this.unlockBadge('badge_spotlight_scout');
+    this.addXP(10, "Поиск по комплексу");
   }
 };
 

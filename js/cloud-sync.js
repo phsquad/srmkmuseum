@@ -933,6 +933,23 @@ const CloudSync = {
     }
   },
 
+  async fetchLeaderboard(limit = 10) {
+    if (!this.isLive || !this.client) return [];
+    try {
+      const { data, error } = await this.client
+        .from('user_achievements')
+        .select('user_id, student_name, group_name, xp, rank_title, unlocked_badges, last_active')
+        .order('xp', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    } catch (e) {
+      console.warn('[CloudSync] Ошибка загрузки таблицы лидеров из БД:', e);
+      return [];
+    }
+  },
+
   // ==========================================================================
   // ПОЛНОЕ ОБНУЛЕНИЕ ВСЕХ СЧЕТЧИКОВ И УРОВНЕЙ В БАЗЕ ДАННЫХ
   // ==========================================================================

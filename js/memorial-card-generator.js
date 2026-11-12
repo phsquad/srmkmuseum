@@ -453,6 +453,12 @@
 
     rewardUser() {
       if (window.AchievementsEngine) {
+        if (typeof window.AchievementsEngine.trackCardCreated === 'function') {
+          window.AchievementsEngine.trackCardCreated();
+        }
+        if (typeof window.AchievementsEngine.trackHeroShared === 'function') {
+          window.AchievementsEngine.trackHeroShared();
+        }
         window.AchievementsEngine.addXP(80, `Создание мемориальной открытки памяти ${this.currentHero.name}`);
         window.AchievementsEngine.unlockBadge('badge_card_creator');
       }

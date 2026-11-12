@@ -499,6 +499,11 @@ const App = {
       HallAnalytics.trackHeroView(id, hero.name);
     }
 
+    // Фиксация изучения досье героя в наградной системе
+    if (window.AchievementsEngine && typeof AchievementsEngine.trackHeroViewed === 'function') {
+      AchievementsEngine.trackHeroViewed(id);
+    }
+
     const currentIndex = heroesDatabase.findIndex(h => h.id === id);
     const prevHero = heroesDatabase[currentIndex - 1] || heroesDatabase[heroesDatabase.length - 1];
     const nextHero = heroesDatabase[currentIndex + 1] || heroesDatabase[0];

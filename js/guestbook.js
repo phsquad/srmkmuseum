@@ -296,6 +296,9 @@ const GuestbookEngine = {
       delta = 1;
       if (window.AchievementsEngine) {
         window.AchievementsEngine.trackCandleLit('wall_' + tributeId);
+        if (typeof window.AchievementsEngine.trackHeartTribute === 'function') {
+          window.AchievementsEngine.trackHeartTribute();
+        }
       }
       this.playChime(784);
     } else {

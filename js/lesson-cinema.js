@@ -83,6 +83,10 @@
       this.startLessonTimer();
       this.showSlide(0);
 
+      if (window.AchievementsEngine && typeof window.AchievementsEngine.trackLessonCinemaStarted === 'function') {
+        window.AchievementsEngine.trackLessonCinemaStarted();
+      }
+
       if (window.MemorialToast) {
         MemorialToast.show('🎬 Полноэкранный режим «Урок Мужества» активен. Навигация: Стрелки / Пробел, Esc для выхода.', 'info');
       }

@@ -109,8 +109,12 @@
       }
 
       // Разблокировка достижения в AchievementsEngine
-      if (window.AchievementsEngine && typeof window.AchievementsEngine.unlockBadge === 'function') {
-        window.AchievementsEngine.unlockBadge('badge_silence');
+      if (window.AchievementsEngine) {
+        if (typeof window.AchievementsEngine.trackSilenceCompleted === 'function') {
+          window.AchievementsEngine.trackSilenceCompleted();
+        } else if (typeof window.AchievementsEngine.unlockBadge === 'function') {
+          window.AchievementsEngine.unlockBadge('badge_silence');
+        }
       }
       if (window.MemorialToast) {
         setTimeout(() => {

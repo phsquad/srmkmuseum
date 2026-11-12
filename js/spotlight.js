@@ -392,6 +392,9 @@
     executeSelected() {
       const selected = this.items[this.selectedIndex];
       if (selected && typeof selected.action === 'function') {
+        if (window.AchievementsEngine && typeof window.AchievementsEngine.trackSpotlightUsed === 'function') {
+          window.AchievementsEngine.trackSpotlightUsed();
+        }
         selected.action();
       }
     }

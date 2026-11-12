@@ -686,6 +686,9 @@
         }
 
         if (certData) {
+          if (window.AchievementsEngine && typeof window.AchievementsEngine.trackVerificationPerformed === 'function') {
+            window.AchievementsEngine.trackVerificationPerformed();
+          }
           wrapper.className = "status-badge-wrapper";
           title.textContent = "ПОДЛИННОСТЬ ПОДТВЕРЖДЕНА В ЭЛЕКТРОННОМ РЕЕСТРЕ СРМК";
           
@@ -704,6 +707,9 @@
           : /^СРМК-УМ-(20\d{2})-(\d{4})$/.test(serial);
 
         if (isValidFormat) {
+          if (window.AchievementsEngine && typeof window.AchievementsEngine.trackVerificationPerformed === 'function') {
+            window.AchievementsEngine.trackVerificationPerformed();
+          }
           wrapper.className = "status-badge-wrapper status-offline";
           title.textContent = "ПОДЛИННОСТЬ ПОДТВЕРЖДЕНА (ЛОКАЛЬНЫЙ РЕЕСТР СРМК)";
 

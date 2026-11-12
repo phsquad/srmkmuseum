@@ -114,6 +114,9 @@ const ReaderEngine = {
    * 3. Процедурный синтезатор шелеста страниц (Web Audio API)
    */
   playPageTurnSound() {
+    if (window.AchievementsEngine) {
+      window.AchievementsEngine.track3dPageTurn();
+    }
     if (window.SoundEngine) {
       window.SoundEngine.playPageFlip();
       return;
