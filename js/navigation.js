@@ -947,7 +947,9 @@
       const scripts = [
         'js/sound-engine.js',
         'js/spotlight.js',
-        'js/memorial-ceremony.js'
+        'js/memorial-ceremony.js',
+        'js/memorial-card-generator.js',
+        'js/lesson-cinema.js'
       ];
       const isHome = window.location.pathname.endsWith('index.html') ||
                      window.location.pathname.endsWith('mobile.html') ||
@@ -955,6 +957,7 @@
                      !window.location.pathname.includes('.html');
       if (isHome) {
         scripts.push('js/live-tributes-ticker.js');
+        scripts.push('js/daily-quest.js');
       }
 
       scripts.forEach(src => {

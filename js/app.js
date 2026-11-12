@@ -593,6 +593,10 @@ const App = {
               🖨 Распечатать лист памяти
             </button>
 
+            <button class="dossier-action-btn" onclick="if(window.MemorialCardGenerator) MemorialCardGenerator.openModal('${hero.id}')" type="button" style="border-color:#dfba6d; color:#dfba6d; background:rgba(197,160,89,0.12); font-weight:600;">
+              🖼 Создать открытку для соцсетей (9:16)
+            </button>
+
             <button class="dossier-action-btn" onclick="if(typeof TechModules !== 'undefined') TechModules.generateSocialPoster('${hero.id}')" type="button">
               📥 Скачать карточку для стенда
             </button>

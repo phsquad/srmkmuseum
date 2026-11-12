@@ -94,6 +94,14 @@
             <span class="item-icon">📑</span>
             <div><strong>Методкабинет</strong><small>Банк уроков Мужества для учителей</small></div>
           </a>
+          <a href="javascript:void(0)" onclick="if(window.LessonCinema) LessonCinema.start()" class="dropdown-item" role="menuitem">
+            <span class="item-icon">🎬</span>
+            <div><strong>Урок Мужества (Cinema)</strong><small>Полноэкранный режим для доски (F)</small></div>
+          </a>
+          <a href="javascript:void(0)" onclick="if(window.MemorialCardGenerator) MemorialCardGenerator.openModal()" class="dropdown-item" role="menuitem">
+            <span class="item-icon">🖼</span>
+            <div><strong>Открытка памяти (9:16)</strong><small>Генератор для соцсетей и клипов</small></div>
+          </a>
         </div>
       </div>
 
@@ -161,6 +169,8 @@
       <div class="drawer-section-label">Быстрые действия</div>
       <a href="javascript:void(0)" class="drawer-link highlight" id="drawerSpotlightBtn">🔍 Быстрый поиск (Ctrl+K)</a>
       <a href="javascript:void(0)" class="drawer-link" id="drawerSilenceBtn" style="color:#dfba6d;">⏱ Минута молчания</a>
+      <a href="javascript:void(0)" class="drawer-link" onclick="if(window.LessonCinema) LessonCinema.start()" style="color:#dfba6d;">🎬 Урок Мужества (Cinema 16:9)</a>
+      <a href="javascript:void(0)" class="drawer-link" onclick="if(window.MemorialCardGenerator) MemorialCardGenerator.openModal()">🖼 Открытка для соцсетей (9:16)</a>
 
       <div class="drawer-section-label">Залы экспозиции</div>
       <a href="index.html#memorial" class="drawer-link">🏛 Мемориал Славы</a>

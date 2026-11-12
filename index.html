@@ -414,6 +414,14 @@
 
           <!-- ПАНЕЛЬ БЫСТРЫХ ИНСТРУМЕНТОВ ПЕДАГОГА -->
           <div class="teacher-tools-bar">
+            <button class="teacher-tool-btn gold" onclick="if(window.LessonCinema) LessonCinema.start()" type="button" style="background:linear-gradient(135deg, rgba(197,160,89,0.2), rgba(138,28,34,0.25)); border-color:#dfba6d;">
+              <span class="btn-tool-icon">🎬</span>
+              <span class="btn-tool-text">
+                <strong style="color:#dfba6d;">Полноэкранный Урок (F)</strong>
+                <small>Интерактивная презентация 16:9</small>
+              </span>
+            </button>
+
             <button class="teacher-tool-btn" onclick="App.toggleProjectorMode()" type="button">
               <span class="btn-tool-icon">📽</span>
               <span class="btn-tool-text">

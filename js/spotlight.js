@@ -239,6 +239,42 @@
               window.location.href = 'index.html#memorial';
             }
           }
+        },
+        {
+          title: 'Полноэкранный Урок Мужества (Cinema 16:9)',
+          subtitle: 'Интерактивная презентация для интерактивной доски или проектора (F)',
+          icon: '🎬',
+          action: () => {
+            this.close();
+            if (window.LessonCinema) {
+              window.LessonCinema.start();
+            }
+          }
+        },
+        {
+          title: 'Создать открытку памяти для соцсетей (9:16 / 1:1)',
+          subtitle: 'Брендированная карточка героя с портретом, орденами и QR-кодом',
+          icon: '🖼',
+          action: () => {
+            this.close();
+            if (window.MemorialCardGenerator) {
+              window.MemorialCardGenerator.openModal();
+            }
+          }
+        },
+        {
+          title: 'Герой и вопрос сегодняшнего дня',
+          subtitle: 'Ежедневная эстафета памяти: экспресс-тест и зажжение свечи (+50 XP)',
+          icon: '⭐️',
+          action: () => {
+            this.close();
+            const slot = document.getElementById('dailyQuestSlot') || document.getElementById('heroes-grid');
+            if (slot) {
+              slot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+              window.location.href = 'index.html#heroes-grid';
+            }
+          }
         }
       ];
 
