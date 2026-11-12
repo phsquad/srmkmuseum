@@ -136,6 +136,18 @@
         <span class="pwa-text">Установить</span>
       </button>
 
+      <!-- КНОПКА ПОИСКА SPOTLIGHT (CTRL+K) -->
+      <button class="header-spotlight-btn" id="btnOpenSpotlight" type="button" title="Быстрый поиск по героям и разделам (Ctrl+K)">
+        <span class="spotlight-btn-icon">🔍</span>
+        <span class="spotlight-btn-text">Поиск</span>
+        <kbd class="spotlight-btn-kbd">Ctrl+K</kbd>
+      </button>
+
+      <!-- ТУМБЛЕР ЗВУКА МЕМОРИАЛА -->
+      <button class="header-sound-btn" id="btnToggleSound" type="button" title="Звуковые эффекты мемориала (Вкл/Выкл)">
+        <span id="soundBtnIcon">🔊</span>
+      </button>
+
       <!-- КНОПКА МОБИЛЬНОГО МЕНЮ (БУРГЕР) -->
       <button class="mobile-burger-btn" id="mobileBurgerBtn" aria-label="Открыть мобильное меню" aria-expanded="false" aria-controls="mobileDrawer" type="button">
         <span></span><span></span><span></span>
@@ -146,6 +158,10 @@
   <!-- ВЫДВИЖНАЯ МОБИЛЬНАЯ ПАНЕЛЬ МЕНЮ (DRAWER) -->
   <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
     <div class="drawer-content">
+      <div class="drawer-section-label">Быстрые действия</div>
+      <a href="javascript:void(0)" class="drawer-link highlight" id="drawerSpotlightBtn">🔍 Быстрый поиск (Ctrl+K)</a>
+      <a href="javascript:void(0)" class="drawer-link" id="drawerSilenceBtn" style="color:#dfba6d;">⏱ Минута молчания</a>
+
       <div class="drawer-section-label">Залы экспозиции</div>
       <a href="index.html#memorial" class="drawer-link">🏛 Мемориал Славы</a>
       <a href="index.html#heroes-grid" class="drawer-link">🎓 За партой Героя</a>

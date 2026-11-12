@@ -43,7 +43,16 @@
       // 7. PWA Модуль и Service Worker
       this.initPwaModule();
 
-      // 8. Подсветка активной страницы
+      // 8. Spotlight Поиск (Ctrl+K)
+      this.initSpotlightBinding();
+
+      // 9. Тумблер звука и церемония Минуты молчания
+      this.initSoundAndCeremony();
+
+      // 10. Загрузка интерактивных модулей Спринта 2
+      this.loadInteractiveSprintModules();
+
+      // 11. Подсветка активной страницы
       this.highlightActivePage();
 
       console.log("[NavigationEngine v7.0 Master] Навигация и единый паспорт музея активны.");
@@ -927,6 +936,135 @@
       document.getElementById('btnInstallPwa')?.addEventListener('click', handleInstallClick);
       document.getElementById('drawerInstallPwaBtn')?.addEventListener('click', handleInstallClick);
       document.getElementById('mobileInstallPwaLink')?.addEventListener('click', handleInstallClick);
+    },
+
+    /**
+     * ========================================================================
+     * 8. ДИНАМИЧЕСКАЯ ЗАГРУЗКА МОДУЛЕЙ СПРИНТА 2
+     * ========================================================================
+     */
+    loadInteractiveSprintModules() {
+      const scripts = [
+        'js/sound-engine.js',
+        'js/spotlight.js',
+        'js/memorial-ceremony.js'
+      ];
+      const isHome = window.location.pathname.endsWith('index.html') ||
+                     window.location.pathname.endsWith('mobile.html') ||
+                     window.location.pathname.endsWith('/') ||
+                     !window.location.pathname.includes('.html');
+      if (isHome) {
+        scripts.push('js/live-tributes-ticker.js');
+      }
+
+      scripts.forEach(src => {
+        if (!document.querySelector(`script[src*="${src}"]`)) {
+          const s = document.createElement('script');
+          s.src = src;
+          document.body.appendChild(s);
+        }
+      });
+    },
+
+    /**
+     * ========================================================================
+     * 9. SPOTLIGHT ПОИСК (CTRL+K) В ШАПКЕ
+     * ========================================================================
+     */
+    initSpotlightBinding() {
+      const headerActions = document.querySelector('.site-header .header-actions');
+      if (headerActions && !document.getElementById('btnOpenSpotlight')) {
+        const spotBtn = document.createElement('button');
+        spotBtn.type = 'button';
+        spotBtn.id = 'btnOpenSpotlight';
+        spotBtn.className = 'header-spotlight-btn';
+        spotBtn.title = 'Быстрый поиск по героям и разделам (Ctrl+K)';
+        spotBtn.innerHTML = `
+          <span class="spotlight-btn-icon">🔍</span>
+          <span class="spotlight-btn-text">Поиск</span>
+          <kbd class="spotlight-btn-kbd">Ctrl+K</kbd>
+        `;
+        const burger = headerActions.querySelector('.mobile-burger-btn');
+        if (burger) headerActions.insertBefore(spotBtn, burger);
+        else headerActions.appendChild(spotBtn);
+      }
+
+      document.addEventListener('click', (e) => {
+        const target = e.target.closest('#btnOpenSpotlight, #drawerSpotlightBtn, [data-open-spotlight]');
+        if (target) {
+          e.preventDefault();
+          const drawer = document.getElementById('mobileDrawer');
+          if (drawer) {
+            drawer.classList.remove('open');
+            drawer.setAttribute('aria-hidden', 'true');
+          }
+          if (window.SpotlightSearch && typeof window.SpotlightSearch.open === 'function') {
+            window.SpotlightSearch.open();
+          }
+        }
+      });
+    },
+
+    /**
+     * ========================================================================
+     * 10. ТУМБЛЕР ЗВУКА И ЦЕРЕМОНИЯ МИНУТЫ МОЛЧАНИЯ
+     * ========================================================================
+     */
+    initSoundAndCeremony() {
+      // 1. Кнопка звука в шапке
+      const headerActions = document.querySelector('.site-header .header-actions');
+      if (headerActions && !document.getElementById('btnToggleSound')) {
+        const sndBtn = document.createElement('button');
+        sndBtn.type = 'button';
+        sndBtn.id = 'btnToggleSound';
+        sndBtn.className = 'header-sound-btn';
+        sndBtn.title = 'Звуковые эффекты мемориала (Вкл/Выкл)';
+        sndBtn.innerHTML = `<span id="soundBtnIcon">🔊</span>`;
+        const burger = headerActions.querySelector('.mobile-burger-btn');
+        if (burger) headerActions.insertBefore(sndBtn, burger);
+        else headerActions.appendChild(sndBtn);
+      }
+
+      const updateSoundIcon = () => {
+        const icon = document.getElementById('soundBtnIcon');
+        const btn = document.getElementById('btnToggleSound');
+        const enabled = window.SoundEngine ? window.SoundEngine.isEnabled() : true;
+        if (icon) icon.textContent = enabled ? '🔊' : '🔇';
+        if (btn) {
+          if (!enabled) btn.classList.add('muted');
+          else btn.classList.remove('muted');
+        }
+      };
+
+      document.addEventListener('click', (e) => {
+        const sndTarget = e.target.closest('#btnToggleSound');
+        if (sndTarget) {
+          e.preventDefault();
+          if (window.SoundEngine) {
+            const newState = window.SoundEngine.toggle();
+            updateSoundIcon();
+            if (window.MemorialToast) {
+              MemorialToast.show(newState ? '🔊 Звуковые эффекты мемориала включены' : '🔇 Звуковые эффекты отключены', 'info');
+            }
+          }
+        }
+
+        const silenceTarget = e.target.closest('#drawerSilenceBtn, #btnStartSilence, [data-start-silence]');
+        if (silenceTarget) {
+          e.preventDefault();
+          const drawer = document.getElementById('mobileDrawer');
+          if (drawer) {
+            drawer.classList.remove('open');
+            drawer.setAttribute('aria-hidden', 'true');
+          }
+          if (window.MemorialCeremony && typeof window.MemorialCeremony.start === 'function') {
+            window.MemorialCeremony.start();
+          }
+        }
+      });
+
+      setTimeout(updateSoundIcon, 200);
+      window.addEventListener('srmk-sound-toggle', updateSoundIcon);
     }
   };
 

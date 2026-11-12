@@ -1,0 +1,593 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   ИНТЕРАКТИВ И САУНД-ДИЗАЙН: css/interactivity-sprint2.css
+   Мемориально-образовательный комплекс ГБПОУ СРМК «Быть воином — жить вечно»
+   ========================================================================== */
+
+/* 1. БЕГУЩАЯ ЛЕНТА ПАМЯТИ (LIVE TRIBUTES TICKER) */
+.memorial-tributes-ticker {
+  width: 100%;
+  background: rgba(14, 17, 23, 0.94);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.22);
+  color: #d8deea;
+  font-family: var(--font-sans, 'Montserrat', sans-serif);
+  font-size: 0.74rem;
+  overflow: hidden;
+  position: relative;
+  z-index: 900;
+  backdrop-filter: blur(10px);
+}
+
+.memorial-tributes-ticker .ticker-inner {
+  display: flex;
+  align-items: center;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 6px 16px;
+  gap: 12px;
+}
+
+.memorial-tributes-ticker .ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(197, 160, 89, 0.15);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  padding: 3px 8px;
+  border-radius: 3px;
+  color: #dfba6d;
+  font-weight: 700;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.memorial-tributes-ticker .ticker-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.memorial-tributes-ticker .ticker-marquee {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  white-space: nowrap;
+  animation: tickerScroll 55s linear infinite;
+}
+
+.memorial-tributes-ticker .ticker-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.memorial-tributes-ticker .ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.memorial-tributes-ticker .ticker-author {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.memorial-tributes-ticker .ticker-text {
+  color: #c9d1d9;
+}
+
+.memorial-tributes-ticker .ticker-hero-tag {
+  color: #c5a059;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.memorial-tributes-ticker .ticker-sep {
+  color: rgba(197, 160, 89, 0.4);
+  font-size: 0.65rem;
+}
+
+.memorial-tributes-ticker .ticker-action-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 3px;
+  background: rgba(138, 28, 34, 0.3);
+  border: 1px solid rgba(138, 28, 34, 0.6);
+  color: #ff9b9b;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.memorial-tributes-ticker .ticker-action-btn:hover {
+  background: rgba(138, 28, 34, 0.6);
+  color: #ffffff;
+}
+
+/* 2. SPOTLIGHT UNIVERSAL SEARCH (CTRL+K) */
+.spotlight-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 5, 8, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 10000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spotlight-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.spotlight-dialog {
+  width: 90%;
+  max-width: 640px;
+  max-height: 80vh;
+  background: #0f1218;
+  border: 1px solid rgba(197, 160, 89, 0.45);
+  border-radius: 10px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(197, 160, 89, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(-12px) scale(0.98);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spotlight-modal-overlay.active .spotlight-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.spotlight-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 12px;
+  background: #141820;
+}
+
+.spotlight-search-icon {
+  font-size: 1.2rem;
+  color: #c5a059;
+}
+
+.spotlight-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: var(--font-sans, 'Montserrat', sans-serif);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.spotlight-input::placeholder {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.spotlight-close-btn {
+  background: transparent;
+  border: none;
+  color: #9da6b3;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.spotlight-close-btn:hover {
+  color: #ffffff;
+}
+
+.spotlight-chips-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+  background: rgba(20, 24, 32, 0.5);
+}
+
+.spotlight-chip {
+  background: rgba(197, 160, 89, 0.1);
+  border: 1px solid rgba(197, 160, 89, 0.28);
+  color: #dfba6d;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.spotlight-chip:hover {
+  background: rgba(197, 160, 89, 0.25);
+  border-color: #c5a059;
+}
+
+.spotlight-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px;
+  max-height: 48vh;
+}
+
+.spotlight-group-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #c5a059;
+  padding: 8px 10px 4px;
+  margin-top: 4px;
+}
+
+.spotlight-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  gap: 12px;
+  transition: background 0.15s ease;
+}
+
+.spotlight-item:hover,
+.spotlight-item.selected {
+  background: rgba(197, 160, 89, 0.14);
+  outline: 1px solid rgba(197, 160, 89, 0.35);
+}
+
+.spotlight-item-icon {
+  font-size: 1.25rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.spotlight-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.spotlight-item-title {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spotlight-item-sub {
+  display: block;
+  font-size: 0.74rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spotlight-item-arrow {
+  color: #64748b;
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.spotlight-empty {
+  padding: 36px 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.spotlight-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background: #141820;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.spotlight-keys-help {
+  display: flex;
+  gap: 12px;
+}
+
+.spotlight-keys-help kbd {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #cbd5e1;
+  font-size: 0.68rem;
+  font-family: inherit;
+  margin-right: 3px;
+}
+
+.spotlight-footer-brand {
+  color: #c5a059;
+  font-weight: 700;
+}
+
+/* 3. МИНУТА МОЛЧАНИЯ (MEMORIAL CEREMONY) */
+.memorial-silence-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 5, 8, 0.96);
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.memorial-silence-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.silence-backdrop-aura {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(197, 160, 89, 0.18) 0%, rgba(138, 28, 34, 0.12) 40%, transparent 70%);
+  border-radius: 50%;
+  animation: auraPulse 4s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes auraPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 0.9; }
+}
+
+.silence-container {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 520px;
+  padding: 30px 24px;
+}
+
+.silence-close-btn {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.silence-close-btn:hover {
+  color: #ffffff;
+}
+
+.silence-flame-wrapper {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.silence-flame-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 180, 50, 0.6) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: flameFlicker 1.8s infinite ease-in-out;
+}
+
+.silence-flame-core {
+  font-size: 2.8rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 16px #ffaa22);
+  animation: flameBounce 1.2s infinite alternate ease-in-out;
+}
+
+.silence-flame-wrapper.flame-glorious .silence-flame-glow {
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.9) 0%, rgba(197, 160, 89, 0.4) 50%, transparent 75%);
+  animation: flameGloriousGlow 2s infinite ease-in-out;
+}
+
+@keyframes flameFlicker {
+  0%, 100% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes flameBounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
+
+@keyframes flameGloriousGlow {
+  0%, 100% { transform: scale(1.1); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 1; }
+}
+
+.silence-timer-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.silence-svg-ring {
+  position: absolute;
+  transform: rotate(-90deg);
+}
+
+.silence-svg-ring circle {
+  fill: none;
+  stroke-width: 6;
+}
+
+.silence-svg-ring .ring-bg {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+
+.silence-svg-ring .ring-fg {
+  stroke: #c5a059;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.8s linear;
+}
+
+.silence-timer-text {
+  font-family: var(--font-serif, 'Cinzel', Georgia, serif);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(197, 160, 89, 0.6);
+}
+
+.silence-title {
+  font-family: var(--font-serif, 'Cinzel', Georgia, serif);
+  font-size: 1.4rem;
+  color: #ffffff;
+  margin: 0 0 10px;
+  letter-spacing: 2px;
+}
+
+.silence-desc {
+  font-family: var(--font-sans, 'Montserrat', sans-serif);
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.silence-complete-btn {
+  background: linear-gradient(135deg, #c5a059 0%, #8a1c22 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-family: var(--font-sans, 'Montserrat', sans-serif);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(138, 28, 34, 0.4);
+  transition: all 0.2s ease;
+}
+
+.silence-complete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(138, 28, 34, 0.6);
+}
+
+/* 4. КНОПКА ПОИСКА В ШАПКЕ */
+.header-spotlight-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: var(--font-sans, 'Montserrat', sans-serif);
+  font-size: 0.74rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.header-spotlight-btn:hover {
+  background: rgba(197, 160, 89, 0.15);
+  border-color: #c5a059;
+  color: #ffffff;
+}
+
+.spotlight-btn-kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .header-spotlight-btn .spotlight-btn-text,
+  .header-spotlight-btn .spotlight-btn-kbd {
+    display: none;
+  }
+}
+
+/* 5. ЗВУКОВОЙ ТУМБЛЕР В ШАПКЕ */
+.header-sound-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-sound-btn:hover {
+  background: rgba(197, 160, 89, 0.2);
+  border-color: #c5a059;
+  color: #ffffff;
+}
+
+.header-sound-btn.muted {
+  opacity: 0.5;
+  filter: grayscale(1);
+}

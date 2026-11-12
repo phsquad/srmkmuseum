@@ -873,6 +873,11 @@ const AchievementsEngine = {
   },
 
   playFanfareSound() {
+    if (window.SoundEngine) {
+      if (!window.SoundEngine.isEnabled()) return;
+      window.SoundEngine.playAchievementChime();
+      return;
+    }
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return;
@@ -894,6 +899,11 @@ const AchievementsEngine = {
   },
 
   playCelebrationSound() {
+    if (window.SoundEngine) {
+      if (!window.SoundEngine.isEnabled()) return;
+      window.SoundEngine.playAchievementChime();
+      return;
+    }
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return;

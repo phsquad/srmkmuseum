@@ -768,7 +768,11 @@ const App = {
       this.updateMemorialStats();
       this.renderCardsGrid();
       this.renderMemorialPlaques();
-      this.playChimeSound(880, 0.35);
+      if (window.SoundEngine) {
+        window.SoundEngine.playCandleIgnite();
+      } else {
+        this.playChimeSound(880, 0.35);
+      }
     }
 
     if (type === 'flowers') {
@@ -784,7 +788,11 @@ const App = {
           if (this.dom.flowersDisplay) this.dom.flowersDisplay.textContent = counters.flowers;
         }
       }
-      this.playMemorialBellSynthesizer();
+      if (window.SoundEngine) {
+        window.SoundEngine.playBell(261.63, 2.8);
+      } else {
+        this.playMemorialBellSynthesizer();
+      }
 
       const flower = document.createElement('div');
       flower.className = 'floating-flower-anim';
@@ -934,6 +942,11 @@ const App = {
   },
 
   startMinuteOfSilence() {
+    if (window.MemorialCeremony && typeof window.MemorialCeremony.start === 'function') {
+      window.MemorialCeremony.start();
+      return;
+    }
+
     const overlay = document.getElementById('silenceOverlay');
     if (!overlay) return;
 
@@ -975,6 +988,15 @@ const App = {
   },
 
   stopMinuteOfSilence(isFinished = false) {
+    if (window.MemorialCeremony && window.MemorialCeremony.isActive) {
+      if (isFinished) {
+        window.MemorialCeremony.finish();
+      } else {
+        window.MemorialCeremony.cancel();
+      }
+      return;
+    }
+
     clearInterval(AppState.silenceTimer);
     AppState.silenceTimer = null;
     const overlay = document.getElementById('silenceOverlay');
@@ -1002,6 +1024,10 @@ const App = {
   },
 
   playMetronomeTick() {
+    if (window.SoundEngine) {
+      window.SoundEngine.playMetronomeTick();
+      return;
+    }
     try {
       const ctx = this.getAudioContext();
       if (!ctx) return;
@@ -1020,6 +1046,10 @@ const App = {
   },
 
   playBellChimeSound() {
+    if (window.SoundEngine) {
+      window.SoundEngine.playBell(196, 3.5);
+      return;
+    }
     try {
       const ctx = this.getAudioContext();
       if (!ctx) return;
