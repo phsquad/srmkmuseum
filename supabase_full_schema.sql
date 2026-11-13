@@ -242,6 +242,24 @@ CREATE POLICY "Public Upsert Metrics" ON public.museum_realtime_metrics FOR ALL 
 -- 5. ХРАНИМЫЕ ПРОЦЕДУРЫ И RPC-ФУНКЦИИ (ДЛЯ АТОМАРНЫХ ОПЕРАЦИЙ БЕЗ ГОНОК ДАННЫХ)
 -- ============================================================================
 
+-- Предварительное удаление старых функций (избежание ошибки 42P13 при смене имен параметров)
+DROP FUNCTION IF EXISTS public.increment_hero_candle(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS public.increment_hero_candle(VARCHAR) CASCADE;
+DROP FUNCTION IF EXISTS public.increment_candle(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS public.increment_candle(VARCHAR) CASCADE;
+DROP FUNCTION IF EXISTS public.increment_hero_flower(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS public.increment_hero_flower(VARCHAR) CASCADE;
+DROP FUNCTION IF EXISTS public.increment_flower(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS public.increment_flower(VARCHAR) CASCADE;
+DROP FUNCTION IF EXISTS public.toggle_tribute_flame(TEXT, INTEGER) CASCADE;
+DROP FUNCTION IF EXISTS public.toggle_tribute_flame(VARCHAR, INTEGER) CASCADE;
+DROP FUNCTION IF EXISTS public.submit_quiz_result(TEXT, TEXT, INTEGER, INTEGER, INTEGER, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS public.record_anonymous_hall_visit(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS public.record_anonymous_hall_visit(VARCHAR) CASCADE;
+DROP FUNCTION IF EXISTS public.update_hall_dwell_time(TEXT, INTEGER) CASCADE;
+DROP FUNCTION IF EXISTS public.sync_user_achievement_progress(TEXT, INTEGER, TEXT, TEXT, JSONB, JSONB) CASCADE;
+DROP FUNCTION IF EXISTS public.reset_all_memorial_counters_and_levels() CASCADE;
+
 -- 5.1. Атомарное зажжение поминальной свечи
 CREATE OR REPLACE FUNCTION public.increment_hero_candle(p_hero_id TEXT)
 RETURNS INTEGER
