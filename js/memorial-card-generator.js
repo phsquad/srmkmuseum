@@ -99,6 +99,7 @@
 
       modal.innerHTML = `
         <div class="card-dialog">
+          <div class="modal-swipe-bar" aria-hidden="true"></div>
           <div class="card-dialog-header">
             <h3>🖼 Мемориальная открытка памяти для соцсетей</h3>
             <button type="button" class="card-dialog-close" id="cardModalCloseBtn" aria-label="Закрыть">&times;</button>
@@ -211,8 +212,18 @@
       const width = isStory ? 1080 : 1080;
       const height = isStory ? 1920 : 1080;
 
-      canvas.width = width;
-      canvas.height = height;
+      // Учет Retina / OLED плотности пикселей (devicePixelRatio)
+      const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 3));
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = '100%';
+      canvas.style.maxWidth = `${isStory ? 340 : 460}px`;
+      canvas.style.aspectRatio = `${width} / ${height}`;
+
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
       // 1. Благородный темный гранитный фон
       const bgGrad = ctx.createRadialGradient(width / 2, height / 2, 80, width / 2, height / 2, height * 0.7);

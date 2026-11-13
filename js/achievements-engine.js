@@ -555,6 +555,7 @@ const AchievementsEngine = {
       modal.className = 'achievements-modal-overlay';
       modal.innerHTML = `
         <div class="achievements-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalRankHeaderTitle">
+          <div class="modal-swipe-bar" aria-hidden="true"></div>
           <div class="achieve-modal-header">
             <div style="display:flex; align-items:center; gap:12px;">
               <span style="font-size:1.8rem;">🏛</span>

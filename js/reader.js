@@ -22,6 +22,7 @@
 const ReaderEngine = {
   currentBook: null,
   currentSpreadIdx: 0,
+  mobileSubPage: 0, // 0 = левая (визуальная), 1 = правая (очерк)
   currentViewMode: 'folio', // 'folio' | 'telegram'
   fontScales: [0.85, 1.0, 1.15, 1.3],
   fontScaleLabels: ['85%', '100%', '115%', '130%'],
@@ -198,7 +199,7 @@ const ReaderEngine = {
                  onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); ReaderEngine.openBook('${hero.id}'); }">
           <div class="book-spine-vol">${volNum} • ${hero.plaque === 'left' ? 'Левая плита' : (hero.plaque === 'right' ? 'Правая плита' : 'ГБПОУ СРМК')}</div>
           <div class="book-spine-portrait">
-            <img src="${photoSrc}" alt="${this.escapeHtml(hero.name)}" onerror="this.src='assets/images/cover-master.jpg'">
+            <img src="${photoSrc}" alt="${this.escapeHtml(hero.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/cover-master.jpg'">
           </div>
           <h4 class="book-spine-title">${this.escapeHtml(hero.name)}</h4>
           <p class="book-spine-spec">${this.escapeHtml(specText)}</p>
@@ -243,7 +244,7 @@ const ReaderEngine = {
               chapterTitle: "Хроника ратного подвига",
               leftHtml: `
                 <div class="page-header-meta"><span>ГБПОУ СРМК</span><span>АРХИВНЫЙ МЕДАЛЬОН</span></div>
-                <div class="page-visual-frame"><img src="${photo}" alt="${this.escapeHtml(h.name)}" onerror="this.src='assets/images/cover-master.jpg'"></div>
+                <div class="page-visual-frame"><img src="${photo}" alt="${this.escapeHtml(h.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/cover-master.jpg'"></div>
                 <div class="page-quote-box">«${this.escapeHtml(h.quote || 'Верность воинскому долгу и памяти студенческого братства.')}»</div>
                 <div class="page-number-footer">Стр. 1</div>
               `,
@@ -418,15 +419,24 @@ const ReaderEngine = {
     }
   },
 
+  isMobile() {
+    return window.innerWidth <= 768;
+  },
+
   /**
    * 9. Отрисовка 3D Фолианта с интеграцией Rich-составляющих
+   * На ПК: 3D разворот из двух страниц (Page Left + Page Right)
+   * На мобильных (<= 768px): крупная одиночная страница с комфортным чтением и свайпом
    */
   renderSpread() {
     if (!this.currentBook || !this.currentBook.pages) return;
 
     const spread = this.currentBook.pages[this.currentSpreadIdx] || this.currentBook.pages[0];
+    const folioEl = document.getElementById('folioBookElement');
     const leftEl = document.getElementById('pageLeftContent');
     const rightEl = document.getElementById('pageRightContent');
+    const totalSpreads = this.currentBook.pages.length;
+    const isMob = this.isMobile();
 
     if (leftEl) {
       leftEl.innerHTML = this.enrichFolioHtml(spread.leftHtml, 'left');
@@ -435,14 +445,43 @@ const ReaderEngine = {
       rightEl.innerHTML = this.enrichFolioHtml(spread.rightHtml, 'right');
     }
 
+    if (folioEl) {
+      if (isMob) {
+        folioEl.classList.add('mobile-single-page');
+        if (this.mobileSubPage === 0) {
+          leftEl?.classList.add('mobile-active-page');
+          leftEl?.style.setProperty('display', 'flex', 'important');
+          rightEl?.classList.remove('mobile-active-page');
+          rightEl?.style.setProperty('display', 'none', 'important');
+        } else {
+          rightEl?.classList.add('mobile-active-page');
+          rightEl?.style.setProperty('display', 'flex', 'important');
+          leftEl?.classList.remove('mobile-active-page');
+          leftEl?.style.setProperty('display', 'none', 'important');
+        }
+      } else {
+        folioEl.classList.remove('mobile-single-page');
+        leftEl?.classList.remove('mobile-active-page');
+        leftEl?.style.removeProperty('display');
+        rightEl?.classList.remove('mobile-active-page');
+        rightEl?.style.removeProperty('display');
+      }
+    }
+
     leftEl?.scrollTo({ top: 0, behavior: 'instant' });
     rightEl?.scrollTo({ top: 0, behavior: 'instant' });
-    document.getElementById('folioBookElement')?.scrollTo({ top: 0, behavior: 'instant' });
+    folioEl?.scrollTo({ top: 0, behavior: 'instant' });
 
-    const total = this.currentBook.pages.length;
     const paginationEl = document.getElementById('paginationDisplay');
     if (paginationEl) {
-      paginationEl.textContent = `${spread.spreadNum || `Разворот ${this.currentSpreadIdx + 1}`} из ${total}`;
+      if (isMob) {
+        const pageNum = this.currentSpreadIdx * 2 + this.mobileSubPage + 1;
+        const totalPages = totalSpreads * 2;
+        const subLabel = this.mobileSubPage === 0 ? 'Иллюстрации и документы' : 'Летопись подвига';
+        paginationEl.innerHTML = `Стр. ${pageNum} из ${totalPages} · <span style="color:#dfba6d; font-weight:600;">${subLabel}</span>`;
+      } else {
+        paginationEl.textContent = `${spread.spreadNum || `Разворот ${this.currentSpreadIdx + 1}`} из ${totalSpreads}`;
+      }
     }
 
     const dotsTrack = document.getElementById('pageDotsTrack');
@@ -457,8 +496,15 @@ const ReaderEngine = {
 
     const prevBtn = document.getElementById('prevPageBtn');
     const nextBtn = document.getElementById('nextPageBtn');
-    if (prevBtn) prevBtn.style.visibility = this.currentSpreadIdx > 0 ? 'visible' : 'hidden';
-    if (nextBtn) nextBtn.style.visibility = this.currentSpreadIdx < total - 1 ? 'visible' : 'hidden';
+    if (isMob) {
+      const hasPrev = this.currentSpreadIdx > 0 || this.mobileSubPage > 0;
+      const hasNext = this.currentSpreadIdx < totalSpreads - 1 || this.mobileSubPage < 1;
+      if (prevBtn) prevBtn.style.visibility = hasPrev ? 'visible' : 'hidden';
+      if (nextBtn) nextBtn.style.visibility = hasNext ? 'visible' : 'hidden';
+    } else {
+      if (prevBtn) prevBtn.style.visibility = this.currentSpreadIdx > 0 ? 'visible' : 'hidden';
+      if (nextBtn) nextBtn.style.visibility = this.currentSpreadIdx < totalSpreads - 1 ? 'visible' : 'hidden';
+    }
 
     this.updateReadingProgress();
   },
@@ -474,7 +520,7 @@ const ReaderEngine = {
     enriched = enriched.replace(
       /<div class="page-visual-frame"><img src="([^"]+)" alt="([^"]+)"([^>]*)><\/div>/g,
       `<div class="page-visual-frame" role="button" tabindex="0" title="Нажмите для увеличения фотографии" onclick="ReaderEngine.openLightbox('$1', '$2')">
-         <img src="$1" alt="$2"$3>
+         <img src="$1" alt="$2" loading="lazy" decoding="async"$3>
        </div>`
     );
 
@@ -504,7 +550,7 @@ const ReaderEngine = {
     const channelHeader = `
       <div class="tg-feed-hero-header">
         <div class="tg-channel-avatar">
-          <img src="${photo}" alt="${this.escapeHtml(b.name)}" onerror="this.src='assets/images/cover-master.jpg'">
+          <img src="${photo}" alt="${this.escapeHtml(b.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/cover-master.jpg'">
         </div>
         <div>
           <div class="tg-channel-title">${this.escapeHtml(b.name)}</div>
@@ -521,7 +567,7 @@ const ReaderEngine = {
           <span>Переслано из: Архивно-мемориальный отдел ГБПОУ СРМК · Центральный архив МО РФ</span>
         </div>
         <div class="tg-photo-card" onclick="ReaderEngine.openLightbox('${photo}', '${this.escapeHtml(b.name)}')">
-          <img src="${photo}" alt="${this.escapeHtml(b.name)}" onerror="this.src='assets/images/cover-master.jpg'">
+          <img src="${photo}" alt="${this.escapeHtml(b.name)}" loading="lazy" decoding="async" onerror="this.src='assets/images/cover-master.jpg'">
           <span class="tg-photo-zoom-hint">🔍 Нажмите для зума</span>
         </div>
 
@@ -927,25 +973,55 @@ const ReaderEngine = {
 
   nextPage() {
     if (!this.currentBook || !this.currentBook.pages) return;
-    if (this.currentSpreadIdx < this.currentBook.pages.length - 1) {
-      this.currentSpreadIdx++;
-      this.playPageTurnSound();
-      this.renderSpread();
+    const totalSpreads = this.currentBook.pages.length;
+
+    if (this.isMobile()) {
+      if (this.mobileSubPage === 0) {
+        this.mobileSubPage = 1;
+        this.playPageTurnSound();
+        this.renderSpread();
+      } else if (this.currentSpreadIdx < totalSpreads - 1) {
+        this.currentSpreadIdx++;
+        this.mobileSubPage = 0;
+        this.playPageTurnSound();
+        this.renderSpread();
+      }
+    } else {
+      if (this.currentSpreadIdx < totalSpreads - 1) {
+        this.currentSpreadIdx++;
+        this.playPageTurnSound();
+        this.renderSpread();
+      }
     }
   },
 
   prevPage() {
     if (!this.currentBook || !this.currentBook.pages) return;
-    if (this.currentSpreadIdx > 0) {
-      this.currentSpreadIdx--;
-      this.playPageTurnSound();
-      this.renderSpread();
+
+    if (this.isMobile()) {
+      if (this.mobileSubPage === 1) {
+        this.mobileSubPage = 0;
+        this.playPageTurnSound();
+        this.renderSpread();
+      } else if (this.currentSpreadIdx > 0) {
+        this.currentSpreadIdx--;
+        this.mobileSubPage = 1;
+        this.playPageTurnSound();
+        this.renderSpread();
+      }
+    } else {
+      if (this.currentSpreadIdx > 0) {
+        this.currentSpreadIdx--;
+        this.playPageTurnSound();
+        this.renderSpread();
+      }
     }
   },
 
   goToSpread(idx) {
     if (!this.currentBook || !this.currentBook.pages) return;
     this.currentSpreadIdx = idx;
+    this.mobileSubPage = 0;
     this.playPageTurnSound();
     this.renderSpread();
   },
@@ -998,18 +1074,36 @@ const ReaderEngine = {
       }
     });
 
+    window.addEventListener('resize', () => {
+      clearTimeout(this._resizeTimer);
+      this._resizeTimer = setTimeout(() => {
+        if (this.currentBook && this.currentViewMode === 'folio') {
+          this.renderSpread();
+        }
+      }, 150);
+    });
+
     let touchStartX = 0;
+    let touchStartY = 0;
     const stage = document.querySelector('.book-stage-wrapper');
     if (stage) {
       stage.addEventListener('touchstart', e => {
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
         touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
       }, { passive: true });
 
       stage.addEventListener('touchend', e => {
         if (this.currentViewMode !== 'folio') return;
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
         const deltaX = e.changedTouches[0].screenX - touchStartX;
-        if (deltaX < -60) this.nextPage();
-        if (deltaX > 60) this.prevPage();
+        const deltaY = e.changedTouches[0].screenY - touchStartY;
+
+        // Плавный свайп влево/вправо для перелистывания страниц на мобильных
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.1) {
+          if (deltaX < 0) this.nextPage();
+          else this.prevPage();
+        }
       }, { passive: true });
     }
   },

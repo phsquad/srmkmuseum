@@ -35,9 +35,14 @@ const TechModules = {
     }
 
     const canvas = document.createElement('canvas');
-    canvas.width = 1080;
-    canvas.height = 1080;
+    const baseSize = 1080;
+    const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 3));
+    canvas.width = Math.round(baseSize * dpr);
+    canvas.height = Math.round(baseSize * dpr);
     const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     // Гранитно-обсидиановый градиент фона
     const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);

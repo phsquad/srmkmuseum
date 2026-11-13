@@ -55,6 +55,9 @@
       // 11. Подсветка активной страницы
       this.highlightActivePage();
 
+      // 12. Мобильная эргономика: свайп-закрытие и сенсорная прокрутка
+      this.initUniversalMobileModalGestures();
+
       console.log("[NavigationEngine v7.0 Master] Навигация и единый паспорт музея активны.");
     },
 
@@ -92,6 +95,7 @@
       modal.innerHTML = `
         <div class="modal-overlay" id="passportOverlay"></div>
         <div class="modal-dialog passport-dialog" style="max-width: 780px; position:relative; z-index:2; background:#12151c; border:1px solid rgba(197, 160, 89, 0.35); padding:34px 28px; border-radius:4px; box-shadow:0 20px 50px rgba(0,0,0,0.95);">
+          <div class="modal-swipe-bar" aria-hidden="true"></div>
           <button class="modal-close" id="passportCloseBtn" type="button" aria-label="Закрыть паспорт">&times;</button>
           
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
@@ -1118,6 +1122,153 @@
 
       setTimeout(updateSoundIcon, 200);
       window.addEventListener('srmk-sound-toggle', updateSoundIcon);
+    },
+
+    /**
+     * ========================================================================
+     * 12. УНИВЕРСАЛЬНАЯ МОБИЛЬНАЯ ЭРГОНОМИКА: СВАЙП ВНИЗ ДЛЯ ЗАКРЫТИЯ МОДАЛОК
+     * ========================================================================
+     */
+    initUniversalMobileModalGestures() {
+      const modalSelectors = [
+        '#passportModal',
+        '#achievementsModal',
+        '#heroModal',
+        '#gbModal',
+        '#memorialCardModal',
+        '#spotlightSearchModal',
+        '#readerModal',
+        '#lessonReportModal',
+        '.passport-modal-wrapper',
+        '.achievements-modal-overlay',
+        '.memorial-card-modal',
+        '.gb-modal',
+        '.modal',
+        '.reader-modal'
+      ];
+
+      const closeSpecificModal = (modalEl) => {
+        if (!modalEl) return;
+        const id = modalEl.id;
+
+        if (id === 'passportModal') {
+          this.closePassportModal();
+        } else if (id === 'achievementsModal' && window.AchievementsEngine) {
+          window.AchievementsEngine.closeModal();
+        } else if (id === 'heroModal' && window.App && typeof window.App.closeModal === 'function') {
+          window.App.closeModal();
+        } else if (id === 'gbModal' && window.GuestbookEngine && typeof window.GuestbookEngine.closeModal === 'function') {
+          window.GuestbookEngine.closeModal();
+        } else if (id === 'memorialCardModal' && window.MemorialCardGenerator && typeof window.MemorialCardGenerator.closeModal === 'function') {
+          window.MemorialCardGenerator.closeModal();
+        } else if (id === 'spotlightSearchModal' && window.SpotlightSearch && typeof window.SpotlightSearch.close === 'function') {
+          window.SpotlightSearch.close();
+        } else if (id === 'lessonReportModal' && window.App && typeof window.App.closeLessonReportModal === 'function') {
+          window.App.closeLessonReportModal();
+        } else {
+          const closeBtn = modalEl.querySelector('.modal-close, .modal-close-btn, .achieve-modal-close, .card-dialog-close, .spotlight-close-btn, [data-modal-close]');
+          if (closeBtn) closeBtn.click();
+          else modalEl.classList.remove('active', 'open');
+        }
+      };
+
+      let startX = 0;
+      let startY = 0;
+      let currentY = 0;
+      let isDragging = false;
+      let activeDialog = null;
+      let activeModal = null;
+      let initialScrollTop = 0;
+
+      const getActiveDialog = (target) => {
+        const dialog = target.closest(
+          '.passport-dialog, .achievements-modal-dialog, .modal-dialog, .card-dialog, .modal-content, .spotlight-dialog, .reader-dialog, .report-modal-content'
+        );
+        if (!dialog) return null;
+        const modal = dialog.closest(modalSelectors.join(', '));
+        if (!modal || (!modal.classList.contains('active') && !modal.classList.contains('open'))) return null;
+        return { dialog, modal };
+      };
+
+      const ensureSwipeBars = () => {
+        document.querySelectorAll(
+          '.passport-dialog, .achievements-modal-dialog, .modal-dialog, .card-dialog, .modal-content, .spotlight-dialog, .report-modal-content'
+        ).forEach(d => {
+          if (!d.querySelector('.modal-swipe-bar')) {
+            const bar = document.createElement('div');
+            bar.className = 'modal-swipe-bar';
+            bar.setAttribute('aria-hidden', 'true');
+            d.insertBefore(bar, d.firstChild);
+          }
+        });
+      };
+
+      ensureSwipeBars();
+      try {
+        const obs = new MutationObserver(ensureSwipeBars);
+        obs.observe(document.body, { childList: true, subtree: true });
+      } catch (e) {}
+
+      document.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length !== 1) return;
+        const found = getActiveDialog(e.target);
+        if (!found) return;
+
+        activeDialog = found.dialog;
+        activeModal = found.modal;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentY = startY;
+        initialScrollTop = activeDialog.scrollTop || (activeModal.scrollTop || 0);
+        isDragging = false;
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!activeDialog || !activeModal) return;
+        currentY = e.touches[0].clientY;
+        const deltaX = e.touches[0].clientX - startX;
+        const deltaY = currentY - startY;
+
+        if (initialScrollTop <= 3 && deltaY > 8 && Math.abs(deltaY) > Math.abs(deltaX) * 1.1) {
+          isDragging = true;
+          const pullDown = Math.min(deltaY * 0.75, 240);
+          activeDialog.style.transition = 'none';
+          activeDialog.style.transform = `translateY(${pullDown}px) scale(${1 - pullDown * 0.0003})`;
+          activeDialog.style.opacity = `${Math.max(0.35, 1 - pullDown / 300)}`;
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchend', () => {
+        if (!activeDialog || !activeModal) return;
+
+        if (isDragging) {
+          const deltaY = currentY - startY;
+          if (deltaY > 80) {
+            activeDialog.style.transition = 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease';
+            activeDialog.style.transform = 'translateY(100vh) scale(0.9)';
+            activeDialog.style.opacity = '0';
+
+            const toClose = activeModal;
+            const toReset = activeDialog;
+            setTimeout(() => {
+              if (toReset) {
+                toReset.style.transition = '';
+                toReset.style.transform = '';
+                toReset.style.opacity = '';
+              }
+              closeSpecificModal(toClose);
+            }, 200);
+          } else {
+            activeDialog.style.transition = 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease';
+            activeDialog.style.transform = '';
+            activeDialog.style.opacity = '';
+          }
+        }
+
+        activeDialog = null;
+        activeModal = null;
+        isDragging = false;
+      }, { passive: true });
     }
   };
 

@@ -452,7 +452,7 @@ const App = {
           <div style="display:flex; gap:6px; margin-top:8px; align-items:center; flex-wrap:wrap;">
             ${hero.awards.map(a => {
               const visual = (typeof ArchiveService !== 'undefined') ? ArchiveService.getAwardVisual(a) : { badge: fallbackAvatar, name: a };
-              return `<img src="${visual.badge}" alt="${this.escapeHtml(visual.name)}" title="${this.escapeHtml(visual.name)}" style="width:26px; height:26px; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">`;
+              return `<img src="${visual.badge}" alt="${this.escapeHtml(visual.name)}" title="${this.escapeHtml(visual.name)}" loading="lazy" decoding="async" style="width:26px; height:26px; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">`;
             }).join('')}
           </div>
         `;
@@ -465,7 +465,7 @@ const App = {
       
       card.innerHTML = `
         <div class="hero-card-img-wrap">
-          <img src="${photoSrc}" alt="${this.escapeHtml(hero.name)}" class="hero-card-img" loading="lazy" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
+          <img src="${photoSrc}" alt="${this.escapeHtml(hero.name)}" class="hero-card-img" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
           <span class="hero-card-badge">СВО</span>
           ${candleCount > 0 ? `<span class="hero-candle-badge" title="Зажжено свечей памяти">🕯 ${candleCount}</span>` : ''}
         </div>
@@ -531,13 +531,13 @@ const App = {
 
       return `
         <div class="award-card-item" style="display:flex; align-items:center; gap:14px; padding:12px 16px; margin-bottom:10px; background:#181d26; border:1px solid rgba(197,160,89,0.35); border-radius:4px; box-shadow:0 4px 14px rgba(0,0,0,0.5);">
-          <img src="${visual.badge}" alt="${this.escapeHtml(visual.name)}" style="width:44px; height:44px; object-fit:contain; flex-shrink:0; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6));">
+          <img src="${visual.badge}" alt="${this.escapeHtml(visual.name)}" loading="lazy" decoding="async" style="width:44px; height:44px; object-fit:contain; flex-shrink:0; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6));">
           <div style="flex-grow:1;">
             <strong style="display:block; color:#ffffff; font-size:0.92rem; font-family:'Cinzel', serif; line-height:1.25;">${this.escapeHtml(visual.name)}</strong>
             <span style="display:block; color:#c5a059; font-size:0.76rem; margin-top:2px;">${this.escapeHtml(visual.established || 'Государственная награда РФ')}</span>
             <small style="display:block; color:#9da6b3; font-size:0.75rem; margin-top:4px; line-height:1.35;">${this.escapeHtml(visual.criteria || 'За мужество и отвагу при исполнении воинского долга.')}</small>
           </div>
-          ${visual.ribbon && visual.ribbon !== visual.badge ? `<img src="${visual.ribbon}" alt="Планка" style="width:54px; height:18px; object-fit:contain; border-radius:2px; border:1px solid rgba(255,255,255,0.2);" title="Орденская планка">` : ''}
+          ${visual.ribbon && visual.ribbon !== visual.badge ? `<img src="${visual.ribbon}" alt="Планка" loading="lazy" decoding="async" style="width:54px; height:18px; object-fit:contain; border-radius:2px; border:1px solid rgba(255,255,255,0.2);" title="Орденская планка">` : ''}
         </div>
       `;
     }).join('');
@@ -558,7 +558,7 @@ const App = {
         <!-- ЛЕВАЯ КОЛОНКА: ФОТО, ГАЛЕРЕЯ И ДЕЙСТВИЯ -->
         <div class="dossier-sidebar">
           <div class="dossier-gallery-main">
-            <img src="${mainPhoto}" alt="${this.escapeHtml(hero.name)}" id="dossierMainImage" class="dossier-img" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
+            <img src="${mainPhoto}" alt="${this.escapeHtml(hero.name)}" id="dossierMainImage" class="dossier-img" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
             <div class="dossier-gallery-caption" id="dossierImageCaption">
               <strong>${this.escapeHtml(galleryItems[0].caption || '')}</strong>
               ${galleryItems[0].desc ? `<br><small style="opacity:0.8;">${this.escapeHtml(galleryItems[0].desc)}</small>` : ''}
@@ -572,7 +572,7 @@ const App = {
                       onclick="App.switchGalleryPhoto('${item.url}', '${item.caption.replace(/'/g, "\\'")}', '${(item.desc || '').replace(/'/g, "\\'")}', this)" 
                       type="button" 
                       title="${this.escapeHtml(item.caption)}">
-                <img src="${item.url}" alt="" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
+                <img src="${item.url}" alt="" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
               </button>
             `).join('')}
           </div>
@@ -1423,7 +1423,7 @@ const App = {
 
     card.innerHTML = `
       <div class="spotlight-avatar-wrap">
-        <img src="${photo}" alt="${this.escapeHtml(hero.name)}" class="spotlight-avatar" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
+        <img src="${photo}" alt="${this.escapeHtml(hero.name)}" class="spotlight-avatar" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
       </div>
       <div class="spotlight-info">
         <div class="spotlight-kicker" style="display:flex; justify-content:space-between; align-items:center;">
