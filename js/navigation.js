@@ -368,15 +368,63 @@
 
     /**
      * ========================================================================
-     * 5. НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ (BOTTOM APP TAB BAR НА MOBILE.HTML)
+     * 5. ЕДИНАЯ НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ (UNIVERSAL BOTTOM APP TAB BAR)
      * ========================================================================
      */
     initBottomTabBar() {
-      const tabs = document.querySelectorAll('.bottom-app-bar .app-tab');
-      if (tabs.length === 0) return;
+      let bar = document.querySelector('.bottom-app-bar');
+      const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+      const isMobileMain = currentPath === 'mobile.html' || currentPath === 'index.html' || currentPath === '';
+      const isBook = currentPath === 'memory-book.html' || currentPath === 'reader.html';
+      const isQuiz = currentPath === 'quiz.html';
+      const isCert = currentPath === 'certificate.html' || currentPath === 'verify.html';
 
+      // Если панель еще не создана в статическом HTML (на десктопных страницах), создаем динамически
+      if (!bar) {
+        bar = document.createElement('nav');
+        bar.className = 'bottom-app-bar';
+        bar.setAttribute('aria-label', 'Нижнее меню приложения');
+        bar.innerHTML = `
+          <a href="mobile.html#memorial" class="app-tab ${isMobileMain ? 'active' : ''}" data-tab="memorial">
+            <span class="app-tab-icon">🏛</span>
+            <span>Мемориал</span>
+          </a>
+          <a href="memory-book.html" class="app-tab ${isBook ? 'active' : ''}" data-tab="book">
+            <span class="app-tab-icon">📖</span>
+            <span>Книга</span>
+          </a>
+          <a href="quiz.html" class="app-tab ${isQuiz ? 'active' : ''}" data-tab="quiz">
+            <span class="app-tab-icon">⚔️</span>
+            <span>Квест</span>
+          </a>
+          <a href="certificate.html" class="app-tab ${isCert ? 'active' : ''}" data-tab="cert">
+            <span class="app-tab-icon">📜</span>
+            <span>Грамота</span>
+          </a>
+          <button type="button" class="app-tab" data-tab="rank" id="tabUniversalOpenAchievements" title="Наградная палата">
+            <span class="app-tab-icon">🎖️</span>
+            <span>Награды</span>
+          </button>
+        `;
+        document.body.appendChild(bar);
+      }
+
+      // Слушатель для кнопки наград в таб-баре
+      const rankTabBtn = bar.querySelector('#tabUniversalOpenAchievements, [data-tab="rank"]');
+      if (rankTabBtn) {
+        rankTabBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (navigator.vibrate) try { navigator.vibrate(15); } catch(err){}
+          if (window.AchievementsEngine) {
+            window.AchievementsEngine.openModal();
+          }
+        });
+      }
+
+      const tabs = bar.querySelectorAll('.app-tab');
       tabs.forEach(tab => {
         tab.addEventListener('click', (e) => {
+          if (navigator.vibrate) try { navigator.vibrate(12); } catch(err){}
           const href = tab.getAttribute('href');
           if (href && href.startsWith('#')) {
             e.preventDefault();
@@ -392,7 +440,7 @@
         });
       });
 
-      if ('IntersectionObserver' in window) {
+      if ('IntersectionObserver' in window && isMobileMain) {
         const sections = document.querySelectorAll('section[id]');
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
@@ -1072,5 +1120,9 @@
   };
 
   window.NavigationEngine = NavigationEngine;
-  document.addEventListener('DOMContentLoaded', () => NavigationEngine.init());
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => NavigationEngine.init());
+  } else {
+    NavigationEngine.init();
+  }
 })();

@@ -103,4 +103,8 @@ const MemorialToast = {
 window.MemorialToast = MemorialToast;
 window.showToast = (msg, type, dur) => MemorialToast.show(msg, type, dur);
 
-document.addEventListener('DOMContentLoaded', () => MemorialToast.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => MemorialToast.init());
+} else {
+  MemorialToast.init();
+}

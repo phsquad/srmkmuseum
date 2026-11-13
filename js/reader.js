@@ -1031,4 +1031,8 @@ const ReaderEngine = {
 };
 
 window.ReaderEngine = ReaderEngine;
-document.addEventListener('DOMContentLoaded', () => ReaderEngine.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => ReaderEngine.init());
+} else {
+  ReaderEngine.init();
+}

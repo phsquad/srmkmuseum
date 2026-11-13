@@ -237,4 +237,9 @@ const DeskQREngine = {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => DeskQREngine.init());
+window.DeskQREngine = DeskQREngine;
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => DeskQREngine.init());
+} else {
+  DeskQREngine.init();
+}

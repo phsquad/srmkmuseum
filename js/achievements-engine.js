@@ -1291,4 +1291,8 @@ const AchievementsEngine = {
 };
 
 window.AchievementsEngine = AchievementsEngine;
-document.addEventListener('DOMContentLoaded', () => AchievementsEngine.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => AchievementsEngine.init());
+} else {
+  AchievementsEngine.init();
+}

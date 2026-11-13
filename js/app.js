@@ -72,9 +72,11 @@ const FALLBACK_HERO_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org
 /**
  * 2. ТОЧКА ВХОДА И ИНИЦИАЛИЗАЦИЯ
  */
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => App.init());
+} else {
   App.init();
-});
+}
 
 const App = {
   init() {

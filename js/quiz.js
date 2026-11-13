@@ -1152,4 +1152,9 @@ const QuizEngine = {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => QuizEngine.init());
+window.QuizEngine = QuizEngine;
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => QuizEngine.init());
+} else {
+  QuizEngine.init();
+}

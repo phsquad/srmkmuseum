@@ -975,4 +975,9 @@ const MemoryBookApp = {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => MemoryBookApp.init());
+window.MemoryBookApp = MemoryBookApp;
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => MemoryBookApp.init());
+} else {
+  MemoryBookApp.init();
+}

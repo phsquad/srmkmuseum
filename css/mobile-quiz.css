@@ -5,6 +5,14 @@
    ========================================================================== */
 @media (max-width: 768px) {
 
+  .quiz-screen {
+    max-width: 100% !important;
+    padding: 0 8px !important;
+    margin: 12px auto 70px !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
   .quiz-header {
     padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
   }
@@ -14,11 +22,34 @@
   }
 
   .quiz-main-wrapper {
-    padding: 20px 12px calc(40px + env(safe-area-inset-bottom, 0px));
+    padding: 16px 8px calc(40px + env(safe-area-inset-bottom, 0px));
   }
 
-  .quiz-card {
-    padding: 20px 16px;
+  .quiz-card, .question-card, .result-card {
+    padding: 18px 12px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .quiz-modes-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .quiz-diff-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .quiz-mode-btn,
+  .quiz-diff-btn {
+    padding: 12px 14px !important;
+  }
+
+  .leaderboard-table-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-width: 100% !important;
   }
 
   .quest-title {

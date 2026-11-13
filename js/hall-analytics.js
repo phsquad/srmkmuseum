@@ -1179,6 +1179,8 @@ const HallAnalytics = {
 window.HallAnalytics = HallAnalytics;
 
 // Автозапуск при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => HallAnalytics.init());
+} else {
   HallAnalytics.init();
-});
+}

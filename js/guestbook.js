@@ -649,4 +649,8 @@ const GuestbookEngine = {
 };
 
 window.GuestbookEngine = GuestbookEngine;
-document.addEventListener('DOMContentLoaded', () => GuestbookEngine.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => GuestbookEngine.init());
+} else {
+  GuestbookEngine.init();
+}

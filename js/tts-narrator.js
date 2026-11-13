@@ -164,4 +164,8 @@ const TTSNarrator = {
 };
 
 window.TTSNarrator = TTSNarrator;
-document.addEventListener('DOMContentLoaded', () => TTSNarrator.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => TTSNarrator.init());
+} else {
+  TTSNarrator.init();
+}

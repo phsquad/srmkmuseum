@@ -868,7 +868,9 @@
   }
 
   .site-header #btnOpenSpotlight,
-  .site-header .header-spotlight-btn {
+  .site-header .header-spotlight-btn,
+  .site-header #btnToggleSound,
+  .site-header .header-sound-btn {
     display: none !important;
   }
 

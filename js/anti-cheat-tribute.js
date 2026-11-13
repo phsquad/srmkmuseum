@@ -424,4 +424,8 @@ const TributeSecurity = {
 window.TributeSecurity = TributeSecurity;
 window.AntiCheatShield = TributeSecurity;
 
-document.addEventListener('DOMContentLoaded', () => TributeSecurity.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => TributeSecurity.init());
+} else {
+  TributeSecurity.init();
+}

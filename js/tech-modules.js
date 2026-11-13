@@ -252,4 +252,8 @@ const TechModules = {
 };
 
 window.TechModules = TechModules;
-document.addEventListener('DOMContentLoaded', () => TechModules.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => TechModules.init());
+} else {
+  TechModules.init();
+}

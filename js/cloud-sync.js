@@ -532,6 +532,43 @@ const CloudSync = {
     }
   },
 
+  normalizeTribute(row) {
+    if (!row) return null;
+    return {
+      id: row.id,
+      author: row.author || 'Посетитель',
+      role: row.role || 'guest',
+      role_label: row.role_label || 'Посетитель',
+      dedication_id: row.dedication_id || 'general',
+      dedication_name: row.dedication_name || 'Всем героям колледжа',
+      message: row.message || '',
+      theme: row.theme || 'theme-parchment',
+      date: row.date || (row.created_at ? new Date(row.created_at).toLocaleDateString('ru-RU') : ''),
+      flames: row.flames || 0,
+      is_pinned: Boolean(row.is_pinned),
+      is_verified: Boolean(row.is_verified),
+      created_at: row.created_at
+    };
+  },
+
+  serializeTribute(t) {
+    return {
+      id: t.id || ('tr-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7)),
+      author: t.author || t.author_name || 'Гость мемориала',
+      role: t.role || 'guest',
+      role_label: t.role_label || t.roleLabel || 'Посетитель',
+      dedication_id: t.dedication_id || t.dedicationId || t.hero_id || 'general',
+      dedication_name: t.dedication_name || t.dedicationName || 'Памяти всех 20 героев СРМК',
+      message: (t.message || '').slice(0, 2500),
+      theme: t.theme || 'theme-parchment',
+      date: t.date || new Date().toLocaleDateString('ru-RU'),
+      flames: typeof t.flames === 'number' ? t.flames : 1,
+      is_pinned: Boolean(t.is_pinned),
+      is_verified: Boolean(t.is_verified),
+      visit_id: t.visit_id || t.visitId || null
+    };
+  },
+
   async sendTribute(tributeObj) {
     if (!this.isLive || !this.client) return false;
     try {
@@ -1188,7 +1225,11 @@ const CloudSync = {
 };
 
 window.CloudSync = CloudSync;
-document.addEventListener('DOMContentLoaded', () => CloudSync.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => CloudSync.init());
+} else {
+  CloudSync.init();
+}
 window.addEventListener('online', () => CloudSync.reconnect());
 window.addEventListener('srmk-config-updated', () => {
   console.log('[CloudSync] Настройки Supabase обновлены, переподключение...');

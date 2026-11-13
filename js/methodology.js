@@ -460,4 +460,8 @@ const Methodology = {
 };
 
 window.Methodology = Methodology;
-document.addEventListener('DOMContentLoaded', () => Methodology.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => Methodology.init());
+} else {
+  Methodology.init();
+}

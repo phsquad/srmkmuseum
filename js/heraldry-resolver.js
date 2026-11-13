@@ -275,4 +275,8 @@ const HeraldryResolver = {
 };
 
 window.HeraldryResolver = HeraldryResolver;
-document.addEventListener('DOMContentLoaded', () => HeraldryResolver.init());
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => HeraldryResolver.init());
+} else {
+  HeraldryResolver.init();
+}
