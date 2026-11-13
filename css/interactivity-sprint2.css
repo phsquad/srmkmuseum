@@ -115,21 +115,22 @@
   color: #ffffff;
 }
 
-/* 2. SPOTLIGHT UNIVERSAL SEARCH (CTRL+K) */
+/* 2. SPOTLIGHT UNIVERSAL SEARCH (CTRL+K / CMD+K) */
 .spotlight-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 5, 8, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: radial-gradient(circle at 50% 25%, rgba(18, 22, 34, 0.88), rgba(4, 6, 10, 0.95));
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   z-index: 10000;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 10vh;
+  padding-top: 7vh;
+  padding-bottom: 3vh;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .spotlight-modal-overlay.active {
@@ -138,36 +139,75 @@
 }
 
 .spotlight-dialog {
-  width: 90%;
-  max-width: 640px;
-  max-height: 80vh;
-  background: #0f1218;
-  border: 1px solid rgba(197, 160, 89, 0.45);
-  border-radius: 10px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(197, 160, 89, 0.15);
+  width: 92%;
+  max-width: 720px;
+  max-height: 82vh;
+  background: rgba(13, 17, 25, 0.97) !important;
+  border: 1px solid rgba(212, 160, 23, 0.38) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.94), 
+              0 0 50px rgba(212, 160, 23, 0.14),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  transform: translateY(-12px) scale(0.98);
-  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: relative;
+  transform: translateY(-16px) scale(0.97);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 
 .spotlight-modal-overlay.active .spotlight-dialog {
   transform: translateY(0) scale(1);
 }
 
+/* Декоративная золотая нить по верхнему срезу */
+.spotlight-top-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.7), #ffe28a, rgba(212, 160, 23, 0.7), transparent);
+  z-index: 10;
+}
+
+/* Шапка поиска */
 .spotlight-header {
   display: flex;
   align-items: center;
-  padding: 14px 18px;
+  padding: 16px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  gap: 12px;
-  background: #141820;
+  gap: 14px;
+  background: linear-gradient(180deg, rgba(22, 28, 42, 0.92) 0%, rgba(15, 20, 29, 0.92) 100%);
+  position: relative;
 }
 
-.spotlight-search-icon {
-  font-size: 1.2rem;
-  color: #c5a059;
+.spotlight-search-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(212, 160, 23, 0.12);
+  border: 1px solid rgba(212, 160, 23, 0.32);
+  color: #dfba6d;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.spotlight-dialog:focus-within .spotlight-search-icon-box {
+  background: rgba(212, 160, 23, 0.22);
+  border-color: #dfba6d;
+  box-shadow: 0 0 16px rgba(212, 160, 23, 0.35);
+  color: #ffe28a;
+}
+
+.spotlight-search-svg {
+  width: 19px;
+  height: 19px;
 }
 
 .spotlight-input {
@@ -177,169 +217,563 @@
   outline: none;
   color: #ffffff;
   font-family: var(--font-sans, 'Montserrat', sans-serif);
-  font-size: 1rem;
+  font-size: 1.02rem;
   font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 .spotlight-input::placeholder {
   color: #64748b;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.spotlight-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spotlight-kbd-badge kbd {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 0.68rem;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .spotlight-close-btn {
-  background: transparent;
-  border: none;
-  color: #9da6b3;
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #94a3b8;
   cursor: pointer;
-  line-height: 1;
-  padding: 0 4px;
+  transition: all 0.18s ease;
 }
 
 .spotlight-close-btn:hover {
-  color: #ffffff;
+  background: rgba(225, 29, 72, 0.16);
+  border-color: rgba(225, 29, 72, 0.45);
+  color: #f43f5e;
+  transform: rotate(90deg);
+}
+
+/* Фильтры-чипсы с горизонтальным скроллом */
+.spotlight-chips-container {
+  padding: 10px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(10, 13, 19, 0.7);
+  overflow: hidden;
 }
 
 .spotlight-chips-row {
   display: flex;
   gap: 8px;
-  padding: 10px 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   overflow-x: auto;
-  background: rgba(20, 24, 32, 0.5);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 2px;
+}
+
+.spotlight-chips-row::-webkit-scrollbar {
+  display: none;
 }
 
 .spotlight-chip {
-  background: rgba(197, 160, 89, 0.1);
-  border: 1px solid rgba(197, 160, 89, 0.28);
-  color: #dfba6d;
-  padding: 4px 10px;
-  border-radius: 14px;
-  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.76rem;
   font-weight: 600;
+  font-family: var(--font-sans, 'Montserrat', sans-serif);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .spotlight-chip:hover {
-  background: rgba(197, 160, 89, 0.25);
-  border-color: #c5a059;
+  background: rgba(212, 160, 23, 0.14);
+  border-color: rgba(212, 160, 23, 0.35);
+  color: #dfba6d;
+  transform: translateY(-1px);
 }
 
+.spotlight-chip.active {
+  background: linear-gradient(135deg, rgba(212, 160, 23, 0.28) 0%, rgba(180, 130, 20, 0.2) 100%);
+  border-color: #dfba6d;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(212, 160, 23, 0.32);
+}
+
+/* Контейнер результатов */
 .spotlight-results {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 12px;
-  max-height: 48vh;
+  padding: 10px 14px;
+  max-height: 52vh;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 160, 23, 0.3) transparent;
+}
+
+.spotlight-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.spotlight-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.spotlight-results::-webkit-scrollbar-thumb {
+  background: rgba(212, 160, 23, 0.32);
+  border-radius: 4px;
 }
 
 .spotlight-group-title {
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #c5a059;
-  padding: 8px 10px 4px;
-  margin-top: 4px;
+  letter-spacing: 1.2px;
+  color: #dfba6d;
+  padding: 10px 12px 6px;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px dashed rgba(212, 160, 23, 0.2);
 }
 
+.spotlight-group-badge {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+/* Карточка элемента поиска */
 .spotlight-item {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   cursor: pointer;
-  gap: 12px;
-  transition: background 0.15s ease;
+  gap: 14px;
+  transition: all 0.18s ease;
+  position: relative;
 }
 
 .spotlight-item:hover,
 .spotlight-item.selected {
-  background: rgba(197, 160, 89, 0.14);
-  outline: 1px solid rgba(197, 160, 89, 0.35);
+  background: linear-gradient(90deg, rgba(212, 160, 23, 0.18) 0%, rgba(212, 160, 23, 0.04) 100%);
+  border-color: rgba(212, 160, 23, 0.36);
+  border-left: 3px solid #dfba6d;
+  transform: translateX(4px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), inset 0 0 18px rgba(212, 160, 23, 0.06);
 }
 
-.spotlight-item-icon {
-  font-size: 1.25rem;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
+/* Аватарка героя */
+.spotlight-hero-avatar-box {
+  position: relative;
+  width: 48px;
+  height: 48px;
   flex-shrink: 0;
 }
 
-.spotlight-item-body {
+.spotlight-hero-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1.5px solid rgba(212, 160, 23, 0.45);
+  background: #141923;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  display: block;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.spotlight-item:hover .spotlight-hero-avatar-img,
+.spotlight-item.selected .spotlight-hero-avatar-img {
+  border-color: #ffe28a;
+  box-shadow: 0 0 14px rgba(212, 160, 23, 0.4);
+}
+
+.spotlight-hero-spec-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0d1118;
+  border: 1px solid rgba(212, 160, 23, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+/* Иконки модулей и ритуалов */
+.spotlight-module-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.spotlight-module-icon-box.gold {
+  background: rgba(212, 160, 23, 0.12);
+  border-color: rgba(212, 160, 23, 0.3);
+  color: #dfba6d;
+}
+
+.spotlight-module-icon-box.crimson {
+  background: rgba(225, 29, 72, 0.12);
+  border-color: rgba(225, 29, 72, 0.3);
+  color: #fb7185;
+}
+
+.spotlight-module-icon-box.blue {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+}
+
+.spotlight-item:hover .spotlight-module-icon-box,
+.spotlight-item.selected .spotlight-module-icon-box {
+  border-color: #dfba6d;
+  box-shadow: 0 0 12px rgba(212, 160, 23, 0.35);
+}
+
+/* Контент элемента */
+.spotlight-item-content {
   flex: 1;
   min-width: 0;
 }
 
-.spotlight-item-title {
-  display: block;
-  font-size: 0.88rem;
+.spotlight-item-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.spotlight-hero-name,
+.spotlight-module-title {
+  font-size: 0.95rem;
   font-weight: 600;
   color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.25;
 }
 
-.spotlight-item-sub {
-  display: block;
-  font-size: 0.74rem;
-  color: #94a3b8;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.spotlight-hero-name {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  letter-spacing: 0.3px;
+  font-size: 0.96rem;
 }
 
-.spotlight-item-arrow {
-  color: #64748b;
-  font-size: 0.85rem;
-  padding: 2px 6px;
-  border-radius: 3px;
+.spotlight-pill-rank {
+  background: rgba(212, 160, 23, 0.14);
+  border: 1px solid rgba(212, 160, 23, 0.32);
+  color: #dfba6d;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.spotlight-pill-plaque {
   background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
 }
 
+.spotlight-pill-feature {
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.spotlight-module-desc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spotlight-hero-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.spotlight-tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  padding: 2px 7px;
+  border-radius: 4px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spotlight-tag-badge.spec {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #cbd5e1;
+}
+
+.spotlight-tag-badge.award {
+  background: rgba(212, 160, 23, 0.1);
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  color: #fde047;
+}
+
+.spotlight-tag-badge.loc {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  color: #fca5a5;
+}
+
+.spotlight-tag-icon {
+  font-size: 0.74rem;
+}
+
+.spotlight-tag-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Действие справа */
+.spotlight-item-action-indicator {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.spotlight-action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: all 0.18s ease;
+}
+
+.spotlight-action-badge kbd {
+  font-family: inherit;
+  color: #dfba6d;
+  font-weight: 700;
+}
+
+.spotlight-item:hover .spotlight-action-badge,
+.spotlight-item.selected .spotlight-action-badge {
+  background: rgba(212, 160, 23, 0.2);
+  border-color: #dfba6d;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(212, 160, 23, 0.3);
+}
+
+/* Пустое состояние */
 .spotlight-empty {
-  padding: 36px 20px;
+  padding: 42px 20px;
   text-align: center;
   color: #94a3b8;
-  font-size: 0.88rem;
 }
 
+.spotlight-empty-icon {
+  font-size: 2.4rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.spotlight-empty-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.spotlight-empty-desc {
+  font-size: 0.82rem;
+  color: #64748b;
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.spotlight-empty-desc em {
+  color: #dfba6d;
+  font-style: normal;
+}
+
+/* Подвал модалки */
 .spotlight-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 18px;
-  background: #141820;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.72rem;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, rgba(16, 21, 30, 0.95) 0%, rgba(12, 15, 22, 0.98) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 0.74rem;
   color: #64748b;
 }
 
 .spotlight-keys-help {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 16px;
 }
 
-.spotlight-keys-help kbd {
-  background: rgba(255, 255, 255, 0.1);
+.spotlight-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.spotlight-kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   padding: 2px 6px;
-  border-radius: 3px;
+  border-radius: 4px;
   color: #cbd5e1;
   font-size: 0.68rem;
   font-family: inherit;
-  margin-right: 3px;
+  font-weight: 600;
 }
 
-.spotlight-footer-brand {
-  color: #c5a059;
-  font-weight: 700;
+.spotlight-footer-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.spotlight-count-badge {
+  background: rgba(212, 160, 23, 0.12);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  color: #dfba6d;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.spotlight-brand-text {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+/* Адаптив для планшетов и мобильных устройств */
+@media (max-width: 768px) {
+  .spotlight-modal-overlay {
+    padding-top: 4vh;
+    padding-bottom: 2vh;
+  }
+  .spotlight-dialog {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    max-height: 90vh !important;
+    border-radius: 14px !important;
+  }
+  .spotlight-header {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  .spotlight-search-icon-box {
+    width: 32px;
+    height: 32px;
+  }
+  .spotlight-input {
+    font-size: 0.94rem;
+  }
+  .spotlight-kbd-badge {
+    display: none;
+  }
+  .spotlight-chips-container {
+    padding: 8px 12px;
+  }
+  .spotlight-results {
+    padding: 8px 10px;
+    max-height: 58vh;
+  }
+  .spotlight-item {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+  .spotlight-hero-avatar-box,
+  .spotlight-hero-avatar-img {
+    width: 42px;
+    height: 42px;
+  }
+  .spotlight-hero-name {
+    font-size: 0.88rem;
+  }
+  .spotlight-pill-rank {
+    font-size: 0.62rem;
+    padding: 1px 5px;
+  }
+  .spotlight-item-action-indicator {
+    display: none;
+  }
+  .spotlight-footer {
+    padding: 10px 14px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .spotlight-keys-help {
+    display: none;
+  }
 }
 
 /* 3. МИНУТА МОЛЧАНИЯ (MEMORIAL CEREMONY) */
