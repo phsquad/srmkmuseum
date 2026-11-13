@@ -10,13 +10,13 @@
     padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
   }
 
-  .header-container {
+  .reader-header .header-container {
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
   }
 
-  .header-actions {
+  .reader-header .header-actions {
     width: 100%;
     overflow-x: auto;
     padding-bottom: 2px;

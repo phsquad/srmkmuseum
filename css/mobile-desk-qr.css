@@ -9,13 +9,13 @@
     padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
   }
 
-  .header-content {
+  .desk-header .header-content {
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
   }
 
-  .header-actions {
+  .desk-header .header-actions {
     width: 100%;
     overflow-x: auto;
   }

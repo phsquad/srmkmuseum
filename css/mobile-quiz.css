@@ -9,7 +9,7 @@
     padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
   }
 
-  .header-actions {
+  .quiz-header .header-actions {
     display: none; /* На экране квеста скрываем лишнее */
   }
 

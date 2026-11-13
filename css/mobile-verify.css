@@ -9,7 +9,7 @@
     padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px;
   }
 
-  .header-content {
+  .verify-header .header-content {
     flex-direction: column;
     gap: 8px;
     text-align: center;

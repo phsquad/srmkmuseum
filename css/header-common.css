@@ -839,3 +839,64 @@
 .btn-supabase-seed:hover {
   background: rgba(16, 185, 129, 0.25);
 }
+
+/* ==========================================================================
+   8. АБСОЛЮТНАЯ МОБИЛЬНАЯ ГАРМОНИЯ ШАПКИ (MOBILE VIEWPORT PERFECTION)
+   ========================================================================== */
+@media (max-width: 560px) {
+  .site-header .header-container {
+    padding: 0 8px;
+    gap: 6px;
+  }
+
+  .site-header .logo-badge {
+    width: 28px;
+    height: 28px;
+    font-size: 0.68rem;
+  }
+
+  .site-header .site-title {
+    font-size: 0.72rem;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .site-header .header-actions {
+    gap: 5px;
+  }
+
+  .site-header #btnOpenSpotlight,
+  .site-header .header-spotlight-btn {
+    display: none !important;
+  }
+
+  .header-presence-pill {
+    padding: 2px 6px;
+    font-size: 0.68rem;
+    gap: 4px;
+  }
+
+  .btn-header-achievements {
+    padding: 2px 6px;
+    font-size: 0.68rem;
+    gap: 4px;
+  }
+
+  .btn-header-achievements .rank-btn-title {
+    display: none !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-header #btnToggleSound,
+  .site-header .header-sound-btn {
+    display: none !important;
+  }
+
+  .site-header .site-title {
+    max-width: 110px;
+  }
+}
+

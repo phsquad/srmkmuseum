@@ -5,29 +5,43 @@
    ========================================================================== */
 @media (max-width: 900px) {
 
+  .master-cover-frame {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 auto 20px !important;
+  }
+
+  .master-cover-img {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+  }
+
   .book-header {
     padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
   }
 
-  .header-container {
+  .book-header .header-container {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
     min-width: 0;
   }
 
-  .header-left,
-  .header-titles {
+  .book-header .header-left,
+  .book-header .header-titles {
     width: 100%;
     min-width: 0;
   }
 
-  .header-titles .main-title {
+  .book-header .header-titles .main-title {
     white-space: normal;
     overflow-wrap: anywhere;
   }
 
-  .header-actions {
+  .book-header .header-actions {
     width: 100%;
     min-width: 0;
     overflow-x: auto;
