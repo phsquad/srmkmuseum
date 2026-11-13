@@ -242,26 +242,37 @@ CREATE POLICY "Public Upsert Metrics" ON public.museum_realtime_metrics FOR ALL 
 -- 5. ХРАНИМЫЕ ПРОЦЕДУРЫ И RPC-ФУНКЦИИ (ДЛЯ АТОМАРНЫХ ОПЕРАЦИЙ БЕЗ ГОНОК ДАННЫХ)
 -- ============================================================================
 
--- Предварительное удаление старых функций (избежание ошибки 42P13 при смене имен параметров)
-DROP FUNCTION IF EXISTS public.increment_hero_candle(TEXT) CASCADE;
-DROP FUNCTION IF EXISTS public.increment_hero_candle(VARCHAR) CASCADE;
-DROP FUNCTION IF EXISTS public.increment_candle(TEXT) CASCADE;
-DROP FUNCTION IF EXISTS public.increment_candle(VARCHAR) CASCADE;
-DROP FUNCTION IF EXISTS public.increment_hero_flower(TEXT) CASCADE;
-DROP FUNCTION IF EXISTS public.increment_hero_flower(VARCHAR) CASCADE;
-DROP FUNCTION IF EXISTS public.increment_flower(TEXT) CASCADE;
-DROP FUNCTION IF EXISTS public.increment_flower(VARCHAR) CASCADE;
-DROP FUNCTION IF EXISTS public.toggle_tribute_flame(TEXT, INTEGER) CASCADE;
-DROP FUNCTION IF EXISTS public.toggle_tribute_flame(VARCHAR, INTEGER) CASCADE;
-DROP FUNCTION IF EXISTS public.submit_quiz_result(TEXT, TEXT, INTEGER, INTEGER, INTEGER, TEXT) CASCADE;
-DROP FUNCTION IF EXISTS public.record_anonymous_hall_visit(TEXT) CASCADE;
-DROP FUNCTION IF EXISTS public.record_anonymous_hall_visit(VARCHAR) CASCADE;
-DROP FUNCTION IF EXISTS public.update_hall_dwell_time(TEXT, INTEGER) CASCADE;
-DROP FUNCTION IF EXISTS public.sync_user_achievement_progress(TEXT, INTEGER, TEXT, TEXT, JSONB, JSONB) CASCADE;
-DROP FUNCTION IF EXISTS public.reset_all_memorial_counters_and_levels() CASCADE;
+-- Безопасное удаление всех старых версий и сигнатур функций перед их созданием
+DO $$
+DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN (
+        SELECT proname, oid::regprocedure::text AS func_sig
+        FROM pg_proc
+        WHERE pronamespace = 'public'::regnamespace
+          AND proname IN (
+              'increment_hero_candle',
+              'increment_candle',
+              'increment_hero_flower',
+              'increment_flower',
+              'toggle_tribute_flame',
+              'submit_quiz_result',
+              'record_anonymous_hall_visit',
+              'update_hall_dwell_time',
+              'sync_user_achievement_progress',
+              'reset_all_memorial_counters_and_levels'
+          )
+    ) LOOP
+        EXECUTE 'DROP FUNCTION IF EXISTS ' || r.func_sig || ' CASCADE;';
+    END LOOP;
+END $$;
 
--- 5.1. Атомарное зажжение поминальной свечи
-CREATE OR REPLACE FUNCTION public.increment_hero_candle(p_hero_id TEXT)
+-- 5.1. Атомарное зажжение поминальной свечи (соответствует вызовам из cloud-sync.js)
+CREATE OR REPLACE FUNCTION public.increment_hero_candle(
+    target_hero_id TEXT,
+    client_fingerprint TEXT DEFAULT NULL
+)
 RETURNS INTEGER
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -270,7 +281,7 @@ DECLARE
     new_val INTEGER;
 BEGIN
     INSERT INTO public.memorial_counters (hero_id, candles, flowers, prayers, last_updated)
-    VALUES (p_hero_id, 1, 0, 0, NOW())
+    VALUES (target_hero_id, 1, 0, 0, NOW())
     ON CONFLICT (hero_id) DO UPDATE
     SET candles = public.memorial_counters.candles + 1,
         last_updated = NOW()
@@ -279,19 +290,25 @@ BEGIN
 END;
 $$;
 
--- Алиас
-CREATE OR REPLACE FUNCTION public.increment_candle(p_hero_id TEXT)
+-- Запасной алиас
+CREATE OR REPLACE FUNCTION public.increment_candle(
+    p_hero_id TEXT
+)
 RETURNS INTEGER
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-    RETURN public.increment_hero_candle(p_hero_id);
+    RETURN public.increment_hero_candle(p_hero_id, NULL);
 END;
 $$;
 
 -- 5.2. Атомарное возложение цветов
-CREATE OR REPLACE FUNCTION public.increment_hero_flower(p_hero_id TEXT)
+CREATE OR REPLACE FUNCTION public.increment_hero_flower(
+    target_hero_id TEXT,
+    qty INTEGER DEFAULT 1,
+    client_fingerprint TEXT DEFAULT NULL
+)
 RETURNS INTEGER
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -300,28 +317,34 @@ DECLARE
     new_val INTEGER;
 BEGIN
     INSERT INTO public.memorial_counters (hero_id, candles, flowers, prayers, last_updated)
-    VALUES (p_hero_id, 0, 1, 0, NOW())
+    VALUES (target_hero_id, 0, GREATEST(1, qty), 0, NOW())
     ON CONFLICT (hero_id) DO UPDATE
-    SET flowers = public.memorial_counters.flowers + 1,
+    SET flowers = public.memorial_counters.flowers + GREATEST(1, qty),
         last_updated = NOW()
     RETURNING flowers INTO new_val;
     RETURN new_val;
 END;
 $$;
 
--- Алиас
-CREATE OR REPLACE FUNCTION public.increment_flower(p_hero_id TEXT)
+-- Запасной алиас
+CREATE OR REPLACE FUNCTION public.increment_flower(
+    p_hero_id TEXT
+)
 RETURNS INTEGER
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-    RETURN public.increment_hero_flower(p_hero_id);
+    RETURN public.increment_hero_flower(p_hero_id, 2, NULL);
 END;
 $$;
 
 -- 5.3. Переключение огонька памяти у послания
-CREATE OR REPLACE FUNCTION public.toggle_tribute_flame(p_tribute_id TEXT, p_delta INTEGER DEFAULT 1)
+CREATE OR REPLACE FUNCTION public.toggle_tribute_flame(
+    target_tribute_id TEXT,
+    delta INTEGER DEFAULT 1,
+    client_fingerprint TEXT DEFAULT NULL
+)
 RETURNS INTEGER
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -330,8 +353,8 @@ DECLARE
     new_flames INTEGER;
 BEGIN
     UPDATE public.guestbook_tributes
-    SET flames = GREATEST(0, flames + p_delta)
-    WHERE id = p_tribute_id
+    SET flames = GREATEST(0, flames + delta)
+    WHERE id = target_tribute_id
     RETURNING flames INTO new_flames;
     RETURN COALESCE(new_flames, 0);
 END;
@@ -370,7 +393,16 @@ END;
 $$;
 
 -- 5.5. Фиксация анонимного посещения зала
-CREATE OR REPLACE FUNCTION public.record_anonymous_hall_visit(p_hall_id TEXT)
+CREATE OR REPLACE FUNCTION public.record_anonymous_hall_visit(
+    p_hall_id TEXT,
+    p_hall_title TEXT DEFAULT NULL,
+    p_exposition_id TEXT DEFAULT NULL,
+    p_dwell_seconds INTEGER DEFAULT 0,
+    p_is_interaction BOOLEAN DEFAULT FALSE,
+    p_anon_hash TEXT DEFAULT 'anon',
+    p_category TEXT DEFAULT 'hall',
+    p_device_type TEXT DEFAULT 'desktop'
+)
 RETURNS INTEGER
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -379,10 +411,11 @@ DECLARE
     new_visits INTEGER;
 BEGIN
     INSERT INTO public.hall_analytics_counters (hall_id, visits, total_dwell_seconds, interactions, last_visited_at)
-    VALUES (p_hall_id, 1, 0, 1, NOW())
+    VALUES (p_hall_id, 1, GREATEST(0, p_dwell_seconds), CASE WHEN p_is_interaction THEN 1 ELSE 0 END, NOW())
     ON CONFLICT (hall_id) DO UPDATE
     SET visits = public.hall_analytics_counters.visits + 1,
-        interactions = public.hall_analytics_counters.interactions + 1,
+        total_dwell_seconds = public.hall_analytics_counters.total_dwell_seconds + GREATEST(0, p_dwell_seconds),
+        interactions = public.hall_analytics_counters.interactions + CASE WHEN p_is_interaction THEN 1 ELSE 0 END,
         last_visited_at = NOW()
     RETURNING visits INTO new_visits;
     RETURN new_visits;
@@ -390,16 +423,20 @@ END;
 $$;
 
 -- 5.6. Обновление времени пребывания в зале
-CREATE OR REPLACE FUNCTION public.update_hall_dwell_time(p_hall_id TEXT, p_additional_seconds INTEGER DEFAULT 10)
+CREATE OR REPLACE FUNCTION public.update_hall_dwell_time(
+    p_hall_id TEXT,
+    p_added_dwell_seconds INTEGER DEFAULT 10,
+    p_anon_hash TEXT DEFAULT 'anon'
+)
 RETURNS VOID
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
     INSERT INTO public.hall_analytics_counters (hall_id, visits, total_dwell_seconds, interactions, last_visited_at)
-    VALUES (p_hall_id, 1, GREATEST(0, p_additional_seconds), 1, NOW())
+    VALUES (p_hall_id, 1, GREATEST(0, p_added_dwell_seconds), 1, NOW())
     ON CONFLICT (hall_id) DO UPDATE
-    SET total_dwell_seconds = public.hall_analytics_counters.total_dwell_seconds + GREATEST(0, p_additional_seconds),
+    SET total_dwell_seconds = public.hall_analytics_counters.total_dwell_seconds + GREATEST(0, p_added_dwell_seconds),
         interactions = public.hall_analytics_counters.interactions + 1,
         last_visited_at = NOW();
 END;
@@ -408,28 +445,48 @@ $$;
 -- 5.7. Синхронизация воинского звания и бейджей
 CREATE OR REPLACE FUNCTION public.sync_user_achievement_progress(
     p_user_id TEXT,
-    p_xp INTEGER DEFAULT 0,
+    p_student_name TEXT DEFAULT NULL,
+    p_group_name TEXT DEFAULT NULL,
+    p_xp_delta INTEGER DEFAULT 0,
     p_rank_id TEXT DEFAULT 'private',
     p_rank_title TEXT DEFAULT 'Рядовой',
-    p_unlocked_badges JSONB DEFAULT '[]'::jsonb,
-    p_stats JSONB DEFAULT '{}'::jsonb
+    p_new_badge_id TEXT DEFAULT NULL,
+    p_new_badge_title TEXT DEFAULT NULL,
+    p_badge_icon TEXT DEFAULT NULL,
+    p_badge_category TEXT DEFAULT NULL,
+    p_badge_xp INTEGER DEFAULT 0,
+    p_stats_json JSONB DEFAULT '{}'::jsonb
 )
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
+DECLARE
+    cur_xp INTEGER := 0;
 BEGIN
     INSERT INTO public.user_achievements (user_id, xp, rank_id, rank_title, unlocked_badges, stats, last_active_at, created_at)
-    VALUES (p_user_id, GREATEST(0, p_xp), p_rank_id, p_rank_title, p_unlocked_badges, p_stats, NOW(), NOW())
+    VALUES (p_user_id, GREATEST(0, p_xp_delta), p_rank_id, p_rank_title, '[]'::jsonb, COALESCE(p_stats_json, '{}'::jsonb), NOW(), NOW())
     ON CONFLICT (user_id) DO UPDATE
-    SET xp = GREATEST(public.user_achievements.xp, EXCLUDED.xp),
-        rank_id = EXCLUDED.rank_id,
-        rank_title = EXCLUDED.rank_title,
-        unlocked_badges = EXCLUDED.unlocked_badges,
-        stats = EXCLUDED.stats,
-        last_active_at = NOW();
+    SET xp = public.user_achievements.xp + GREATEST(0, p_xp_delta),
+        rank_id = COALESCE(p_rank_id, public.user_achievements.rank_id),
+        rank_title = COALESCE(p_rank_title, public.user_achievements.rank_title),
+        stats = COALESCE(p_stats_json, public.user_achievements.stats),
+        last_active_at = NOW()
+    RETURNING xp INTO cur_xp;
 
-    RETURN jsonb_build_object('success', true);
+    IF p_new_badge_id IS NOT NULL AND length(trim(p_new_badge_id)) > 0 THEN
+        INSERT INTO public.achievement_unlock_events (user_id, badge_id, badge_title, badge_icon, xp_reward, unlocked_at)
+        VALUES (p_user_id, p_new_badge_id, p_new_badge_title, p_badge_icon, p_badge_xp, NOW());
+
+        UPDATE public.user_achievements
+        SET unlocked_badges = CASE
+            WHEN unlocked_badges @> to_jsonb(p_new_badge_id) THEN unlocked_badges
+            ELSE unlocked_badges || to_jsonb(p_new_badge_id)
+        END
+        WHERE user_id = p_user_id;
+    END IF;
+
+    RETURN jsonb_build_object('success', true, 'xp', cur_xp);
 END;
 $$;
 
