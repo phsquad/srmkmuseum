@@ -831,26 +831,28 @@
         });
       }
 
-      // Функция вычисления органического числа посетителей (по времени суток)
+      // Функция отображения РЕАЛЬНОГО числа посетителей онлайн через Supabase Realtime Presence
       const updatePresenceDisplay = () => {
         let count = 1;
-        if (window.HallAnalytics && typeof window.HallAnalytics.getActiveVisitorsCount === 'function' && window.CloudSync?.isLive) {
+        if (window.CloudSync && typeof window.CloudSync.getLivePresenceCount === 'function' && window.CloudSync.isLive) {
+          count = window.CloudSync.getLivePresenceCount();
+        } else if (window.HallAnalytics && typeof window.HallAnalytics.getActiveVisitorsCount === 'function') {
           count = window.HallAnalytics.getActiveVisitorsCount();
         } else {
-          // Реалистичный органический фоновый трафик
-          const hour = new Date().getHours();
-          const base = (hour >= 8 && hour <= 17) ? 14 : (hour >= 18 && hour <= 22) ? 7 : 2;
-          const jitter = (Date.now() % 5) - 2; // -2 .. +2
-          count = Math.max(1, base + jitter);
+          count = 1; // Реальный счетчик: 1 (текущий посетитель)
         }
         const countEl = document.getElementById('hdrPresenceCount');
         if (countEl) countEl.textContent = count;
       };
 
       updatePresenceDisplay();
-      setInterval(updatePresenceDisplay, 25000);
+      setInterval(updatePresenceDisplay, 5000);
 
-      window.addEventListener('srmk-presence-updated', () => updatePresenceDisplay());
+      window.addEventListener('srmk-presence-updated', (e) => {
+        const c = e.detail?.count || (window.CloudSync?.getLivePresenceCount ? window.CloudSync.getLivePresenceCount() : 1);
+        const countEl = document.getElementById('hdrPresenceCount');
+        if (countEl) countEl.textContent = c;
+      });
     },
 
     /**

@@ -233,15 +233,20 @@ const CloudSync = {
           if (window.HallAnalytics && typeof HallAnalytics.handlePresenceSync === 'function') {
             HallAnalytics.handlePresenceSync(state);
           }
-          window.dispatchEvent(new CustomEvent('srmk-presence-updated', { detail: { state } }));
+          const liveCount = CloudSync.getLivePresenceCount();
+          window.dispatchEvent(new CustomEvent('srmk-presence-updated', { detail: { state, count: liveCount } }));
         })
         .subscribe(async (status) => {
           if (status === 'SUBSCRIBED') {
             this.presenceChannel = presenceChannel;
-            if (window.HallAnalytics && typeof HallAnalytics.getCurrentHallId === 'function') {
-              const curHall = HallAnalytics.getCurrentHallId();
-              await presenceChannel.track({ hall_id: curHall, joined_at: Date.now() });
-            }
+            const curHall = (window.HallAnalytics && typeof HallAnalytics.getCurrentHallId === 'function')
+              ? HallAnalytics.getCurrentHallId()
+              : (window.location.pathname.split('/').pop() || 'memorial');
+            try {
+              await presenceChannel.track({ hall_id: curHall, page: window.location.pathname, joined_at: Date.now() });
+            } catch (err) {}
+            const liveCount = CloudSync.getLivePresenceCount();
+            window.dispatchEvent(new CustomEvent('srmk-presence-updated', { detail: { count: liveCount } }));
           }
         });
       this.channels.push(presenceChannel);
@@ -833,6 +838,17 @@ const CloudSync = {
       });
     } catch (e) {
       // Игнорируем фоновые задержки presence
+    }
+  },
+
+  getLivePresenceCount() {
+    if (!this.presenceChannel) return 1;
+    try {
+      const state = this.presenceChannel.presenceState();
+      const keys = Object.keys(state || {});
+      return Math.max(keys.length, 1);
+    } catch (e) {
+      return 1;
     }
   },
 
