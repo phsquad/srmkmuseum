@@ -34,110 +34,44 @@ const GuestbookEngine = {
     this.populateHeroDropdowns();
     this.bindDOMEvents();
     this.injectPresetChips();
-    
-    // Задержка 400 мс для инициализации подключения Supabase через CloudSync
-    setTimeout(async () => {
+
+    try {
+      localStorage.removeItem('srmk_guestbook_entries_v3');
+      localStorage.removeItem('srmk_guestbook_entries');
+    } catch (_) {}
+
+    window.addEventListener('srmk-supabase-status', async (e) => {
+      if (e.detail && e.detail.status === 'online') {
+        await this.loadData();
+        this.renderWall();
+        this.updateStats();
+      }
+    });
+
+    window.addEventListener('srmk-tribute-added', async () => {
       await this.loadData();
       this.renderWall();
       this.updateStats();
-    }, 400);
+    });
 
-    console.log("[GuestbookEngine v3.0] Цифровая Стена Памяти и модерация готовы к работе.");
+    await this.loadData();
+    this.renderWall();
+    this.updateStats();
   },
 
   /**
-   * 1. Загрузка данных (Облако Supabase ➔ LocalStorage Fallback)
+   * 1. Загрузка данных строго из реальной БД Supabase (без заглушек)
    */
   async loadData() {
+    this.userFlames = JSON.parse(localStorage.getItem('srmk_user_flames_v3') || '{}');
     if (typeof CloudSync !== 'undefined' && CloudSync.isLive) {
       const cloudData = await CloudSync.fetchTributes();
       if (cloudData && Array.isArray(cloudData)) {
         this.tributes = cloudData.map(t => this.normalizeTributeFields(t));
-        this.userFlames = JSON.parse(localStorage.getItem('srmk_user_flames_v3') || '{}');
         return;
       }
     }
-    // Fallback: Загрузка локальных данных
-    const raw = localStorage.getItem('srmk_guestbook_entries_v3');
-    if (raw) {
-      this.tributes = JSON.parse(raw).map(t => this.normalizeTributeFields(t));
-    } else {
-      // Инициализируем канонические послания открытия Мемориала
-      this.tributes = [
-        {
-          id: "tr-seed-1",
-          author: "Евгений Викторович Бледных",
-          role: "admin",
-          role_label: "Директор ГБПОУ СРМК, к.и.н.",
-          dedication_id: "general",
-          dedication_name: "Общему Мемориалу Славы",
-          message: "26 сентября 2025 года мы навечно увековечили подвиг 20 наших ребят. Каждый из них — часть славной истории нашего колледжа. Их мужество служит вечным нравственным ориентиром для каждого поколения студентов СРМК.",
-          theme: "theme-parchment",
-          flames: 24,
-          is_pinned: true,
-          is_verified: true,
-          date: "26 сентября 2025 г."
-        },
-        {
-          id: "tr-seed-2",
-          author: "Владимир Григорьев",
-          role: "student",
-          role_label: "Студент 3 курса СРМК, автор реквиема",
-          dedication_id: "general",
-          dedication_name: "Общему Мемориалу Славы",
-          message: "Тыл и фронт — един! И сколько б ни потребовалось зим — верим и знаем: мы победим! Вечная слава выпускникам нашего колледжа, шагнувшим в вечность.",
-          theme: "theme-clean",
-          flames: 19,
-          is_pinned: false,
-          is_verified: true,
-          date: "26 сентября 2025 г."
-        },
-        {
-          id: "tr-seed-3",
-          author: "Лариса Ивановна Вечёрка",
-          role: "guest",
-          role_label: "Мать кавалера Ордена Мужества",
-          dedication_id: "vecherka-n-a",
-          dedication_name: "Николаю Анатольевичу Вечёрке",
-          message: "Низкий материнский поклон руководству и студентам колледжа за священную память о Коле и его боевых товарищах. Память жива, пока мы помним!",
-          theme: "theme-parchment",
-          flames: 31,
-          is_pinned: false,
-          is_verified: true,
-          date: "15 октября 2025 г."
-        },
-        {
-          id: "tr-seed-4",
-          author: "Педагогический совет колледжа",
-          role: "teacher",
-          role_label: "Преподаватели СРМК",
-          dedication_id: "nazyrov-sh-r",
-          dedication_name: "Шамилю Рустамовичу Назырову",
-          message: "Помним Шамиля студентом — трудолюбивым, добрым, окончившим колледж с красным дипломом. Гордимся подвигом нашего выпускника, водителя «Машины жизни».",
-          theme: "theme-parchment",
-          flames: 16,
-          is_pinned: false,
-          is_verified: true,
-          date: "2 ноября 2025 г."
-        },
-        {
-          id: "tr-seed-5",
-          author: "Студенческий спасательный отряд",
-          role: "student",
-          role_label: "Студенты МЧС и спасатели",
-          dedication_id: "martynov-s-k",
-          dedication_name: "Станиславу Константиновичу Мартынову",
-          message: "Станислав был старостой нашей группы, примером несгибаемой воли. За партой Героя мы бережно храним память о его подвиге под Угледаром!",
-          theme: "theme-clean",
-          flames: 28,
-          is_pinned: false,
-          is_verified: true,
-          date: "9 декабря 2025 г."
-        }
-      ];
-      this.saveStorage();
-    }
-    this.userFlames = JSON.parse(localStorage.getItem('srmk_user_flames_v3') || '{}');
+    this.tributes = [];
   },
 
   /**

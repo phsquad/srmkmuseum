@@ -1,41 +1,31 @@
 /**
  * ============================================================================
- * БЕГУЩАЯ ЛЕНТА ПАМЯТИ: js/live-tributes-ticker.js (v1.0 Live Stream)
- * Мемориально-образовательный комплекс ГБПОУ СРМК «Быть воином — жить вечно»
- * 
- * Включает:
- * 1. Живую трансляцию поминальных записей со Стены Памяти на главном экране
- * 2. Синхронизацию с Realtime-каналом Supabase guestbook_tributes
- * 3. Возможность оставить свое слово благодарности в 1 клик
+ * БЕГУЩАЯ ЛЕНТА ПАМЯТИ: js/live-tributes-ticker.js (v2.0 Supabase-Only)
+ * Показывает только реальные записи из таблицы guestbook_tributes в Supabase.
+ * Если записей в БД нет — лента скрыта.
  * ============================================================================
  */
-
-(function() {
+(function () {
   'use strict';
-
-  const DEFAULT_TICKER_ITEMS = [
-    { author: 'Студенты гр. Э-22', text: 'Вечная слава и благодарность героям-выпускникам СРМК!', hero: 'Всем защитникам' },
-    { author: 'Совет ветеранов колледжа', text: 'Подвиг Владислава Шартова и всех 20 ребят навечно в сердцах преподавателей.', hero: 'Шартов В. И.' },
-    { author: 'Семья выпускника', text: 'Иван Луценко, гордимся твоим мужеством и верностью присяге.', hero: 'Луценко И. С.' },
-    { author: 'Отделение информационных технологий', text: 'За каждой партой героя — бессмертный пример верности Родине.', hero: 'Чупин А. В.' },
-    { author: 'Юнармейцы Ставрополя', text: 'Быть воином — жить вечно. Обещаем быть достойными вашей памяти!', hero: 'Кавалерам Ордена Мужества' }
-  ];
 
   const LiveTributesTicker = {
     containerEl: null,
     items: [],
 
     init() {
-      // Инициализируем только если есть подходящее место (на главной index.html или mobile.html)
       const targetAnchor = document.getElementById('memorialTributesStreamSlot') ||
-                           document.querySelector('#memorial .section-header') ||
-                           document.querySelector('.site-header');
-
+                           document.getElementById('siteHeader');
       if (!targetAnchor) return;
+
       this.createTickerMarkup();
       this.loadTributes();
 
-      // Слушатель новых отзывов в реальном времени из Supabase
+      window.addEventListener('srmk-supabase-status', (e) => {
+        if (e.detail && e.detail.status === 'online') {
+          this.loadTributes();
+        }
+      });
+
       window.addEventListener('srmk-tribute-added', (e) => {
         if (e.detail) this.prependTribute(e.detail);
       });
@@ -43,108 +33,67 @@
 
     createTickerMarkup() {
       if (document.getElementById('memorialTributesTicker')) return;
-
       const ticker = document.createElement('div');
       ticker.id = 'memorialTributesTicker';
       ticker.className = 'memorial-tributes-ticker';
+      ticker.style.display = 'none';
       ticker.setAttribute('role', 'region');
       ticker.setAttribute('aria-label', 'Лента слов благодарности и памяти');
-
       ticker.innerHTML = `
-        <div class="ticker-inner">
-          <div class="ticker-badge">
-            <span class="ticker-flame-icon">🕯️</span>
-            <span class="ticker-badge-text">Стена Памяти онлайн</span>
-          </div>
-          <div class="ticker-content" id="tickerTrack">
-            <!-- Элементы ленты загружаются динамически -->
-          </div>
-          <a href="guestbook.html" class="ticker-action-btn" title="Оставить свое памятное послание">
-            Почтить память ➔
-          </a>
+        <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;font-size:0.82rem;border-bottom:1px solid var(--border-subtle);background:rgba(18,22,29,0.9);">
+          <div id="tickerTrack" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></div>
+          <a href="guestbook.html" style="flex:0 0 auto;color:var(--accent-primary);font-weight:600;">Стена Памяти →</a>
         </div>
       `;
-
-      // Вставляем сразу под шапкой сайта
-      const siteHeader = document.querySelector('.site-header') || document.querySelector('header.header');
-      if (siteHeader && siteHeader.nextSibling) {
-        siteHeader.parentNode.insertBefore(ticker, siteHeader.nextSibling);
-      } else {
-        document.body.insertBefore(ticker, document.body.firstChild);
+      const header = document.getElementById('siteHeader');
+      if (header && header.parentNode) {
+        header.parentNode.insertBefore(ticker, header.nextSibling);
       }
-
       this.containerEl = ticker;
     },
 
     async loadTributes() {
       let tributes = [];
-
-      // Пробуем получить живые записи из CloudSync / Supabase
-      if (window.CloudSync && typeof window.CloudSync.fetchTributes === 'function') {
+      if (window.CloudSync && window.CloudSync.isLive && typeof window.CloudSync.fetchTributes === 'function') {
         try {
-          const cloudData = await window.CloudSync.fetchTributes(15);
+          const cloudData = await window.CloudSync.fetchTributes();
           if (Array.isArray(cloudData) && cloudData.length > 0) {
-            tributes = cloudData.map(t => ({
-              author: t.author_name || 'Благодарный посетитель',
-              text: t.tribute_text || 'Вечная слава защитникам Отечества!',
-              hero: t.target_hero_name || 'Героям СРМК'
-            }));
+            tributes = cloudData.slice(0, 15).map(t => ({
+              author: t.author || t.author_name || 'Посетитель',
+              text: t.message || t.tribute_text || '',
+              hero: t.dedication_name || t.target_hero_name || ''
+            })).filter(t => t.text);
           }
         } catch (e) {
           console.warn('[LiveTributesTicker] Ошибка чтения из CloudSync:', e);
         }
       }
-
-      // Если в облаке пока пусто — берем из LocalStorage или базового архива
-      if (tributes.length === 0) {
-        try {
-          const local = JSON.parse(localStorage.getItem('srmk_guestbook_entries') || '[]');
-          if (Array.isArray(local) && local.length > 0) {
-            tributes = local.slice(0, 8).map(t => ({
-              author: t.author || 'Посетитель мемориала',
-              text: t.text || t.message || 'Вечная память!',
-              hero: t.hero || 'Героям СРМК'
-            }));
-          }
-        } catch (e) {}
-      }
-
-      if (tributes.length === 0) {
-        tributes = DEFAULT_TICKER_ITEMS;
-      }
-
       this.items = tributes;
       this.render();
     },
 
     render() {
       const track = document.getElementById('tickerTrack');
-      if (!track) return;
-
-      const itemsHtml = this.items.map(item => `
-        <div class="ticker-item">
-          <strong class="ticker-author">${this.escape(item.author)}:</strong>
-          <span class="ticker-text">«${this.escape(item.text)}»</span>
-          ${item.hero ? `<span class="ticker-hero-tag">• ${this.escape(item.hero)}</span>` : ''}
-        </div>
-      `).join('<span class="ticker-sep">✦</span>');
-
-      // Дублируем для бесконечной плавной прокрутки
-      track.innerHTML = `
-        <div class="ticker-marquee">
-          ${itemsHtml}
-          <span class="ticker-sep">✦</span>
-          ${itemsHtml}
-        </div>
-      `;
+      if (!track || !this.containerEl) return;
+      if (this.items.length === 0) {
+        this.containerEl.style.display = 'none';
+        track.innerHTML = '';
+        return;
+      }
+      this.containerEl.style.display = 'block';
+      track.innerHTML = this.items.map(item =>
+        `<span><strong style="color:var(--accent-primary);">${this.escape(item.author)}:</strong> «${this.escape(item.text)}»${item.hero ? ` <small style="color:var(--text-muted);">(${this.escape(item.hero)})</small>` : ''}</span>`
+      ).join(' &nbsp;•&nbsp; ');
     },
 
     prependTribute(item) {
       if (!item) return;
+      const text = item.message || item.tribute_text || item.text || '';
+      if (!text) return;
       this.items.unshift({
-        author: item.author_name || item.author || 'Посетитель',
-        text: item.tribute_text || item.text || 'Вечная память!',
-        hero: item.target_hero_name || item.hero || 'Героям СРМК'
+        author: item.author || item.author_name || 'Посетитель',
+        text,
+        hero: item.dedication_name || item.target_hero_name || ''
       });
       this.items = this.items.slice(0, 20);
       this.render();

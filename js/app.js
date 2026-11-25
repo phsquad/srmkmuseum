@@ -31,6 +31,16 @@
       this.syncCloudCounters();
       this.handleDeepLink();
 
+      window.addEventListener('srmk-supabase-status', (e) => {
+        if (e.detail && e.detail.status === 'online') {
+          this.syncCloudCounters();
+        }
+      });
+
+      window.addEventListener('srmk-cloud-counters', () => {
+        this.syncCloudCounters();
+      });
+
       if (global.SpotlightSearch && typeof global.SpotlightSearch.init === 'function') {
         global.SpotlightSearch.init();
       }
@@ -77,14 +87,17 @@
       if (!global.CloudSync || !global.CloudSync.client) return;
       try {
         const { data } = await global.CloudSync.client.from('memorial_counters').select('hero_id, candles, flowers');
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           let flowersSum = 0;
+          const nextCandles = {};
           data.forEach(row => {
-            if (row.hero_id) this.candlesMap[row.hero_id] = Math.max(this.candlesMap[row.hero_id] || 0, row.candles || 0);
+            if (row.hero_id) nextCandles[row.hero_id] = Number(row.candles) || 0;
             flowersSum += Number(row.flowers) || 0;
           });
-          this.flowersTotal = Math.max(this.flowersTotal, flowersSum);
+          this.candlesMap = nextCandles;
+          this.flowersTotal = flowersSum;
           this.updateStatsStrip();
+          this.renderCardsGrid();
         }
       } catch (_) {}
     },
@@ -372,6 +385,9 @@
         try { localStorage.setItem(FLOWERS_KEY, String(this.flowersTotal)); } catch (_) {}
         this.updateStatsStrip();
         if (global.MemorialToast) global.MemorialToast.show('🌹 Гвоздика возложена к Мемориалу Славы.', 'success');
+        if (global.CloudSync && typeof global.CloudSync.incrementFlower === 'function') {
+          global.CloudSync.incrementFlower('general').catch(() => {});
+        }
       });
 
       document.getElementById('btnCloseDossier')?.addEventListener('click', () => {
