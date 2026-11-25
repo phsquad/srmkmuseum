@@ -480,37 +480,28 @@ const CloudSync = {
   async pushCandle(heroId) {
     if (!this.isLive || !this.client) return null;
     try {
-      const fingerprint = window.TributeSecurity ? await window.TributeSecurity.getDeviceFingerprint() : null;
-      const { data, error } = await this.client.rpc('increment_hero_candle', { 
-        target_hero_id: heroId,
-        client_fingerprint: fingerprint
+      const { data, error } = await this.client.rpc('increment_hero_candle', {
+        target_hero_id: heroId
       });
-      if (error) {
-        // Запасной вызов старой функции при отсутствии нового параметра
-        const fallback = await this.client.rpc('increment_candle', { p_hero_id: heroId });
-        return fallback.data;
-      }
-      return data;
+      if (!error) return data;
+      const fallback = await this.client.rpc('increment_candle', { p_hero_id: heroId });
+      return fallback.data;
     } catch (e) {
       console.warn('[CloudSync] Ошибка зажжения свечи:', e);
       return null;
     }
   },
 
-  async pushFlower(heroId, count = 2) {
+  async pushFlower(heroId, count = 1) {
     if (!this.isLive || !this.client) return null;
     try {
-      const fingerprint = window.TributeSecurity ? await window.TributeSecurity.getDeviceFingerprint() : null;
-      const { data, error } = await this.client.rpc('increment_hero_flower', { 
-        target_hero_id: heroId, 
-        qty: count,
-        client_fingerprint: fingerprint
+      const { data, error } = await this.client.rpc('increment_hero_flower', {
+        target_hero_id: heroId,
+        qty: count
       });
-      if (error) {
-        const fallback = await this.client.rpc('increment_flower', { p_hero_id: heroId });
-        return fallback.data;
-      }
-      return data;
+      if (!error) return data;
+      const fallback = await this.client.rpc('increment_flower', { p_hero_id: heroId });
+      return fallback.data;
     } catch (e) {
       console.warn('[CloudSync] Ошибка возложения цветов:', e);
       return null;
@@ -568,23 +559,15 @@ const CloudSync = {
       theme: t.theme || 'theme-parchment',
       date: t.date || new Date().toLocaleDateString('ru-RU'),
       flames: typeof t.flames === 'number' ? t.flames : 1,
-      is_pinned: Boolean(t.is_pinned),
-      is_verified: Boolean(t.is_verified),
-      visit_id: t.visit_id || t.visitId || null
+      is_pinned: false,
+      is_verified: false
     };
   },
 
   async sendTribute(tributeObj) {
     if (!this.isLive || !this.client) return false;
     try {
-      // Античит-нормализация: публичные пользователи не могут самовольно закреплять или верифицировать
       const payload = this.serializeTribute(tributeObj);
-      const isAuth = Boolean(this.client.auth?.getUser && (await this.client.auth.getUser()).data?.user);
-      if (!isAuth) {
-        payload.is_pinned = false;
-        payload.is_verified = false;
-        payload.flames = 1;
-      }
       const { error } = await this.client.from('guestbook_tributes').insert([payload]);
       if (error) throw error;
       return true;
@@ -597,11 +580,9 @@ const CloudSync = {
   async toggleFlame(tributeId, delta) {
     if (!this.isLive || !this.client) return null;
     try {
-      const fingerprint = window.TributeSecurity ? await window.TributeSecurity.getDeviceFingerprint() : null;
       const { data, error } = await this.client.rpc('toggle_tribute_flame', {
         target_tribute_id: tributeId,
-        delta: delta,
-        client_fingerprint: fingerprint
+        delta: delta
       });
       if (error) throw error;
       return data;

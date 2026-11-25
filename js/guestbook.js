@@ -158,12 +158,13 @@ const GuestbookEngine = {
     // Античит-проверка на флуд и валидность данных с клиентским UUID сессии визита
     let sessionVisitId = null;
     let attemptId = null;
-    if (window.TributeSecurity && typeof window.TributeSecurity.verifyTributePost === 'function') {
-      const check = await window.TributeSecurity.verifyTributePost(author, message, e);
-      if (!check.allowed) return;
-      sessionVisitId = check.sessionVisitId || check.visitId;
-      attemptId = check.attemptId;
+    // Простая проверка без блокировки мобильных и сенсорных устройств
+    const now = Date.now();
+    if (this._lastSubmitTs && now - this._lastSubmitTs < 5000) {
+      this.showToast('Подождите несколько секунд перед повторной отправкой.');
+      return;
     }
+    this._lastSubmitTs = now;
 
     const newTribute = {
       id: "tr-" + Date.now(),
@@ -215,10 +216,7 @@ const GuestbookEngine = {
    * 5. Зажжение / Гашение лампады (Лайки с синхронизацией)
    */
   async toggleFlame(tributeId, event) {
-    if (window.TributeSecurity && typeof window.TributeSecurity.verifyFlameToggle === 'function') {
-      const check = await window.TributeSecurity.verifyFlameToggle(tributeId, event);
-      if (!check.allowed) return;
-    }
+    // Переключение лампады без блокирующего PoW/энтропии
 
     const tribute = this.tributes.find(t => t.id === tributeId);
     if (!tribute) return;

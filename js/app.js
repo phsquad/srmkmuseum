@@ -343,8 +343,8 @@
       if (global.MemorialToast) {
         global.MemorialToast.show('🕯 Свеча памяти зажжена.', 'success');
       }
-      if (global.CloudSync && typeof global.CloudSync.incrementCandle === 'function') {
-        global.CloudSync.incrementCandle(heroId).catch(() => {});
+      if (global.CloudSync && typeof global.CloudSync.pushCandle === 'function') {
+        global.CloudSync.pushCandle(heroId).catch(() => {});
       }
     },
 
@@ -385,8 +385,8 @@
         try { localStorage.setItem(FLOWERS_KEY, String(this.flowersTotal)); } catch (_) {}
         this.updateStatsStrip();
         if (global.MemorialToast) global.MemorialToast.show('🌹 Гвоздика возложена к Мемориалу Славы.', 'success');
-        if (global.CloudSync && typeof global.CloudSync.incrementFlower === 'function') {
-          global.CloudSync.incrementFlower('general').catch(() => {});
+        if (global.CloudSync && typeof global.CloudSync.pushFlower === 'function') {
+          global.CloudSync.pushFlower('general', 1).catch(() => {});
         }
       });
 
