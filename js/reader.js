@@ -133,18 +133,28 @@
         if (vol.markdown) {
           body.innerHTML = this.markdownToHtml(vol.markdown);
         } else if (Array.isArray(vol.pages) && vol.pages.length > 0) {
-          body.innerHTML = vol.pages.map(p => {
+          const hero = (global.heroesDatabase || []).find(h => h.id === vol.id);
+          const pagesHtml = vol.pages.map(p => {
             const title = p.chapterTitle || (Array.isArray(p) ? p[0] : '');
-            const text = p.content || (Array.isArray(p) ? p[1] : '');
-            const stamp = p.stamp || (Array.isArray(p) ? p[2] : '');
+            let text = p.content || (Array.isArray(p) ? p[1] : '');
+            if (!text && p.rightHtml) {
+              const tmp = document.createElement('div');
+              tmp.innerHTML = p.rightHtml;
+              const storyEl = tmp.querySelector('.page-story-text');
+              text = storyEl ? storyEl.textContent.trim() : '';
+            }
+            const stamp = p.stamp || (Array.isArray(p) ? p[2] : '') || (p.spreadNum || '');
             return `
-              <section style="margin-bottom: 1.6em;">
+              <section style="margin-bottom: 1.8em;">
                 ${stamp ? `<div style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">${stamp}</div>` : ''}
                 ${title ? `<h3>${title}</h3>` : ''}
                 ${this.markdownToHtml(text)}
               </section>
             `;
           }).join('');
+          const deedHtml = hero && hero.deed ? `<hr style="border:none;border-top:1px solid var(--border-subtle);margin:1.8em 0;">${this.markdownToHtml(hero.deed)}` : '';
+          const quoteHtml = hero && hero.quote ? `<blockquote>«${hero.quote}»</blockquote>` : '';
+          body.innerHTML = pagesHtml + deedHtml + quoteHtml;
         } else {
           body.innerHTML = this.markdownToHtml(vol.shortSnippet || '');
         }
