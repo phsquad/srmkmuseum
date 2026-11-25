@@ -31,9 +31,6 @@
       this.syncCloudCounters();
       this.handleDeepLink();
 
-      if (global.AdminCMS && typeof global.AdminCMS.init === 'function') {
-        global.AdminCMS.init();
-      }
       if (global.SpotlightSearch && typeof global.SpotlightSearch.init === 'function') {
         global.SpotlightSearch.init();
       }
