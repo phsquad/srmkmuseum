@@ -130,7 +130,24 @@
         `;
       }
       if (body) {
-        body.innerHTML = this.markdownToHtml(vol.markdown || vol.shortSnippet || '');
+        if (vol.markdown) {
+          body.innerHTML = this.markdownToHtml(vol.markdown);
+        } else if (Array.isArray(vol.pages) && vol.pages.length > 0) {
+          body.innerHTML = vol.pages.map(p => {
+            const title = p.chapterTitle || (Array.isArray(p) ? p[0] : '');
+            const text = p.content || (Array.isArray(p) ? p[1] : '');
+            const stamp = p.stamp || (Array.isArray(p) ? p[2] : '');
+            return `
+              <section style="margin-bottom: 1.6em;">
+                ${stamp ? `<div style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">${stamp}</div>` : ''}
+                ${title ? `<h3>${title}</h3>` : ''}
+                ${this.markdownToHtml(text)}
+              </section>
+            `;
+          }).join('');
+        } else {
+          body.innerHTML = this.markdownToHtml(vol.shortSnippet || '');
+        }
       }
 
       document.querySelectorAll('.toc-item').forEach((el, i) => el.classList.toggle('active', i === this.currentIndex));
