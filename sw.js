@@ -5,7 +5,7 @@
  * ============================================================================
  */
 
-const CACHE_NAME = 'srmk-museum-v3.0-shell';
+const CACHE_NAME = 'srmk-museum-v3.1-shell';
 const PORTRAIT_CACHE = 'srmk-portraits-v3';
 const AUDIO_CACHE = 'srmk-audio-v3';
 const MAX_AUDIO_ENTRIES = 25;

@@ -54,6 +54,35 @@ button, input, select, textarea {
   color: inherit;
 }
 
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="number"],
+select,
+textarea,
+.form-input,
+.form-select,
+.form-textarea,
+.manual-search-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+select option {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+}
+
 button {
   cursor: pointer;
   background: none;
@@ -190,4 +219,58 @@ html.high-contrast {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+
+/* Shared legacy action & segmented buttons across secondary modules */
+.segment-btn,
+.btn-action-primary,
+.btn-action-secondary,
+.btn-clear-form,
+.btn-generate-plan,
+.btn-open-form,
+.mini-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.84rem;
+  transition: border-color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+}
+
+.segment-btn:hover,
+.btn-action-secondary:hover,
+.btn-clear-form:hover,
+.mini-btn:hover {
+  border-color: var(--accent-primary);
+}
+
+.segment-btn.active,
+.btn-action-primary,
+.btn-generate-plan,
+.btn-open-form {
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  border-color: var(--accent-primary);
+}
+
+.segment-control {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actions-footer,
+.form-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
 }

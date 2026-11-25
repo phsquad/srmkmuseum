@@ -23,11 +23,9 @@ const CertificateVerifier = {
     }).format(new Date());
   },
 
-  buildVerificationUrl({ serial, name, date }) {
+  buildVerificationUrl({ serial }) {
     const url = new URL('verify.html', window.location.href);
     url.searchParams.set('cert', this.normalize(serial));
-    url.searchParams.set('name', this.normalize(name));
-    url.searchParams.set('date', this.normalize(date));
     return url.href;
   },
 

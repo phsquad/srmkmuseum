@@ -156,10 +156,10 @@ const DeskQREngine = {
     sheet.className = `plaque-sheet ${this.theme} ${isPortrait ? 'orient-portrait' : ''}`;
 
     const photoSrc = hero.media?.photo || 'assets/images/memorial-bg.jpg';
-    const qrTargetUrl = new URL(`index.html#hero-${encodeURIComponent(hero.id)}`, window.location.href).href;
-    const qrApiUrl = (typeof CertificateVerifier !== 'undefined' && CertificateVerifier.getQrCodeSrc)
-      ? CertificateVerifier.getQrCodeSrc(qrTargetUrl, 160)
-      : `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrTargetUrl)}`;
+    const qrTargetUrl = new URL(`index.html?hero=${encodeURIComponent(hero.id)}`, window.location.href).href;
+    const qrApiUrl = (window.QRCode && typeof QRCode.generateDataUri === 'function')
+      ? QRCode.generateDataUri(qrTargetUrl, { size: 160 })
+      : '';
 
     sheet.innerHTML = `
       <div class="plaque-frame-outer"></div>
@@ -205,7 +205,10 @@ const DeskQREngine = {
           <div class="plaque-info-block">
             <strong>Ратный подвиг и воинский долг:</strong>
             ${hero.military?.rank || 'Воин ВС РФ'} ${hero.military?.unit ? `• ${hero.military.unit}` : ''}<br>
-            ${hero.deed || 'Сведения о боевом пути и подвиге верифицированы архивами колледжа.'}
+            ${((hero.deed || 'Сведения о боевом пути и подвиге верифицированы архивами колледжа.')
+              .replace(/^###\s+(.+)$/gm, '<strong style="color:var(--accent-primary);">$1</strong><br>')
+              .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+              .replace(/\n{2,}/g, '<br>'))}
           </div>
 
           ${hero.quote ? `

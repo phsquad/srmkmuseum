@@ -46,7 +46,32 @@
       this.restoreAccessibility();
       this.bindEvents();
       this.syncRankBadge();
+      this.syncDbBadge();
       this.registerServiceWorker();
+    },
+
+    syncDbBadge() {
+      const update = (status) => {
+        const badge = document.getElementById('srmkDbStatusBadge');
+        if (!badge) return;
+        const st = status || (global.CloudSync ? global.CloudSync.status : 'offline');
+        badge.setAttribute('data-status', st);
+        const label = badge.querySelector('.db-label');
+        if (st === 'online') {
+          if (label) label.textContent = 'БД онлайн';
+          badge.title = 'Подключено к базе данных Supabase';
+        } else if (st === 'connecting') {
+          if (label) label.textContent = 'БД...';
+          badge.title = 'Подключение к базе данных Supabase...';
+        } else {
+          if (label) label.textContent = 'Локально';
+          badge.title = 'Автономный режим: нет связи с БД Supabase';
+        }
+      };
+      update();
+      window.addEventListener('srmk-supabase-status', (e) => {
+        update(e.detail && e.detail.status);
+      });
     },
 
     renderHeader() {
@@ -97,6 +122,10 @@
           </nav>
 
           <div class="srmk-actions">
+            <span class="srmk-db-badge" id="srmkDbStatusBadge" data-status="connecting" title="Статус подключения к базе данных Supabase">
+              <span class="db-dot" aria-hidden="true"></span>
+              <span class="db-label">БД...</span>
+            </span>
             <button type="button" class="srmk-icon-btn" id="btnOpenSpotlight" title="Поиск (Ctrl+K)" aria-label="Поиск по музею">🔍</button>
             <button type="button" class="srmk-rank-pill" id="btnHeaderRankBadge" data-gamification title="Воинский ранг и награды">
               <span id="hdrRankIcon">🎖️</span>

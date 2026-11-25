@@ -188,6 +188,48 @@
   color: var(--accent-primary);
 }
 
+.srmk-db-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.03);
+  white-space: nowrap;
+}
+
+.srmk-db-badge .db-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+.srmk-db-badge[data-status="online"] .db-dot {
+  background: #22c55e;
+}
+
+.srmk-db-badge[data-status="offline"],
+.srmk-db-badge[data-status="error"] {
+  color: #f5b642;
+  border-color: rgba(245, 182, 66, 0.35);
+}
+
+.srmk-db-badge[data-status="offline"] .db-dot,
+.srmk-db-badge[data-status="error"] .db-dot {
+  background: #f59e0b;
+}
+
+@media (max-width: 639px) {
+  .srmk-db-badge .db-label {
+    display: none;
+  }
+}
+
 .srmk-rank-pill {
   display: none;
   align-items: center;

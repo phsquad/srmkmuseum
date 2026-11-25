@@ -332,19 +332,29 @@
       modal.classList.add('active');
     },
 
-    lightCandle(heroId) {
-      this.candlesMap[heroId] = (this.candlesMap[heroId] || 0) + 1;
-      try { localStorage.setItem(CANDLES_KEY, JSON.stringify(this.candlesMap)); } catch (_) {}
-      this.updateStatsStrip();
-      this.renderCardsGrid();
-      if (global.SoundEngine && typeof global.SoundEngine.playCandleIgnite === 'function') {
-        global.SoundEngine.playCandleIgnite();
+    async lightCandle(heroId, triggerBtn = null) {
+      if (!global.CloudSync || !global.CloudSync.isLive) {
+        if (global.MemorialToast) {
+          global.MemorialToast.show('Локальный режим: нет связи с БД. Зажжение свечи недоступно без сети.', 'warning');
+        }
+        return;
       }
-      if (global.MemorialToast) {
-        global.MemorialToast.show('🕯 Свеча памяти зажжена.', 'success');
-      }
-      if (global.CloudSync && typeof global.CloudSync.pushCandle === 'function') {
-        global.CloudSync.pushCandle(heroId).catch(() => {});
+      if (triggerBtn) triggerBtn.disabled = true;
+      try {
+        await global.CloudSync.pushCandle(heroId);
+        await this.syncCloudCounters();
+        if (global.SoundEngine && typeof global.SoundEngine.playCandleIgnite === 'function') {
+          global.SoundEngine.playCandleIgnite();
+        }
+        if (global.MemorialToast) {
+          global.MemorialToast.show('🕯 Свеча памяти зажжена в базе мемориала.', 'success');
+        }
+      } catch (_) {
+        if (global.MemorialToast) {
+          global.MemorialToast.show('Не удалось записать в БД. Попробуйте позже.', 'error');
+        }
+      } finally {
+        if (triggerBtn) triggerBtn.disabled = false;
       }
     },
 
@@ -447,7 +457,7 @@
 
         const candleHero = e.target.closest('[data-candle-hero]');
         if (candleHero) {
-          this.lightCandle(candleHero.getAttribute('data-candle-hero'));
+          this.lightCandle(candleHero.getAttribute('data-candle-hero'), candleHero);
         }
       });
 

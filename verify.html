@@ -68,7 +68,7 @@
         <div class="verify-grid">
           <div class="verify-item">
             <span class="verify-label">Регистрационный номер:</span>
-            <span class="verify-value" id="cardSerial">СРМК-УМ-2026-0001</span>
+            <span class="verify-value" id="cardSerial">—</span>
           </div>
 
           <div class="verify-item">
@@ -114,7 +114,7 @@
             <span id="cardCryptoHash" class="hash-code">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</span>
           </div>
           <div class="qr-preview-small" id="qrPreviewBox">
-            <img id="verifyQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=СРМК-УМ-2026-0001" alt="QR-код документа">
+            <img id="verifyQrImg" src="" alt="QR-код документа" style="background:#fff;padding:4px;border-radius:4px;">
           </div>
         </div>
 
@@ -138,10 +138,7 @@
         </div>
 
         <div class="preset-links">
-          <span>Тестовые образцы для проверки:</span>
-          <button onclick="VerifyApp.checkSerial('СРМК-УМ-2026-0001')" type="button">СРМК-УМ-2026-0001</button> • 
-          <button onclick="VerifyApp.checkSerial('СРМК-УМ-2026-0042')" type="button">СРМК-УМ-2026-0042</button> • 
-          <button onclick="VerifyApp.checkSerial('СРМК-УМ-2026-7777')" type="button">СРМК-УМ-2026-7777</button>
+          <span>Формат серийного номера: <code>СРМК-УМ-2026-XXXX</code></span>
         </div>
       </div>
 
@@ -174,17 +171,44 @@
     const VerifyApp = {
       async init() {
         const params = new URLSearchParams(window.location.search);
-        const serial = params.get('cert') || 'СРМК-УМ-2026-0001';
-        const nameParam = params.get('name');
-        const dateParam = params.get('date');
+        const serial = (params.get('cert') || '').trim();
 
-        document.getElementById('manualSearchInput').value = serial;
-        
-        document.getElementById('manualSearchInput').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') this.submitSearch();
+        const searchInput = document.getElementById('manualSearchInput');
+        if (searchInput) {
+          searchInput.value = serial;
+          searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') this.submitSearch();
+          });
+        }
+
+        if (!serial) {
+          this.renderEmptyState();
+          return;
+        }
+
+        // Wait for CloudSync to finish connecting before querying Supabase
+        if (typeof CloudSync !== 'undefined' && CloudSync.status === 'connecting') {
+          await new Promise((resolve) => {
+            const done = () => resolve();
+            window.addEventListener('srmk-supabase-status', done, { once: true });
+            setTimeout(done, 4500);
+          });
+        }
+
+        await this.verifySerial(serial);
+      },
+
+      renderEmptyState() {
+        const wrapper = document.getElementById('statusBadgeWrapper');
+        const title = document.getElementById('statusTitle');
+        if (wrapper) wrapper.className = 'verify-status';
+        if (title) title.textContent = 'Введите серийный номер сертификата или отсканируйте QR-код';
+        ['cardSerial', 'cardName', 'cardDate', 'cardGroup', 'cardSpecialty', 'cardReason', 'cardCryptoHash'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = '—';
         });
-
-        await this.verifySerial(serial, nameParam, dateParam);
+        const qrImg = document.getElementById('verifyQrImg');
+        if (qrImg && window.QRCode) qrImg.src = window.QRCode.generateDataUri(window.location.href, { size: 150 });
       },
 
       submitSearch() {
@@ -200,75 +224,56 @@
         window.location.href = url.href;
       },
 
-      async verifySerial(serial, nameParam = null, dateParam = null) {
+      async verifySerial(serial) {
         const wrapper = document.getElementById('statusBadgeWrapper');
         const title = document.getElementById('statusTitle');
 
         document.getElementById('cardSerial').textContent = serial;
 
-        const currentUrl = encodeURIComponent(window.location.href);
-        document.getElementById('verifyQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${currentUrl}`;
-
-        // 1. Проверка в облаке Supabase
-        let certData = null;
-        if (typeof CloudSync !== 'undefined' && CloudSync.isLive) {
-          certData = await CloudSync.verifyCertificate(serial);
+        const qrImg = document.getElementById('verifyQrImg');
+        if (qrImg && window.QRCode) {
+          qrImg.src = window.QRCode.generateDataUri(window.location.href, { size: 150 });
         }
+
+        // Проверка строго в реальной БД Supabase (certificates_registry)
+        if (typeof CloudSync === 'undefined' || !CloudSync.isLive) {
+          wrapper.className = 'verify-status';
+          title.textContent = 'ЛОКАЛЬНЫЙ РЕЖИМ: НЕТ СВЯЗИ С БАЗОЙ ДАННЫХ SUPABASE';
+          document.getElementById('cardName').textContent = 'Проверка недоступна в офлайне';
+          document.getElementById('cardDate').textContent = '—';
+          document.getElementById('cardGroup').textContent = '—';
+          document.getElementById('cardSpecialty').textContent = '—';
+          document.getElementById('cardReason').textContent = 'Подключитесь к сети для проверки сертификата в реестре Supabase.';
+          document.getElementById('cardCryptoHash').textContent = 'ОФЛАЙН-РЕЖИМ';
+          return;
+        }
+
+        const certData = await CloudSync.verifyCertificate(serial);
 
         if (certData) {
           if (window.AchievementsEngine && typeof window.AchievementsEngine.trackVerificationPerformed === 'function') {
             window.AchievementsEngine.trackVerificationPerformed();
           }
-          wrapper.className = "status-badge-wrapper";
-          title.textContent = "ПОДЛИННОСТЬ ПОДТВЕРЖДЕНА В ЭЛЕКТРОННОМ РЕЕСТРЕ СРМК";
-          
-          document.getElementById('cardName').textContent = certData.student_name || nameParam || "—";
-          document.getElementById('cardDate').textContent = certData.issue_date || dateParam || "10 сентября 2026 г.";
-          document.getElementById('cardGroup').textContent = certData.group_name ? `Группа ${certData.group_name}` : "Обучающийся СРМК";
-          document.getElementById('cardSpecialty').textContent = certData.specialty || "Специальность СПО";
-          document.getElementById('cardReason').textContent = certData.nomination || "Участие во Всероссийской акции «Имя в истории»";
-          document.getElementById('cardCryptoHash').textContent = `SHA256:${(certData.crypto_hash || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855').toUpperCase()}`;
+          wrapper.className = 'verify-status valid';
+          title.textContent = 'ПОДЛИННОСТЬ ПОДТВЕРЖДЕНА В ЭЛЕКТРОННОМ РЕЕСТРЕ СРМК';
+
+          document.getElementById('cardName').textContent = certData.student_name || '—';
+          document.getElementById('cardDate').textContent = certData.issue_date || '—';
+          document.getElementById('cardGroup').textContent = certData.group_name ? `Группа ${certData.group_name}` : 'Обучающийся СРМК';
+          document.getElementById('cardSpecialty').textContent = certData.specialty || 'Специальность СПО';
+          document.getElementById('cardReason').textContent = certData.nomination || 'Участие в Уроке Мужества';
+          document.getElementById('cardCryptoHash').textContent = `SHA256:${(certData.crypto_hash || '').toUpperCase()}`;
           return;
         }
 
-        // 2. Локальный фолбэк по алгоритму CertificateVerifier
-        const isValidFormat = typeof CertificateVerifier !== 'undefined' 
-          ? CertificateVerifier.isValidSerial(serial)
-          : /^СРМК-УМ-(20\d{2})-(\d{4})$/.test(serial);
-
-        if (isValidFormat) {
-          if (window.AchievementsEngine && typeof window.AchievementsEngine.trackVerificationPerformed === 'function') {
-            window.AchievementsEngine.trackVerificationPerformed();
-          }
-          wrapper.className = "status-badge-wrapper status-offline";
-          title.textContent = "ПОДЛИННОСТЬ ПОДТВЕРЖДЕНА (ЛОКАЛЬНЫЙ РЕЕСТР СРМК)";
-
-          const displayName = nameParam || "Смирнов Никита Александрович";
-          const displayDate = dateParam || "10 сентября 2026 г.";
-
-          document.getElementById('cardName').textContent = displayName;
-          document.getElementById('cardDate').textContent = displayDate;
-          document.getElementById('cardGroup').textContent = "Группа ИСиП-242";
-          document.getElementById('cardSpecialty').textContent = "09.02.11 Разработка ПО";
-          document.getElementById('cardReason').textContent = "Участие во Всероссийском Уроке Мужества";
-
-          if (typeof CertificateVerifier !== 'undefined') {
-            const calculatedHash = await CertificateVerifier.computeHash(serial + displayName + displayDate);
-            document.getElementById('cardCryptoHash').textContent = `SHA256:${calculatedHash.toUpperCase()}`;
-          } else {
-            document.getElementById('cardCryptoHash').textContent = "SHA256:E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855";
-          }
-        } else {
-          wrapper.className = "status-badge-wrapper status-invalid";
-          title.textContent = "ОШИБКА: ДОКУМЕНТ НЕ НАЙДЕН В РЕЕСТРЕ (НЕВАЛИДНЫЙ НОМЕР)";
-
-          document.getElementById('cardName').textContent = "ОТКАЗ ВЕРИФИКАЦИИ";
-          document.getElementById('cardDate').textContent = "НЕИЗВЕСТНО";
-          document.getElementById('cardGroup').textContent = "ОТКАЗ";
-          document.getElementById('cardSpecialty').textContent = "НЕВАЛИДНЫЙ СЕРИЙНЫЙ НОМЕР";
-          document.getElementById('cardReason').textContent = "Документ с данным регистрационным номером не выписывался в реестре ГБПОУ СРМК.";
-          document.getElementById('cardCryptoHash').textContent = "ОТКАЗ ВЕРИФИКАЦИИ ХЭША";
-        }
+        wrapper.className = 'verify-status invalid';
+        title.textContent = 'ДОКУМЕНТ НЕ НАЙДЕН В РЕЕСТРЕ СРМК';
+        document.getElementById('cardName').textContent = 'НЕ НАЙДЕН';
+        document.getElementById('cardDate').textContent = '—';
+        document.getElementById('cardGroup').textContent = '—';
+        document.getElementById('cardSpecialty').textContent = '—';
+        document.getElementById('cardReason').textContent = 'Сертификат с данным серийным номером отсутствует в таблице certificates_registry.';
+        document.getElementById('cardCryptoHash').textContent = 'ОТСУТСТВУЕТ В БД';
       }
     };
 

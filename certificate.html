@@ -88,12 +88,12 @@
       <div id="studentSingleFields">
         <div class="control-group">
           <label class="control-label">ФИО обучающегося (Дательный падеж):</label>
-          <input type="text" id="inputStudentName" class="form-input" value="Иванову Даниле Денисовичу">
+          <input type="text" id="inputStudentName" class="form-input" value="" placeholder="Введите ФИО (в дательном падеже)">
         </div>
 
         <div class="control-group" style="margin-top: 10px;">
           <label class="control-label">Учебная группа:</label>
-          <input type="text" id="inputStudentGroup" class="form-input" value="ИС-241">
+          <input type="text" id="inputStudentGroup" class="form-input" value="" placeholder="Например: ИСиП-242">
         </div>
 
         <div class="control-group" style="margin-top: 10px;">
@@ -115,10 +115,7 @@
       <div id="studentBatchFields" style="display: none;">
         <div class="control-group">
           <label class="control-label">Список студентов (По одному на строку):</label>
-          <textarea id="inputBatchList" class="form-textarea" rows="5">Иванову Даниле Денисовичу
-Смирновой Алине Викторовне
-Кузнецову Артему Павловичу
-Васильеву Дмитрию Олеговичу</textarea>
+          <textarea id="inputBatchList" class="form-textarea" rows="5" placeholder="Введите ФИО студентов построчно..."></textarea>
         </div>
         <div class="control-group" style="margin-top: 10px;">
           <label class="control-label">Общая группа для списка:</label>
@@ -169,7 +166,7 @@
         <button id="btnPrintPDF" class="btn-action-primary" type="button">
           <span>🖨️</span> Распечатать / Сохранить в PDF
         </button>
-        <button id="btnExportCertPng" class="btn-action-primary" type="button" style="background: linear-gradient(135deg, rgba(212, 160, 23, 0.25), rgba(15, 20, 30, 0.95)); border-color: rgba(212, 160, 23, 0.45); margin-top: 6px;">
+        <button id="btnExportCertPng" class="btn-action-secondary" type="button" style="margin-top: 6px; border-color: var(--border-accent); color: var(--accent-primary);">
           <span>📥</span> Скачать сертификат (PNG / Retina HD)
         </button>
         <button id="btnQuickFill" class="btn-action-secondary" type="button">
@@ -512,6 +509,19 @@
         ctx.fillText(`Дата выдачи: ${dateStr}`, baseW - 120, baseH - 140);
         ctx.fillText('г. Ставрополь, Мемориал Славы СРМК', baseW - 120, baseH - 110);
 
+        if (typeof CloudSync !== 'undefined' && CloudSync.isLive) {
+          const verifier = window.CertificateVerifier;
+          const hashHex = verifier ? await verifier.computeHash(serialFormatted + (name || '') + dateStr) : '';
+          await CloudSync.registerCertificate({
+            serial: serialFormatted,
+            student_name: name || 'Участник',
+            group_name: group || null,
+            nomination: document.getElementById('selectNomination')?.value || 'Урок Мужества',
+            issue_date: dateStr,
+            crypto_hash: hashHex
+          });
+        }
+
         const link = document.createElement('a');
         link.download = `Сертификат_СРМК_${(name || 'Документ').replace(/\s+/g, '_')}.png`;
         link.href = canvas.toDataURL('image/png');
@@ -598,17 +608,16 @@
         const sheet = document.createElement('article');
         sheet.className = `certificate-sheet ${this.theme}`;
 
-        const serialFormatted = `СРМК-УМ-2026-${String(serialNumber).padStart(4, '0')}`;
+        const uniqueSuffix = String((Date.now() + serialNumber * 137) % 9000 + 1000);
+        const serialFormatted = `СРМК-УМ-2026-${uniqueSuffix}`;
         const verifier = window.CertificateVerifier || (typeof CertificateVerifier !== 'undefined' ? CertificateVerifier : null);
         const qrVerificationUrl = verifier
-          ? verifier.buildVerificationUrl({ serial: serialFormatted, name, date: dateStr })
-          : new URL(`verify.html?cert=${encodeURIComponent(serialFormatted)}&name=${encodeURIComponent(name)}&date=${encodeURIComponent(dateStr)}`, window.location.href).href;
+          ? verifier.buildVerificationUrl({ serial: serialFormatted })
+          : new URL(`verify.html?cert=${encodeURIComponent(serialFormatted)}`, window.location.href).href;
 
-        const qrApiUrl = (verifier && typeof verifier.getQrCodeSrc === 'function')
-          ? verifier.getQrCodeSrc(qrVerificationUrl, 150)
-          : ((typeof QRCode !== 'undefined' && typeof QRCode.generateDataUri === 'function')
-            ? QRCode.generateDataUri(qrVerificationUrl, { size: 150, margin: 2, logo: true })
-            : `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrVerificationUrl)}`);
+        const qrApiUrl = (typeof QRCode !== 'undefined' && typeof QRCode.generateDataUri === 'function')
+          ? QRCode.generateDataUri(qrVerificationUrl, { size: 150, margin: 2, logo: true })
+          : '';
 
         sheet.innerHTML = `
           <div class="cert-frame-outer"></div>

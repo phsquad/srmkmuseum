@@ -330,9 +330,8 @@
             </p>
             <div style="display:flex; gap:36px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:12px;">
               <div style="background:#fff; padding:14px; border-radius:10px; border:2px solid #dfba6d; text-align:center;">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://phsquad.github.io/srmkmuseum/quiz.html" 
-                     alt="QR квеста" width="160" height="160"
-                     onerror="this.src='assets/images/icons/icon-192.png'">
+                <img src="${window.QRCode ? window.QRCode.generateDataUri('https://phsquad.github.io/srmkmuseum/quiz.html', { size: 160 }) : 'assets/images/icons/icon-192.png'}"
+                     alt="QR квеста" width="160" height="160">
                 <div style="color:#0a0c0f; font-weight:700; font-size:0.75rem; margin-top:6px;">КВЕСТ СРМК ОНЛАЙН</div>
               </div>
               <div style="text-align:left; max-width:380px;">

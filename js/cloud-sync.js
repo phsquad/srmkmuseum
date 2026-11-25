@@ -57,11 +57,12 @@ const CloudSync = {
     try {
       const testClient = supabase.createClient(testUrl, testKey);
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
 
       const { data, error } = await testClient
         .from('memorial_counters')
-        .select('hero_id', { count: 'exact', head: true })
+        .select('hero_id')
+        .limit(1)
         .abortSignal(controller.signal);
 
       clearTimeout(timeoutId);
@@ -333,123 +334,6 @@ const CloudSync = {
     } catch (e) {
       console.warn('[CloudSync] Не удалось загрузить героев из базы:', e);
       return null;
-    }
-  },
-
-  async seedDatabase() {
-    if (!this.client) {
-      return { success: false, message: 'Supabase клиент не инициализирован' };
-    }
-    try {
-      const heroes = (typeof window.heroesDatabase !== 'undefined' && Array.isArray(window.heroesDatabase))
-        ? window.heroesDatabase
-        : ((typeof heroesDatabase !== 'undefined' && Array.isArray(heroesDatabase)) ? heroesDatabase : []);
-
-      if (heroes.length === 0) {
-        return { success: false, message: 'Локальная база героев (data.js) пуста' };
-      }
-
-      // 1. Наполняем heroes_database
-      const { data: existingHeroes, error: checkErr } = await this.client
-        .from('heroes_database')
-        .select('id');
-
-      let insertedCount = 0;
-      if (!checkErr) {
-        const existingIds = new Set((existingHeroes || []).map(h => h.id));
-        const toInsert = heroes.filter(h => !existingIds.has(h.id)).map(h => ({
-          id: h.id,
-          name: h.name,
-          plaque: h.plaque || 'general',
-          spec_tag: h.specTag || h.category || h.id,
-          dates: h.dates || {},
-          education: h.education || {},
-          military: h.military || {},
-          awards: h.awards || [],
-          deed: h.deed || '',
-          quote: h.quote || '',
-          media: h.media || { photo: h.photo || '', audio: h.audioGuide || '' },
-          map_coords: h.mapCoords || {}
-        }));
-
-        if (toInsert.length > 0) {
-          const { error: insErr } = await this.client.from('heroes_database').upsert(toInsert);
-          if (insErr) throw insErr;
-          insertedCount = toInsert.length;
-        }
-      }
-
-      // 2. Инициализируем memorial_counters
-      const { data: existingCounters } = await this.client.from('memorial_counters').select('hero_id');
-      const counterIds = new Set((existingCounters || []).map(c => c.hero_id));
-      const countersToInsert = heroes.filter(h => !counterIds.has(h.id)).map(h => ({
-        hero_id: h.id,
-        candles: 0,
-        flowers: 0,
-        last_updated: new Date().toISOString()
-      }));
-
-      if (countersToInsert.length > 0) {
-        await this.client.from('memorial_counters').upsert(countersToInsert);
-      }
-
-      // 3. Заполняем канонические послания на Стене Памяти (если пусто)
-      const { data: existingTributes } = await this.client.from('guestbook_tributes').select('id').limit(1);
-      if (!existingTributes || existingTributes.length === 0) {
-        const seedTributes = [
-          {
-            id: "tr-seed-1",
-            author: "Евгений Викторович Бледных",
-            role: "admin",
-            role_label: "Директор ГБПОУ СРМК, к.и.н.",
-            dedication_id: "general",
-            dedication_name: "Общему Мемориалу Славы",
-            message: "26 сентября 2025 года мы навечно увековечили подвиг 20 наших ребят. Каждый из них — часть славной истории нашего колледжа. Их мужество служит вечным нравственным ориентиром для каждого поколения студентов СРМК.",
-            theme: "theme-parchment",
-            flames: 24,
-            is_pinned: true,
-            is_verified: true,
-            date: "26 сентября 2025 г."
-          },
-          {
-            id: "tr-seed-2",
-            author: "Владимир Григорьев",
-            role: "student",
-            role_label: "Студент 3 курса СРМК, автор реквиема",
-            dedication_id: "general",
-            dedication_name: "Общему Мемориалу Славы",
-            message: "Тыл и фронт — един! И сколько б ни потребовалось зим — верим и знаем: мы победим! Вечная слава выпускникам нашего колледжа, шагнувшим в вечность.",
-            theme: "theme-clean",
-            flames: 19,
-            is_pinned: false,
-            is_verified: true,
-            date: "26 сентября 2025 г."
-          },
-          {
-            id: "tr-seed-3",
-            author: "Лариса Ивановна Вечёрка",
-            role: "guest",
-            role_label: "Мать кавалера Ордена Мужества",
-            dedication_id: "vecherka-n-a",
-            dedication_name: "Вечёрка Николай Александрович",
-            message: "Коленька навсегда останется живым в наших сердцах. Спасибо дирекции колледжа, преподавателям и сокурсникам за сохранение священной памяти.",
-            theme: "theme-parchment",
-            flames: 31,
-            is_pinned: true,
-            is_verified: true,
-            date: "28 сентября 2025 г."
-          }
-        ];
-        await this.client.from('guestbook_tributes').upsert(seedTributes);
-      }
-
-      return {
-        success: true,
-        message: `База данных синхронизирована! Героев в базе: ${heroes.length} (новых внесено: ${insertedCount}).`
-      };
-    } catch (e) {
-      console.error('[CloudSync] Ошибка наполнения базы:', e);
-      return { success: false, message: e.message || 'Ошибка заполнения' };
     }
   },
 
@@ -778,16 +662,6 @@ const CloudSync = {
   async updateHallDwellTime(hallId, addedDwellSeconds, anonHash = 'anon') {
     if (!this.isLive || !this.client) return null;
     try {
-      try {
-        const { data, error } = await this.client.rpc('update_hall_dwell_time', {
-          p_hall_id: hallId,
-          p_added_dwell_seconds: addedDwellSeconds,
-          p_anon_hash: anonHash
-        });
-        if (!error) return data;
-      } catch (rpcErr) {}
-
-      // Fallback
       const { data: cur } = await this.client
         .from('hall_analytics_counters')
         .select('total_duration_seconds')
