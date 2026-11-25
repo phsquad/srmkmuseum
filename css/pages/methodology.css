@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   METHODOLOGY CABINET: css/pages/methodology.css
+   ========================================================================== */
+
+.method-wrap {
+  padding: 36px 0 56px;
+}
+
+.method-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.method-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  padding: clamp(18px, 3vw, 28px);
+  margin-bottom: 24px;
+}
+
+.method-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 760px) {
+  .method-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.method-field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.method-input,
+.method-textarea,
+.method-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.method-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.method-offline-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-accent);
+  background: rgba(38, 66, 107, 0.25);
+  margin-bottom: 24px;
+}

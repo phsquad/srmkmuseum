@@ -1,0 +1,289 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   MEMORY BOOK & READER: css/pages/book-reader.css
+   ========================================================================== */
+
+/* 1. MEMORY BOOK CATALOG (Above-the-fold H1 + compact side poster) */
+.book-hero {
+  padding: 36px 0 28px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.book-hero-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  gap: 28px;
+  align-items: center;
+}
+
+@media (max-width: 820px) {
+  .book-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+.book-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.book-hero h1 span {
+  color: var(--accent-primary);
+}
+
+.book-hero-poster {
+  max-height: 240px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-accent);
+  box-shadow: var(--shadow-card);
+}
+
+.book-controls {
+  padding: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.volumes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding-bottom: 32px;
+}
+
+.volume-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.volume-card:hover {
+  border-color: var(--border-accent);
+}
+
+.volume-card-top {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+}
+
+.volume-thumb {
+  width: 78px;
+  height: 104px;
+  flex: 0 0 78px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  object-position: top center;
+  border: 1px solid var(--border-accent);
+}
+
+.volume-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.volume-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-primary);
+}
+
+.volume-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin: 4px 0;
+}
+
+.volume-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.volume-snippet {
+  padding: 0 16px 14px;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.volume-actions {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 8px;
+}
+
+/* 2. READER (Article Flow + CSS 2-Column Spread, zero height clipping) */
+.reader-toolbar {
+  position: sticky;
+  top: var(--header-h);
+  z-index: var(--z-sticky);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 10px 0;
+}
+
+.reader-toolbar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.reader-progress-track {
+  height: 3px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.reader-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-primary);
+  transition: width 120ms linear;
+}
+
+.reader-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  padding: 28px 0 48px;
+  align-items: start;
+}
+
+@media (max-width: 959px) {
+  .reader-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reader-toc {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  position: sticky;
+  top: 130px;
+}
+
+@media (max-width: 959px) {
+  .reader-toc {
+    position: static;
+    max-height: 240px;
+  }
+}
+
+.toc-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toc-item:hover,
+.toc-item.active {
+  background: rgba(226, 189, 107, 0.12);
+  color: var(--accent-primary);
+}
+
+.reader-paper {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  padding: clamp(20px, 4vw, 48px);
+  box-shadow: var(--shadow-card);
+}
+
+.reader-chapter-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reader-chapter-photo {
+  width: 110px;
+  height: 146px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  object-position: top center;
+  border: 1px solid var(--border-accent);
+}
+
+.reader-article {
+  font-family: var(--font-book);
+  font-size: var(--reader-font-size, 1.06rem);
+  line-height: 1.78;
+  color: var(--text-primary);
+  max-width: 70ch;
+}
+
+.reader-article h1,
+.reader-article h2,
+.reader-article h3 {
+  font-family: var(--font-display);
+  color: var(--accent-primary);
+  margin: 1.3em 0 0.5em;
+  line-height: 1.25;
+}
+
+.reader-article blockquote {
+  margin: 1.2em 0;
+  padding: 12px 18px;
+  border-left: 3px solid var(--accent-primary);
+  background: rgba(255, 255, 255, 0.04);
+  font-style: italic;
+}
+
+.reader-article p + p {
+  margin-top: 0.9em;
+}
+
+/* Pure CSS 2-Column Spread on >= 1200px (no JS height clipping) */
+@media (min-width: 1200px) {
+  .reader-paper[data-view="spread"] .reader-article {
+    max-width: none;
+    column-count: 2;
+    column-gap: 44px;
+    column-rule: 1px solid var(--border-subtle);
+  }
+  .reader-paper[data-view="spread"] .reader-article h1,
+  .reader-paper[data-view="spread"] .reader-article h2 {
+    column-span: all;
+  }
+}
+
+.reader-nav-footer {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}

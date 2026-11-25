@@ -1,0 +1,135 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   4 THEME ARCHETYPES & PER-SECTION ACCENTS: css/themes.css
+   Archetypes: memorial | folio | tactical | official
+   ========================================================================== */
+
+/* 1. MEMORIAL ARCHETYPE (Halls I & IV, Guestbook) */
+[data-section="hall-memorial"],
+[data-section="hall-relay"],
+[data-section="guestbook"] {
+  --bg-canvas: #0a0c0f;
+  --bg-surface: #121419;
+  --bg-elevated: #1b1e26;
+  --accent-primary: #e6c86e;
+  --accent-secondary: #8a1c22;
+  --accent-glow: rgba(230, 200, 110, 0.25);
+}
+
+[data-section="hall-relay"] {
+  --bg-surface: #141210;
+  --accent-primary: #f0b45b;
+  --accent-glow: rgba(240, 180, 91, 0.26);
+}
+
+[data-section="guestbook"] {
+  --bg-canvas: #0e1116;
+  --accent-primary: #f5b642;
+  --accent-glow: rgba(245, 182, 66, 0.24);
+}
+
+/* 2. FOLIO ARCHETYPE (Hall II, Memory Book, Reader) */
+[data-section="hall-desks"],
+[data-section="memory-book"],
+[data-section="reader"] {
+  --bg-canvas: #101318;
+  --bg-surface: #161b23;
+  --bg-elevated: #1f2631;
+  --accent-primary: #dfb063;
+  --accent-secondary: #7a2323;
+  --accent-glow: rgba(223, 176, 99, 0.22);
+}
+
+[data-section="memory-book"],
+[data-section="reader"] {
+  --bg-canvas: #11100e;
+  --bg-surface: #181613;
+  --bg-elevated: #221f1a;
+  --accent-primary: #e2bd6b;
+  --border-accent: rgba(226, 189, 107, 0.34);
+}
+
+/* Reader Paper Mode toggle */
+[data-section="reader"][data-reader-theme="paper"] {
+  --bg-canvas: #f4efe4;
+  --bg-surface: #fbf8f1;
+  --bg-elevated: #efe8d8;
+  --bg-card: #ffffff;
+  --text-primary: #1f1b16;
+  --text-secondary: #3f382e;
+  --text-muted: #675e50;
+  --text-on-accent: #ffffff;
+  --accent-primary: #8a5a19;
+  --accent-primary-hover: #6e450f;
+  --border-subtle: rgba(31, 27, 22, 0.14);
+  --border-accent: rgba(138, 90, 25, 0.35);
+}
+
+/* 3. TACTICAL ARCHETYPE (Hall III Map & Quiz) */
+[data-section="hall-map"],
+[data-section="quiz"] {
+  --bg-canvas: #0d141b;
+  --bg-surface: #131d27;
+  --bg-elevated: #1a2836;
+  --accent-primary: #6bbbd9;
+  --accent-secondary: #8a1c22;
+  --accent-glow: rgba(107, 187, 217, 0.24);
+  --border-accent: rgba(107, 187, 217, 0.32);
+}
+
+[data-section="quiz"] {
+  --bg-canvas: #12141a;
+  --bg-surface: #181c25;
+  --bg-elevated: #212734;
+  --accent-primary: #e5a94c;
+  --accent-glow: rgba(229, 169, 76, 0.25);
+  --border-accent: rgba(229, 169, 76, 0.34);
+}
+
+/* 4. OFFICIAL / PRINT ARCHETYPE (Certificate, Verify, Desk-QR, Methodology, 404) */
+[data-section="certificate"],
+[data-section="verify"],
+[data-section="desk-qr"],
+[data-section="methodology"],
+[data-section="error-404"] {
+  --bg-canvas: #0c1513;
+  --bg-surface: #12201d;
+  --bg-elevated: #192b27;
+  --accent-primary: #dfc175;
+  --accent-secondary: #1e4d42;
+  --accent-glow: rgba(223, 193, 117, 0.22);
+  --border-accent: rgba(223, 193, 117, 0.32);
+}
+
+[data-section="desk-qr"] {
+  --bg-canvas: #151412;
+  --bg-surface: #1d1b18;
+  --bg-elevated: #26231e;
+  --accent-primary: #d9b466;
+}
+
+[data-section="methodology"] {
+  --bg-canvas: #0f1622;
+  --bg-surface: #151f2f;
+  --bg-elevated: #1d2b40;
+  --accent-primary: #e2c574;
+  --accent-secondary: #26426b;
+}
+
+/* Subtle Atmospheric Textures per Section */
+.texture-blueprint {
+  background-image:
+    linear-gradient(rgba(223, 176, 99, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(223, 176, 99, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.texture-topo {
+  background-image: radial-gradient(circle at 20% 20%, rgba(107, 187, 217, 0.08), transparent 55%),
+                    radial-gradient(circle at 80% 70%, rgba(138, 28, 34, 0.09), transparent 50%);
+}
+
+.texture-candlelight {
+  background-image: radial-gradient(circle at 50% 15%, rgba(240, 180, 91, 0.12), transparent 60%);
+}

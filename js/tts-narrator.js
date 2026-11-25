@@ -43,6 +43,9 @@ const TTSNarrator = {
    */
   speakText(text, targetElement = null, onEndCallback = null) {
     this.stop();
+    if (window.AudioDock && typeof window.AudioDock.pause === 'function') {
+      window.AudioDock.pause();
+    }
 
     if (!text || !this.synth) return;
 

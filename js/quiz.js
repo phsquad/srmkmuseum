@@ -1018,6 +1018,8 @@ const QuizEngine = {
     if (typeof AchievementsEngine === 'undefined') return;
 
     const badges = AchievementsEngine.BADGES;
+    const countEl = document.getElementById('badgesTotalCount');
+    if (countEl) countEl.textContent = String(badges.length);
     const unlocked = AchievementsEngine.getUnlockedBadges();
 
     container.innerHTML = badges.map(b => {

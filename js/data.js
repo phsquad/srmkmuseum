@@ -208,7 +208,9 @@ const heroesDatabase = [
 `,
     quote: "Верность воинскому долгу и памяти студенческого братства.",
     media: {
-      photo: "assets/images/heroes/petukhov.jpg",
+      photo: "assets/images/heroes/petukhov.webp",
+      photoThumb: "assets/images/heroes/thumbs/petukhov.webp",
+      photoFallback: "assets/images/heroes/petukhov.jpg",
       audioGuide: "assets/audio/guides/petukhov.mp3",
       documents: ["Архивное дело студента выпуска 2016 г.", "Приказ о зачислении в СРМК"]
     },
@@ -244,7 +246,9 @@ const heroesDatabase = [
 `,
     quote: "Профессия научила держать удар, а долг позвал на защиту Отечества.",
     media: {
-      photo: "assets/images/heroes/yaryshev.jpg",
+      photo: "assets/images/heroes/yaryshev.webp",
+      photoThumb: "assets/images/heroes/thumbs/yaryshev.webp",
+      photoFallback: "assets/images/heroes/yaryshev.jpg",
       audioGuide: "assets/audio/guides/yaryshev.mp3",
       documents: ["Архивная ведомость практики", "Наградной лист"]
     },
@@ -280,7 +284,9 @@ const heroesDatabase = [
 `,
     quote: "Спасение жизней — священное призвание на службе и в бою.",
     media: {
-      photo: "assets/images/heroes/sopolev.jpg",
+      photo: "assets/images/heroes/sopolev.webp",
+      photoThumb: "assets/images/heroes/thumbs/sopolev.webp",
+      photoFallback: "assets/images/heroes/sopolev.jpg",
       audioGuide: "assets/audio/guides/sopolev.mp3",
       documents: ["Диплом отделения Пожарной безопасности СРМК"]
     },
@@ -314,7 +320,9 @@ const heroesDatabase = [
 `,
     quote: "Честно выполнил свой воинский долг перед товарищами.",
     media: {
-      photo: "assets/images/heroes/belov.jpg",
+      photo: "assets/images/heroes/belov.webp",
+      photoThumb: "assets/images/heroes/thumbs/belov.webp",
+      photoFallback: "assets/images/heroes/belov.jpg",
       audioGuide: "assets/audio/guides/belov.mp3",
       documents: ["Студенческая зачетная книжка СРМК"]
     },
@@ -348,7 +356,9 @@ const heroesDatabase = [
 `,
     quote: "Каждый рейс на передовую — это спасенные жизни пехоты.",
     media: {
-      photo: "assets/images/heroes/shartov.svg",
+      photo: "assets/images/heroes/shartov.webp",
+      photoThumb: "assets/images/heroes/thumbs/shartov.webp",
+      photoFallback: "assets/images/heroes/shartov.jpg",
       audioGuide: "assets/audio/guides/shartov.mp3",
       documents: ["Сводная ведомость производственной практики"]
     },
@@ -384,7 +394,9 @@ const heroesDatabase = [
 `,
     quote: "Он был лучшим во всех делах — добрым, смелым и надежным.",
     media: {
-      photo: "assets/images/heroes/nazyrov.jpg",
+      photo: "assets/images/heroes/nazyrov.webp",
+      photoThumb: "assets/images/heroes/thumbs/nazyrov.webp",
+      photoFallback: "assets/images/heroes/nazyrov.jpg",
       audioGuide: "assets/audio/guides/nazyrov.mp3",
       documents: ["Красный диплом СРМК", "Удостоверение Ветерана боевых действий"]
     },
@@ -418,7 +430,9 @@ const heroesDatabase = [
 `,
     quote: "Броня сильна стойкостью экипажа.",
     media: {
-      photo: "assets/images/heroes/lukyanenko.jpg",
+      photo: "assets/images/heroes/lukyanenko.webp",
+      photoThumb: "assets/images/heroes/thumbs/lukyanenko.webp",
+      photoFallback: "assets/images/heroes/lukyanenko.jpg",
       audioGuide: "assets/audio/guides/lukyanenko.mp3",
       documents: ["Архивная карточка выпускника СРМК"]
     },
@@ -452,7 +466,9 @@ const heroesDatabase = [
 `,
     quote: "Самый юный герой в строю выпускников нашего колледжа.",
     media: {
-      photo: "assets/images/heroes/nazarenko.jpg",
+      photo: "assets/images/heroes/nazarenko.webp",
+      photoThumb: "assets/images/heroes/thumbs/nazarenko.webp",
+      photoFallback: "assets/images/heroes/nazarenko.jpg",
       audioGuide: "assets/audio/guides/nazarenko.mp3",
       documents: ["Диплом СРМК выпуска 2024 года"]
     },
@@ -486,7 +502,9 @@ const heroesDatabase = [
 `,
     quote: "Труд сапера спасает сотни жизней.",
     media: {
-      photo: "assets/images/heroes/lutsenko.svg",
+      photo: "assets/images/heroes/lutsenko.webp",
+      photoThumb: "assets/images/heroes/thumbs/lutsenko.webp",
+      photoFallback: "assets/images/heroes/lutsenko.jpg",
       audioGuide: "assets/audio/guides/lutsenko.mp3",
       documents: ["Журнал производственного обучения"]
     },
@@ -520,7 +538,9 @@ const heroesDatabase = [
 `,
     quote: "Никто кроме нас.",
     media: {
-      photo: "assets/images/heroes/ponomarchuk.jpg",
+      photo: "assets/images/heroes/ponomarchuk.webp",
+      photoThumb: "assets/images/heroes/thumbs/ponomarchuk.webp",
+      photoFallback: "assets/images/heroes/ponomarchuk.jpg",
       audioGuide: "assets/audio/guides/ponomarchuk.mp3",
       documents: ["Диплом спасателя СРМК"]
     },
@@ -558,7 +578,9 @@ const heroesDatabase = [
 `,
     quote: "Сила командира — в ответственности за каждого бойца.",
     media: {
-      photo: "assets/images/heroes/martynov.jpg",
+      photo: "assets/images/heroes/martynov.webp",
+      photoThumb: "assets/images/heroes/thumbs/martynov.webp",
+      photoFallback: "assets/images/heroes/martynov.jpg",
       audioGuide: "assets/audio/guides/martynov.mp3",
       documents: ["Грамоты за отличную учебу СРМК", "Наградной лист"]
     },
@@ -592,7 +614,9 @@ const heroesDatabase = [
 `,
     quote: "Гвардейцы не отступают.",
     media: {
-      photo: "assets/images/heroes/gorlov.jpg",
+      photo: "assets/images/heroes/gorlov.webp",
+      photoThumb: "assets/images/heroes/thumbs/gorlov.webp",
+      photoFallback: "assets/images/heroes/gorlov.jpg",
       audioGuide: "assets/audio/guides/gorlov.mp3",
       documents: ["Информационное письмо в/ч 54801", "Орденская книжка"]
     },
@@ -626,7 +650,9 @@ const heroesDatabase = [
 `,
     quote: "Первые в бою, первые в вечности.",
     media: {
-      photo: "assets/images/heroes/vecherka.jpg",
+      photo: "assets/images/heroes/vecherka.webp",
+      photoThumb: "assets/images/heroes/thumbs/vecherka.webp",
+      photoFallback: "assets/images/heroes/vecherka.jpg",
       audioGuide: "assets/audio/guides/vecherka.mp3",
       documents: ["Архивное дело студента МЧС", "Наградной лист"]
     },
@@ -660,7 +686,9 @@ const heroesDatabase = [
 `,
     quote: "Его подвиг навсегда вписан в золотые страницы нашего колледжа.",
     media: {
-      photo: "assets/images/heroes/samokhin.jpg",
+      photo: "assets/images/heroes/samokhin.webp",
+      photoThumb: "assets/images/heroes/thumbs/samokhin.webp",
+      photoFallback: "assets/images/heroes/samokhin.jpg",
       audioGuide: "assets/audio/guides/samokhin.mp3",
       documents: ["Скан Указа Президента РФ № 83029", "Студенческий билет СРМК"]
     },
@@ -694,7 +722,9 @@ const heroesDatabase = [
 `,
     quote: "Пример чести, доблести и отваги.",
     media: {
-      photo: "assets/images/heroes/butov.jpg",
+      photo: "assets/images/heroes/butov.webp",
+      photoThumb: "assets/images/heroes/thumbs/butov.webp",
+      photoFallback: "assets/images/heroes/butov.jpg",
       audioGuide: "assets/audio/guides/butov.mp3",
       documents: ["Удостоверение сотрудника ПУ ФСБ", "Студенческая зачетка"]
     },
@@ -728,7 +758,9 @@ const heroesDatabase = [
 `,
     quote: "Мастерство в профессии, несокрушимый дух в бою.",
     media: {
-      photo: "assets/images/heroes/elagin.jpg",
+      photo: "assets/images/heroes/elagin.webp",
+      photoThumb: "assets/images/heroes/thumbs/elagin.webp",
+      photoFallback: "assets/images/heroes/elagin.jpg",
       audioGuide: "assets/audio/guides/elagin.mp3",
       documents: ["Журнал учебной группы сварщиков 2016–2019 гг."]
     },
@@ -762,7 +794,9 @@ const heroesDatabase = [
 `,
     quote: "Честь дороже жизни.",
     media: {
-      photo: "assets/images/heroes/grigoriev.jpg",
+      photo: "assets/images/heroes/grigoriev.webp",
+      photoThumb: "assets/images/heroes/thumbs/grigoriev.webp",
+      photoFallback: "assets/images/heroes/grigoriev.jpg",
       audioGuide: "assets/audio/guides/grigoriev.mp3",
       documents: ["Мемориальная доска со школы и колледжа"]
     },
@@ -796,7 +830,9 @@ const heroesDatabase = [
 `,
     quote: "Прикрыл товарищей огнем в решающий момент боя.",
     media: {
-      photo: "assets/images/heroes/brynza.jpg",
+      photo: "assets/images/heroes/brynza.webp",
+      photoThumb: "assets/images/heroes/thumbs/brynza.webp",
+      photoFallback: "assets/images/heroes/brynza.jpg",
       audioGuide: "assets/audio/guides/brynza.mp3",
       documents: ["Личное дело студента автоотделения"]
     },
@@ -830,7 +866,9 @@ const heroesDatabase = [
 `,
     quote: "Где мы — там победа.",
     media: {
-      photo: "assets/images/heroes/serbienko.jpg",
+      photo: "assets/images/heroes/serbienko.webp",
+      photoThumb: "assets/images/heroes/thumbs/serbienko.webp",
+      photoFallback: "assets/images/heroes/serbienko.jpg",
       audioGuide: "assets/audio/guides/serbienko.mp3",
       documents: ["Диплом спасателя СРМК"]
     },
@@ -864,7 +902,9 @@ const heroesDatabase = [
 `,
     quote: "Верность присяге до последнего дыхания.",
     media: {
-      photo: "assets/images/heroes/chupin.svg",
+      photo: "assets/images/heroes/chupin.webp",
+      photoThumb: "assets/images/heroes/thumbs/chupin.webp",
+      photoFallback: "assets/images/heroes/chupin.jpg",
       audioGuide: "assets/audio/guides/chupin.mp3",
       documents: ["Студенческая зачетная книжка выпуска 2019 г."]
     },

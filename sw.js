@@ -1,17 +1,19 @@
 /**
  * ============================================================================
- * SERVICE WORKER: sw.js (v2.1 PWA Offline-First & 4G Optimization)
+ * SERVICE WORKER: sw.js (v3.0 Two-Tier Cache + Synthetic 206 Range Support)
  * Мемориально-образовательный комплекс ГБПОУ СРМК «Быть воином — жить вечно»
  * ============================================================================
  */
 
-const CACHE_NAME = 'srmk-museum-v2.1.0-4g-retina';
+const CACHE_NAME = 'srmk-museum-v3.0-shell';
+const PORTRAIT_CACHE = 'srmk-portraits-v3';
+const AUDIO_CACHE = 'srmk-audio-v3';
+const MAX_AUDIO_ENTRIES = 25;
 
-// Базовые статические ресурсы для предварительного кэширования
+// Tier 1 Precache: App Shell + <= 40 KB thumbnails (no heavy MP3s or full portraits on install)
 const PRECACHE_ASSETS = [
   './',
   './index.html',
-  './mobile.html',
   './memory-book.html',
   './reader.html',
   './quiz.html',
@@ -23,26 +25,27 @@ const PRECACHE_ASSETS = [
   './404.html',
   './manifest.json',
 
-  // Таблицы стилей
-  './css/header-common.css',
-  './css/site-common.css',
-  './css/interactivity-sprint2.css',
-  './css/edtech-sprint3.css',
-  './css/reader.css',
-  './css/mobile-reader.css',
-  './css/quiz.css',
-  './css/guestbook.css',
-  './css/desk-qr.css',
-  './css/mobile-desk-qr.css',
-  './css/pedagogy-and-visual.css',
+  './css/tokens.css',
+  './css/base.css',
+  './css/shell.css',
+  './css/themes.css',
+  './css/pages/home.css',
+  './css/pages/book-reader.css',
+  './css/pages/quiz.css',
+  './css/pages/certificates.css',
+  './css/pages/desk-qr.css',
+  './css/pages/guestbook.css',
+  './css/pages/methodology.css',
+  './css/pages/error-404.css',
 
-  // Ядро скриптов
   './js/config.js',
   './js/qr-code.js',
   './js/cloud-sync.js',
   './js/data.js',
   './js/sources.js',
   './js/navigation.js',
+  './js/audio-dock.js',
+  './js/tts-narrator.js',
   './js/achievements-engine.js',
   './js/memorial-toast.js',
   './js/heraldry-resolver.js',
@@ -62,33 +65,33 @@ const PRECACHE_ASSETS = [
   './js/certificate-verifier.js',
   './js/hall-analytics.js',
   './js/memory-book.js',
+  './js/methodology.js',
   './js/grand-memory-book-part-1.js',
   './js/grand-memory-book-part-2.js',
   './js/grand-memory-book-part-3.js',
 
-  // 20 архивных портретов героев
-  './assets/images/heroes/petukhov.jpg',
-  './assets/images/heroes/yaryshev.jpg',
-  './assets/images/heroes/sopolev.jpg',
-  './assets/images/heroes/belov.jpg',
-  './assets/images/heroes/shartov.jpg',
-  './assets/images/heroes/nazyrov.jpg',
-  './assets/images/heroes/lukyanenko.jpg',
-  './assets/images/heroes/nazarenko.jpg',
-  './assets/images/heroes/lutsenko.jpg',
-  './assets/images/heroes/ponomarchuk.jpg',
-  './assets/images/heroes/martynov.jpg',
-  './assets/images/heroes/gorlov.jpg',
-  './assets/images/heroes/vecherka.jpg',
-  './assets/images/heroes/samokhin.jpg',
-  './assets/images/heroes/butov.jpg',
-  './assets/images/heroes/elagin.jpg',
-  './assets/images/heroes/grigoriev.jpg',
-  './assets/images/heroes/brynza.jpg',
-  './assets/images/heroes/serbienko.jpg',
-  './assets/images/heroes/chupin.jpg',
+  // <= 40 KB hero thumbnails
+  './assets/images/heroes/thumbs/petukhov.webp',
+  './assets/images/heroes/thumbs/yaryshev.webp',
+  './assets/images/heroes/thumbs/sopolev.webp',
+  './assets/images/heroes/thumbs/belov.webp',
+  './assets/images/heroes/thumbs/shartov.webp',
+  './assets/images/heroes/thumbs/nazyrov.webp',
+  './assets/images/heroes/thumbs/lukyanenko.webp',
+  './assets/images/heroes/thumbs/nazarenko.webp',
+  './assets/images/heroes/thumbs/lutsenko.webp',
+  './assets/images/heroes/thumbs/ponomarchuk.webp',
+  './assets/images/heroes/thumbs/martynov.webp',
+  './assets/images/heroes/thumbs/gorlov.webp',
+  './assets/images/heroes/thumbs/vecherka.webp',
+  './assets/images/heroes/thumbs/samokhin.webp',
+  './assets/images/heroes/thumbs/butov.webp',
+  './assets/images/heroes/thumbs/elagin.webp',
+  './assets/images/heroes/thumbs/grigoriev.webp',
+  './assets/images/heroes/thumbs/brynza.webp',
+  './assets/images/heroes/thumbs/serbienko.webp',
+  './assets/images/heroes/thumbs/chupin.webp',
 
-  // Ключевые изображения и фавиконы
   './assets/images/logo-srmk.png',
   './assets/images/cover-master.jpg',
   './assets/images/memorial-bg.jpg',
@@ -99,100 +102,163 @@ const PRECACHE_ASSETS = [
   './assets/images/icons/favicon-32.png'
 ];
 
-// Установка: предварительное кэширование ядра приложения
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW v2.1] Кэширование 100% ресурсов музея (20 портретов, залы, стили, модули)...');
-      return Promise.allSettled(
-        PRECACHE_ASSETS.map((url) =>
-          cache.add(url).catch((err) => console.warn(`[SW] Ошибка предкэширования ${url}:`, err))
-        )
-      );
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(
+        PRECACHE_ASSETS.map((url) => cache.add(url).catch(() => {}))
+      )
+    ).then(() => self.skipWaiting())
   );
 });
 
-// Активация: удаление устаревших кэшей предыдущих версий
 self.addEventListener('activate', (event) => {
+  const validCaches = new Set([CACHE_NAME, PORTRAIT_CACHE, AUDIO_CACHE]);
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((name) => {
-          if (name !== CACHE_NAME) {
-            console.log(`[SW v2.1] Очистка устаревшего кэша: ${name}`);
-            return caches.delete(name);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then((names) =>
+      Promise.all(names.map((n) => (validCaches.has(n) ? null : caches.delete(n))))
+    ).then(() => self.clients.claim())
   );
 });
 
-// Перехват запросов (Fetch Strategy)
+// Teacher classroom pre-warm message from methodology.html / projector mode
+self.addEventListener('message', (event) => {
+  if (!event.data || event.data.type !== 'WARM_LESSON_CACHE') return;
+  const urls = Array.isArray(event.data.urls) ? event.data.urls : [];
+  event.waitUntil(
+    (async () => {
+      const portraitCache = await caches.open(PORTRAIT_CACHE);
+      const audioCache = await caches.open(AUDIO_CACHE);
+      let done = 0;
+      for (const u of urls) {
+        try {
+          const targetCache = u.endsWith('.mp3') ? audioCache : portraitCache;
+          const existing = await targetCache.match(u);
+          if (!existing) {
+            const res = await fetch(u);
+            if (res && res.status === 200) await targetCache.put(u, res);
+          }
+          done += 1;
+        } catch (_) {}
+      }
+      const clients = await self.clients.matchAll();
+      clients.forEach((c) => c.postMessage({ type: 'WARM_LESSON_DONE', done, total: urls.length }));
+    })()
+  );
+});
+
+async function evictAudioCacheIfNeeded(cache) {
+  const keys = await cache.keys();
+  if (keys.length <= MAX_AUDIO_ENTRIES) return;
+  const toDelete = keys.length - MAX_AUDIO_ENTRIES;
+  for (let i = 0; i < toDelete; i++) {
+    await cache.delete(keys[i]);
+  }
+}
+
+async function handleAudioRangeRequest(req) {
+  const cache = await caches.open(AUDIO_CACHE);
+  const urlNoRange = req.url;
+  let fullRes = await cache.match(urlNoRange);
+
+  if (!fullRes) {
+    // Fetch full 200 MP3 without Range header so Cache Storage accepts it
+    const netRes = await fetch(urlNoRange);
+    if (netRes && netRes.status === 200) {
+      await cache.put(urlNoRange, netRes.clone());
+      await evictAudioCacheIfNeeded(cache);
+      fullRes = netRes;
+    } else {
+      return netRes;
+    }
+  }
+
+  const rangeHeader = req.headers.get('range');
+  if (!rangeHeader) return fullRes;
+
+  const buf = await fullRes.arrayBuffer();
+  const total = buf.byteLength;
+  const match = /bytes=(\d+)-(\d*)/.exec(rangeHeader);
+  if (!match) return fullRes;
+
+  const start = Math.min(Number(match[1]), total - 1);
+  const end = match[2] ? Math.min(Number(match[2]), total - 1) : total - 1;
+  const sliced = buf.slice(start, end + 1);
+
+  return new Response(sliced, {
+    status: 206,
+    statusText: 'Partial Content',
+    headers: {
+      'Content-Type': fullRes.headers.get('Content-Type') || 'audio/mpeg',
+      'Content-Range': `bytes ${start}-${end}/${total}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': String(sliced.byteLength)
+    }
+  });
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  const url = new URL(req.url);
-
-  // Игнорируем запросы не по протоколу HTTP/HTTPS или не GET
   if (req.method !== 'GET' || !req.url.startsWith('http')) return;
 
-  // Игнорируем запросы к Supabase API / Realtime (обрабатываются в CloudSync)
+  const url = new URL(req.url);
   if (url.hostname.includes('supabase.co')) return;
 
-  // 1. Для HTML-страниц: стратегия Network-First с немедленным падением в кэш
-  if (req.mode === 'navigate' || req.destination === 'document') {
+  // MP3 Audio Guides with synthetic 206 Range support
+  if (url.pathname.endsWith('.mp3')) {
     event.respondWith(
-      fetch(req)
-        .then((networkRes) => {
-          if (networkRes && networkRes.status === 200) {
-            const clone = networkRes.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
-          }
-          return networkRes;
-        })
-        .catch(async () => {
-          const cached = await caches.match(req);
-          if (cached) return cached;
-          const fallback = await caches.match('./index.html');
-          return fallback || new Response('Офлайн-режим Мемориала СРМК. Страница сохранена в локальной памяти.', {
-            headers: { 'Content-Type': 'text/html; charset=utf-8' }
-          });
-        })
+      handleAudioRangeRequest(req).catch(() => new Response('', { status: 503 }))
     );
     return;
   }
 
-  // 2. Для статических ассетов (портреты, награды, стили, шрифты, скрипты): Cache-First / Stale-While-Revalidate
-  event.respondWith(
-    caches.match(req).then((cachedRes) => {
-      if (cachedRes) {
-        // Фоновое обновление в фоне для актуализации данных
-        fetch(req)
-          .then((networkRes) => {
-            if (networkRes && networkRes.status === 200) {
-              caches.open(CACHE_NAME).then((cache) => cache.put(req, networkRes));
-            }
-          })
-          .catch(() => {});
-        return cachedRes;
-      }
+  // Full hero portraits (on-demand cache in PORTRAIT_CACHE)
+  if (url.pathname.includes('/assets/images/heroes/') && !url.pathname.includes('/thumbs/')) {
+    event.respondWith(
+      caches.open(PORTRAIT_CACHE).then(async (cache) => {
+        const cached = await cache.match(req);
+        if (cached) return cached;
+        try {
+          const netRes = await fetch(req);
+          if (netRes && netRes.status === 200) {
+            cache.put(req, netRes.clone());
+          }
+          return netRes;
+        } catch (_) {
+          return caches.match('./assets/images/cover-master.jpg');
+        }
+      })
+    );
+    return;
+  }
 
-      return fetch(req)
-        .then((networkRes) => {
-          if (networkRes && networkRes.status === 200) {
-            const clone = networkRes.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+  // HTML Navigation: Network-First
+  if (req.mode === 'navigate' || req.destination === 'document') {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(req, clone));
           }
-          return networkRes;
+          return res;
         })
-        .catch(() => {
-          // Если не удалось загрузить картинку героя
-          if (req.destination === 'image') {
-            return caches.match('./assets/images/cover-master.jpg');
-          }
-          return new Response('', { status: 408, statusText: 'Offline Resource' });
-        });
+        .catch(async () => (await caches.match(req)) || (await caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Other static assets: Cache-First + background refresh
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      const netFetch = fetch(req).then((res) => {
+        if (res && res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(req, clone));
+        }
+        return res;
+      }).catch(() => cached || new Response('', { status: 408 }));
+      return cached || netFetch;
     })
   );
 });

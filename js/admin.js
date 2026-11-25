@@ -605,7 +605,18 @@ const AdminCMS = {
         const parsed = JSON.parse(savedState);
         if (Array.isArray(parsed) && parsed.length > 0) {
           heroesDatabase.length = 0;
-          parsed.forEach(h => heroesDatabase.push(h));
+          parsed.forEach(h => {
+            if (h && h.media && typeof h.media.photo === 'string') {
+              const m = h.media.photo.match(/^assets\/images\/heroes\/([a-z0-9_-]+)\.(?:svg|jpg)$/i);
+              if (m) {
+                const slug = m[1];
+                h.media.photo = `assets/images/heroes/${slug}.webp`;
+                h.media.photoThumb = `assets/images/heroes/thumbs/${slug}.webp`;
+                h.media.photoFallback = `assets/images/heroes/${slug}.jpg`;
+              }
+            }
+            heroesDatabase.push(h);
+          });
         }
       } catch (e) {
         console.error("[AdminCMS] Ошибка применения LocalStorage:", e);

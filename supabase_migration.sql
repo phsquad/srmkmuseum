@@ -735,9 +735,12 @@ CREATE TABLE IF NOT EXISTS user_achievements (
   unlocked_badges TEXT[] NOT NULL DEFAULT '{}',
   stats JSONB NOT NULL DEFAULT '{"candlesLitHeroes":[], "flowersLaid":0, "audioHeard":0, "chaptersRead":0, "quizzesPassed":0, "modesCompleted":[]}'::jsonb,
   last_active TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  last_active_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE public.user_achievements ADD COLUMN IF NOT EXISTS last_active_at TIMESTAMPTZ DEFAULT NOW();
 
 CREATE INDEX IF NOT EXISTS idx_user_achievements_xp ON user_achievements(xp DESC);
 CREATE INDEX IF NOT EXISTS idx_user_achievements_rank ON user_achievements(rank_id);

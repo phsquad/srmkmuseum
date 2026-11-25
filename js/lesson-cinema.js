@@ -23,6 +23,14 @@
     isActive: false,
 
     init() {
+      // Check ?mode=projector query param
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('mode') === 'projector') {
+          document.documentElement.dataset.mode = 'projector';
+        }
+      } catch (_) {}
+
       // Горячая клавиша F или F11
       document.addEventListener('keydown', (e) => {
         const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
@@ -56,6 +64,16 @@
           this.start();
         }
       });
+    },
+
+    toggleProjector() {
+      const isProj = document.documentElement.dataset.mode === 'projector';
+      if (isProj) {
+        delete document.documentElement.dataset.mode;
+      } else {
+        document.documentElement.dataset.mode = 'projector';
+      }
+      return !isProj;
     },
 
     toggle() {

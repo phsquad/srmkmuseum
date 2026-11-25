@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   CORE DESIGN TOKENS: css/tokens.css
+   Мемориальный комплекс ГБПОУ СРМК «Быть воином — жить вечно»
+   ========================================================================== */
+
+:root {
+  /* Layout & CLS reservation */
+  --header-h: 64px;
+  --tabbar-h: 68px;
+  --container-max: 1280px;
+
+  /* Typography */
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-book: 'Lora', Georgia, serif;
+  --font-sans: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Default Memorial Obsidian Palette (WCAG AA compliant) */
+  --bg-canvas: #0a0c0f;
+  --bg-surface: #12161d;
+  --bg-elevated: #19202b;
+  --bg-card: rgba(20, 25, 34, 0.92);
+
+  --text-primary: #f5f2ea;
+  --text-secondary: #c4ccd8;
+  --text-muted: #94a1b3;
+  --text-on-accent: #0a0c0f;
+
+  --accent-primary: #e6c86e;
+  --accent-primary-hover: #f3da8a;
+  --accent-secondary: #8a1c22;
+  --accent-glow: rgba(230, 200, 110, 0.24);
+
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-accent: rgba(230, 200, 110, 0.32);
+
+  /* Radii & Shadows */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 14px 36px rgba(0, 0, 0, 0.48);
+  --shadow-elevated: 0 24px 60px rgba(0, 0, 0, 0.65);
+
+  /* Z-index layers */
+  --z-base: 1;
+  --z-sticky: 900;
+  --z-header: 1000;
+  --z-dock: 1050;
+  --z-drawer: 1100;
+  --z-modal: 1200;
+  --z-toast: 1300;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --t-fast: 160ms;
+  --t-base: 260ms;
+}

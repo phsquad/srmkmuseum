@@ -1,0 +1,646 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   HOME PAGE & 4 HALLS: css/pages/home.css
+   ========================================================================== */
+
+/* 1. HERO ENTRANCE (Low-Key Museum Atmosphere) */
+.hero-entrance {
+  position: relative;
+  min-height: calc(100vh - var(--header-h));
+  display: flex;
+  align-items: center;
+  padding: 40px 0 48px;
+  overflow: hidden;
+  background-color: #07090c;
+  background-image:
+    radial-gradient(circle at 68% 42%, rgba(230, 200, 110, 0.16), transparent 48%),
+    radial-gradient(circle at 25% 75%, rgba(138, 28, 34, 0.14), transparent 52%),
+    linear-gradient(180deg, rgba(10, 12, 15, 0.68) 0%, rgba(10, 12, 15, 0.92) 78%, var(--bg-canvas) 100%),
+    url('../../assets/images/memorial-bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-entrance-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 40px;
+  align-items: center;
+}
+
+@media (max-width: 959px) {
+  .hero-entrance {
+    min-height: auto;
+    padding: 28px 0 36px;
+  }
+  .hero-entrance-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-accent);
+  background: rgba(230, 200, 110, 0.08);
+  color: var(--accent-primary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.1vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: 0.04em;
+  color: #f5f2ea;
+  margin-bottom: 16px;
+}
+
+.hero-title span {
+  display: block;
+  color: var(--accent-primary);
+  margin-top: 6px;
+}
+
+.hero-subtitle {
+  font-family: var(--font-book);
+  font-size: clamp(1rem, 1.3vw, 1.16rem);
+  color: var(--text-secondary);
+  max-width: 56ch;
+  margin-bottom: 26px;
+}
+
+.hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.hero-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(16, 20, 28, 0.82);
+  border: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 480px) {
+  .hero-stats-strip {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hero-stat-value {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.hero-stat-label {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+/* Cascading Hero Deck (Google Arts & Culture inspired) */
+.hero-deck-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero-deck {
+  position: relative;
+  width: min(320px, 82vw);
+  height: 410px;
+}
+
+.deck-card {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-accent);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-elevated);
+  transition: transform 320ms var(--ease-out), opacity 320ms var(--ease-out), z-index 0s;
+  cursor: pointer;
+}
+
+.deck-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.deck-card-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 42%, rgba(8, 10, 14, 0.94) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px;
+}
+
+.deck-card-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-primary);
+  margin-bottom: 4px;
+}
+
+.deck-card-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.deck-card-meta {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.deck-card[data-pos="0"] {
+  z-index: 3;
+  transform: translateX(0) scale(1);
+  opacity: 1;
+}
+
+.deck-card[data-pos="-1"] {
+  z-index: 2;
+  transform: translateX(-28px) scale(0.92);
+  opacity: 0.58;
+}
+
+.deck-card[data-pos="1"] {
+  z-index: 2;
+  transform: translateX(28px) scale(0.92);
+  opacity: 0.58;
+}
+
+.deck-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 2. HALL SECTIONS COMMON */
+.hall-section {
+  padding: 64px 0;
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--bg-canvas);
+}
+
+.hall-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.hall-eyebrow {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  margin-bottom: 6px;
+}
+
+.hall-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.hall-desc {
+  max-width: 62ch;
+  color: var(--text-secondary);
+  font-size: 0.94rem;
+  margin-top: 6px;
+}
+
+/* 3. HALL I: GRANITE STELES */
+.plaque-switch {
+  display: none;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 899px) {
+  .plaque-switch {
+    display: flex;
+  }
+}
+
+.steles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 899px) {
+  .steles-grid {
+    grid-template-columns: 1fr;
+  }
+  .stele-panel.hidden-mobile {
+    display: none;
+  }
+}
+
+.stele-panel {
+  background: linear-gradient(180deg, #161920 0%, #0e1015 100%);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+}
+
+.stele-heading {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--accent-primary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+}
+
+.stele-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stele-item-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+}
+
+.stele-item-btn:hover {
+  background: rgba(230, 200, 110, 0.09);
+  border-color: var(--border-accent);
+}
+
+.stele-item-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.92rem;
+}
+
+.stele-item-meta {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* 4. HALL II: HERO DESKS GRID */
+.desks-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.desks-search {
+  flex: 1 1 260px;
+  max-width: 380px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-pill {
+  min-height: 38px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.filter-pill.active,
+.filter-pill:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(223, 176, 99, 0.1);
+}
+
+.heroes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.hero-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+}
+
+.hero-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-accent);
+}
+
+.hero-card-media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: #0d1016;
+  overflow: hidden;
+}
+
+.hero-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.hero-card-spec {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(10, 12, 15, 0.85);
+  border: 1px solid var(--border-accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+.hero-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.hero-card-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.hero-card-years {
+  font-size: 0.78rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.hero-card-snippet {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  flex: 1;
+}
+
+.hero-card-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.hero-card-actions .btn {
+  flex: 1;
+  min-height: 38px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+}
+
+/* 5. HALL III: MAP & TOPOGRAPHY */
+.map-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 959px) {
+  .map-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.map-canvas-box {
+  min-height: 420px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-accent);
+  background: var(--bg-surface);
+  overflow: hidden;
+  position: relative;
+}
+
+.map-fallback-note {
+  padding: 24px;
+  color: var(--text-secondary);
+}
+
+.battle-milestones {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  max-height: 440px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.milestone-item {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--accent-primary);
+  cursor: pointer;
+}
+
+.milestone-item:hover {
+  background: rgba(107, 187, 217, 0.1);
+}
+
+/* 6. HALL IV: RELAY, DAILY HERO & OATH */
+.relay-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 24px;
+}
+
+@media (max-width: 899px) {
+  .relay-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.relay-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.relay-card h3 {
+  font-family: var(--font-display);
+  color: var(--accent-primary);
+  font-size: 1.15rem;
+}
+
+.oath-quote {
+  font-family: var(--font-book);
+  font-style: italic;
+  color: var(--text-primary);
+  padding: 14px 16px;
+  border-left: 3px solid var(--accent-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* 7. HERO DOSSIER MODAL */
+.dossier-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background: rgba(5, 7, 10, 0.85);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.dossier-modal.active {
+  display: flex;
+}
+
+.dossier-dialog {
+  width: min(920px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevated);
+  padding: 24px;
+  position: relative;
+}
+
+.dossier-close {
+  position: sticky;
+  top: 0;
+  float: right;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 1.3rem;
+}
+
+.dossier-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 720px) {
+  .dossier-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dossier-photo {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-accent);
+  aspect-ratio: 3 / 4;
+}
+
+.dossier-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.dossier-bio {
+  font-family: var(--font-book);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-top: 12px;
+}
+
+.dossier-bio h3 {
+  font-family: var(--font-display);
+  color: var(--accent-primary);
+  font-size: 1rem;
+  margin: 16px 0 6px;
+}

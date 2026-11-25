@@ -29,7 +29,38 @@ const Methodology = {
       if (validTabs.includes(nextHash)) this.activateTab(nextHash, false);
     });
 
+    this.bindOfflineWarmup();
+
     console.log("[Methodology v4.0 Master] Методический кабинет и генератор Word-планов готовы.");
+  },
+
+  bindOfflineWarmup() {
+    const btn = document.getElementById('btnWarmLessonCache');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) {
+        this.showToast('Service Worker ещё активируется. Обновите страницу и повторите.');
+        return;
+      }
+      const urls = ['./assets/audio/guides/general-tour.mp3'];
+      (window.heroesDatabase || []).forEach(h => {
+        if (h.media?.photo) urls.push(h.media.photo);
+        if (h.media?.audioGuide) urls.push(h.media.audioGuide);
+      });
+      btn.disabled = true;
+      btn.textContent = '⏳ Загрузка в кэш...';
+      navigator.serviceWorker.controller.postMessage({ type: 'WARM_LESSON_CACHE', urls });
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'WARM_LESSON_DONE') {
+          btn.disabled = false;
+          btn.textContent = `✅ Готово к офлайну (${e.data.done}/${e.data.total})`;
+          this.showToast(`Кэш урока готов: ${e.data.done} из ${e.data.total} файлов сохранено.`);
+        }
+      });
+    }
   },
 
   /**

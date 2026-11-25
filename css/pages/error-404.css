@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   404 ERROR PAGE: css/pages/error-404.css
+   ========================================================================== */
+
+.error-wrap {
+  min-height: calc(100vh - var(--header-h) - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  text-align: center;
+}
+
+.error-card {
+  max-width: 560px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  box-shadow: var(--shadow-card);
+}
+
+.error-code {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900;
+  color: var(--accent-primary);
+  line-height: 1;
+  margin-bottom: 12px;
+}

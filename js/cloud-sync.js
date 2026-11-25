@@ -893,24 +893,30 @@ const CloudSync = {
       if (!userId) return null;
 
       // 1. Попытка вызова RPC-процедуры в базе
-      try {
-        const { data, error } = await this.client.rpc('sync_user_achievement_progress', {
-          p_user_id: userId,
-          p_student_name: studentName,
-          p_group_name: groupName,
-          p_xp_delta: xpDelta,
-          p_rank_id: rankId,
-          p_rank_title: rankTitle,
-          p_new_badge_id: newBadgeId,
-          p_new_badge_title: newBadgeTitle,
-          p_badge_icon: badgeIcon,
-          p_badge_category: badgeCategory,
-          p_badge_xp: badgeXp,
-          p_stats_json: statsJson
-        });
-        if (!error && data) return data;
-      } catch (rpcErr) {
-        // Fallback ниже
+      if (!this._achievementRpcDisabled) {
+        try {
+          const { data, error } = await this.client.rpc('sync_user_achievement_progress', {
+            p_user_id: userId,
+            p_student_name: studentName,
+            p_group_name: groupName,
+            p_xp_delta: xpDelta,
+            p_rank_id: rankId,
+            p_rank_title: rankTitle,
+            p_new_badge_id: newBadgeId,
+            p_new_badge_title: newBadgeTitle,
+            p_badge_icon: badgeIcon,
+            p_badge_category: badgeCategory,
+            p_badge_xp: badgeXp,
+            p_stats_json: statsJson
+          });
+          if (!error && data) return data;
+          if (error) {
+            this._achievementRpcDisabled = true;
+            console.warn('[CloudSync] sync_user_achievement_progress недоступна (выполните supabase_migration.sql):', error.message);
+          }
+        } catch (rpcErr) {
+          this._achievementRpcDisabled = true;
+        }
       }
 
       // 2. Fallback: прямой upsert в таблицу user_achievements

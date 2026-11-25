@@ -2,488 +2,78 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>3D Фолиант Памяти: 20 страниц бессмертия | Музей СРМК</title>
-  <meta name="description" content="Интерактивная книга с трехмерным перелистыванием страниц, дикторским аудиосопровождением и визуализатором звуковой волны.">
-  <meta name="theme-color" content="#0a0c0f">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Читалка Книги Памяти | Музей СРМК</title>
+  <meta name="description" content="Интерактивная читалка 21 тома Книги Памяти ГБПОУ СРМК с поддержкой книжного разворота, аудиогида и озвучки.">
+  <meta name="theme-color" content="#11100e">
 
-  <!-- PWA & Favicon -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/images/icons/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Музей СРМК">
 
-  <!-- Open Graph & Социальные мета-теги -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Мемориальный комплекс ГБПОУ СРМК">
-  <meta property="og:locale" content="ru_RU">
-  <meta property="og:url" content="https://phsquad.github.io/srmkmuseum/reader.html">
-  <meta property="og:title" content="3D Фолиант Памяти: 20 страниц бессмертия | Музей СРМК">
-  <meta property="og:description" content="Интерактивная книга с трехмерным перелистыванием страниц, дикторским аудиосопровождением и визуализатором звуковой волны.">
-  <meta property="og:image" content="https://phsquad.github.io/srmkmuseum/assets/images/cover-master.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="3D Фолиант Памяти: 20 страниц бессмертия | Музей СРМК">
-  <meta name="twitter:description" content="Интерактивная книга с трехмерным перелистыванием страниц, дикторским аудиосопровождением и визуализатором звуковой волны.">
-  <meta name="twitter:image" content="https://phsquad.github.io/srmkmuseum/assets/images/cover-master.jpg">
-
-  <!-- Шрифты -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Стили -->
-  <link rel="stylesheet" href="css/site-common.css">
-  <link rel="stylesheet" href="css/header-common.css">
-  <link rel="stylesheet" href="css/interactivity-sprint2.css">
-  <link rel="stylesheet" href="css/edtech-sprint3.css">
-  <link rel="stylesheet" href="css/reader.css">
-  <link rel="stylesheet" href="css/mobile-reader.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/pages/book-reader.css">
 </head>
-<body class="dark-theme">
+<body data-section="reader">
 
-  <!-- ЕДИНАЯ НАВИГАЦИОННАЯ ШАПКА -->
-  <!-- ЕДИНЫЙ КАНОНИЧЕСКИЙ ШАБЛОН НАВИГАЦИОННОЙ ШАПКИ СРМК (v7.0 Compact Buttons) -->
-<header class="site-header" id="siteHeader">
-  <div class="container header-container">
-    
-    <!-- ЛОГОТИП И НАЗВАНИЕ -->
-    <a href="index.html" class="logo-group" aria-label="На главную страницу музея">
-      <div class="logo-badge">СРМК</div>
-      <div class="logo-text">
-        <span class="org-name">ГБПОУ СРМК • Ставрополь</span>
-        <span class="site-title">«Быть воином — жить вечно»</span>
+  <header class="srmk-header" id="siteHeader"></header>
+
+  <div class="reader-toolbar">
+    <div class="container reader-toolbar-inner">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <a href="memory-book.html" class="btn btn-ghost" style="min-height:36px; padding:4px 10px;">← К каталогу</a>
+        <button type="button" class="btn btn-secondary" id="btnReaderAudio" style="min-height:36px; padding:4px 12px;">🎧 Аудиогид</button>
+        <button type="button" class="btn btn-ghost" id="btnReaderTTS" style="min-height:36px; padding:4px 12px;">🔊 Озвучить текст</button>
       </div>
-    </a>
-
-    <!-- КОМПАКТНЫЕ КНОПКИ НАВИГАЦИИ (МОДУЛИ, СТРАНИЦЫ И ЗАЛЫ СПРЯТАНЫ В ВЫПАДАЮЩИЕ МЕНЮ) -->
-    <div class="header-actions">
-      <!-- КНОПКА 1: ЗАЛЫ ЭКСПОЗИЦИИ -->
-      <div class="header-dropdown" id="dropdownHalls">
-        <button class="header-dropdown-btn" id="btnDropdownHalls" type="button" aria-expanded="false" aria-controls="menuHalls">
-          <span class="btn-icon">🏛</span>
-          <span class="btn-text">Залы</span>
-          <span class="arrow-icon" aria-hidden="true">▾</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-left" id="menuHalls" role="menu">
-          <div class="dropdown-header">Экспозиция музея</div>
-          <a href="index.html#memorial" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🏛</span>
-            <div><strong>Мемориал Славы</strong><small>Зал №1 • Стелы и 20 кавалеров</small></div>
-          </a>
-          <a href="index.html#heroes-grid" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🎓</span>
-            <div><strong>За партой Героя</strong><small>Зал №2 • 20 интерактивных парт</small></div>
-          </a>
-          <a href="index.html#battle-path" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🗺</span>
-            <div><strong>Хроника и Карта</strong><small>Зал №3 • Боевой путь и инфографика</small></div>
-          </a>
-          <a href="index.html#memory-hall" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🕯</span>
-            <div><strong>Эстафета поколений</strong><small>Зал №4 • Клятва и хроника</small></div>
-          </a>
-        </div>
+      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-ghost" id="btnViewFlow" style="min-height:36px; padding:4px 10px;">Статья</button>
+        <button type="button" class="btn btn-ghost" id="btnViewSpread" style="min-height:36px; padding:4px 10px;">Разворот</button>
+        <button type="button" class="btn btn-ghost" id="btnReaderTheme" style="min-height:36px; padding:4px 10px;">Тёмный / Бумага</button>
+        <button type="button" class="btn btn-ghost" id="btnFontMinus" style="min-height:36px; padding:4px 10px;">A-</button>
+        <button type="button" class="btn btn-ghost" id="btnFontPlus" style="min-height:36px; padding:4px 10px;">A+</button>
       </div>
-
-      <!-- КНОПКА 2: ЦИФРОВЫЕ МОДУЛИ -->
-      <div class="header-dropdown modules-dropdown" id="modulesDropdown">
-        <button class="header-dropdown-btn btn-dropdown-toggle" id="btnDropdownToggle" type="button" aria-expanded="false" aria-controls="dropdownMenu">
-          <span class="btn-icon">📖</span>
-          <span class="btn-text">Модули</span>
-          <span class="arrow-icon" aria-hidden="true">▾</span>
-        </button>
-        <div class="dropdown-menu" id="dropdownMenu" role="menu">
-          <div class="dropdown-header">Интерактивные модули</div>
-          <a href="memory-book.html" class="dropdown-item" role="menuitem">
-            <span class="item-icon">📖</span>
-            <div><strong>Книга Памяти</strong><small>Электронная летопись 20 героев</small></div>
-          </a>
-          <a href="reader.html" class="dropdown-item" role="menuitem">
-            <span class="item-icon">📚</span>
-            <div><strong>3D Фолиант</strong><small>Читалка книги с 3D перелистыванием</small></div>
-          </a>
-          <a href="quiz.html" class="dropdown-item" role="menuitem">
-            <span class="item-icon">⚔️</span>
-            <div><strong>Квест-викторина</strong><small>10 интерактивных вопросов</small></div>
-          </a>
-          <a href="desk-qr.html" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🪑</span>
-            <div><strong>Парта Героя</strong><small>Конструктор табличек и QR-кодов</small></div>
-          </a>
-          <a href="guestbook.html" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🕯</span>
-            <div><strong>Стена Памяти</strong><small>Поминальные лампады и отзывы</small></div>
-          </a>
-        </div>
-      </div>
-
-      <!-- КНОПКА 3: СЕРВИСЫ И СЕРТИФИКАТЫ -->
-      <div class="header-dropdown" id="dropdownServices">
-        <button class="header-dropdown-btn" id="btnDropdownServices" type="button" aria-expanded="false" aria-controls="menuServices">
-          <span class="btn-icon">📜</span>
-          <span class="btn-text">Сервисы</span>
-          <span class="arrow-icon" aria-hidden="true">▾</span>
-        </button>
-        <div class="dropdown-menu" id="menuServices" role="menu">
-          <div class="dropdown-header">Документы и образование</div>
-          <a href="certificate.html" class="dropdown-item highlight-item" role="menuitem">
-            <span class="item-icon">📜</span>
-            <div><strong>Оформить Сертификат</strong><small>Именной наградной лист с печатью</small></div>
-          </a>
-          <a href="verify.html" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🛡</span>
-            <div><strong>Реестр верификации</strong><small>Проверка подлинности (SHA-256)</small></div>
-          </a>
-          <a href="methodology.html" class="dropdown-item" role="menuitem">
-            <span class="item-icon">📑</span>
-            <div><strong>Методкабинет</strong><small>Банк уроков Мужества для учителей</small></div>
-          </a>
-          <a href="javascript:void(0)" onclick="if(window.LessonCinema) LessonCinema.start()" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🎬</span>
-            <div><strong>Урок Мужества (Cinema)</strong><small>Полноэкранный режим для доски (F)</small></div>
-          </a>
-          <a href="javascript:void(0)" onclick="if(window.MemorialCardGenerator) MemorialCardGenerator.openModal()" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🖼</span>
-            <div><strong>Открытка памяти (9:16)</strong><small>Генератор для соцсетей и клипов</small></div>
-          </a>
-        </div>
-      </div>
-
-      <!-- КНОПКА 4: О ПРОЕКТЕ И ПАСПОРТ -->
-      <div class="header-dropdown" id="dropdownAbout">
-        <button class="header-dropdown-btn" id="btnDropdownAbout" type="button" aria-expanded="false" aria-controls="menuAbout">
-          <span class="btn-icon">ℹ️</span>
-          <span class="btn-text">О проекте</span>
-          <span class="arrow-icon" aria-hidden="true">▾</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" id="menuAbout" role="menu">
-          <div class="dropdown-header">Информация и статус</div>
-          <button type="button" class="dropdown-item btn-open-passport-item" id="btnOpenPassport" data-open-passport="true" role="menuitem">
-            <span class="item-icon">📋</span>
-            <div><strong>Паспорт проекта</strong><small>Официальный документ комплекса</small></div>
-          </button>
-          <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="dropdown-item" role="menuitem">
-            <span class="item-icon">🇷🇺</span>
-            <div><strong>Карта Доблести РФ</strong><small>Всероссийский портал акции ↗</small></div>
-          </a>
-        </div>
-      </div>
-
-      <!-- ВИДЖЕТ ЖИВОГО ПРИСУТСТВИЯ (PRESENCE) -->
-      <div class="header-presence-pill" id="hdrLivePresence" title="Посетители в залах памяти прямо сейчас">
-        <span class="presence-dot"></span>
-        <span class="presence-text"><strong id="hdrPresenceCount">1</strong> <span class="presence-label-full">в залах</span></span>
-      </div>
-
-      <!-- КНОПКА НАГРАДНОГО РАНГА И ДОСТИЖЕНИЙ -->
-      <button class="btn-header-achievements" id="btnHeaderRankBadge" type="button" title="Воинский ранг и наградные ордена (нажмите для открытия)">
-        <span class="rank-btn-icon">🎖</span>
-        <span class="rank-btn-title">Награды</span>
-        <span class="rank-xp-badge" id="hdrRankXp">0 XP</span>
-      </button>
-
-      <!-- КНОПКА УСТАНОВКИ PWA (ПОЯВЛЯЕТСЯ ПРИ ПОДДЕРЖКЕ БРАУЗЕРОМ) -->
-      <button class="btn-header-pwa-install" id="btnInstallPwa" type="button" style="display:none;" title="Установить Музей на телефон или рабочий стол">
-        <span class="pwa-icon">📥</span>
-        <span class="pwa-text">Установить</span>
-      </button>
-
-      <!-- КНОПКА ПОИСКА SPOTLIGHT (CTRL+K) -->
-      <button class="header-spotlight-btn" id="btnOpenSpotlight" type="button" title="Быстрый поиск по героям и разделам (Ctrl+K)">
-        <span class="spotlight-btn-icon">🔍</span>
-        <span class="spotlight-btn-text">Поиск</span>
-        <kbd class="spotlight-btn-kbd">Ctrl+K</kbd>
-      </button>
-
-      <!-- ТУМБЛЕР ЗВУКА МЕМОРИАЛА -->
-      <button class="header-sound-btn" id="btnToggleSound" type="button" title="Звуковые эффекты мемориала (Вкл/Выкл)">
-        <span id="soundBtnIcon">🔊</span>
-      </button>
-
-      <!-- КНОПКА МОБИЛЬНОГО МЕНЮ (БУРГЕР) -->
-      <button class="mobile-burger-btn" id="mobileBurgerBtn" aria-label="Открыть мобильное меню" aria-expanded="false" aria-controls="mobileDrawer" type="button">
-        <span></span><span></span><span></span>
-      </button>
     </div>
+    <div class="reader-progress-track"><div class="reader-progress-bar" id="readerProgressBar"></div></div>
   </div>
 
-  <!-- ВЫДВИЖНАЯ МОБИЛЬНАЯ ПАНЕЛЬ МЕНЮ (DRAWER) -->
-  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
-    <div class="drawer-content">
-      <div class="drawer-section-label">Быстрые действия</div>
-      <a href="javascript:void(0)" class="drawer-link highlight" id="drawerSpotlightBtn">🔍 Быстрый поиск (Ctrl+K)</a>
-      <a href="javascript:void(0)" class="drawer-link" id="drawerSilenceBtn" style="color:#dfba6d;">⏱ Минута молчания</a>
-      <a href="javascript:void(0)" class="drawer-link" onclick="if(window.LessonCinema) LessonCinema.start()" style="color:#dfba6d;">🎬 Урок Мужества (Cinema 16:9)</a>
-      <a href="javascript:void(0)" class="drawer-link" onclick="if(window.MemorialCardGenerator) MemorialCardGenerator.openModal()">🖼 Открытка для соцсетей (9:16)</a>
+  <main class="container reader-layout">
+    <aside class="reader-toc" aria-label="Оглавление Книги Памяти">
+      <div style="font-family:var(--font-display); color:var(--accent-primary); font-size:0.9rem; margin-bottom:10px;">Оглавление (21 том)</div>
+      <div id="readerTocList"></div>
+    </aside>
 
-      <div class="drawer-section-label">Залы экспозиции</div>
-      <a href="index.html#memorial" class="drawer-link">🏛 Мемориал Славы</a>
-      <a href="index.html#heroes-grid" class="drawer-link">🎓 За партой Героя</a>
-      <a href="index.html#battle-path" class="drawer-link">🗺 Хроника и Карта</a>
-      <a href="index.html#memory-hall" class="drawer-link">🕯 Эстафета памяти</a>
-
-      <div class="drawer-section-label">Цифровые модули</div>
-      <a href="memory-book.html" class="drawer-link">📖 Электронная Книга Памяти</a>
-      <a href="reader.html" class="drawer-link">📚 3D Фолиант-читалка</a>
-      <a href="quiz.html" class="drawer-link">⚔️ Квест-викторина «Дорогами мужества»</a>
-      <a href="desk-qr.html" class="drawer-link">🪑 Конструктор «Парты Героя»</a>
-      <a href="guestbook.html" class="drawer-link">🕯 Стена Памяти и отзывы</a>
-
-      <div class="drawer-section-label">Страницы и сервисы</div>
-      <a href="certificate.html" class="drawer-link highlight">📜 Оформить Сертификат участника</a>
-      <a href="javascript:void(0)" class="drawer-link drawer-rank-link" id="drawerAchievementsLink">🎖 Наградная палата (ранг и медали)</a>
-      <a href="verify.html" class="drawer-link">🛡 Реестр верификации</a>
-      <a href="methodology.html" class="drawer-link">📑 Методический кабинет педагога</a>
-
-      <div class="drawer-buttons-row">
-        <a href="mobile.html" class="drawer-btn" style="border-color: rgba(16, 185, 129, 0.4); color: #34d399;">📱 Мобильная PWA</a>
-        <button class="drawer-btn" id="drawerInstallPwaBtn" type="button" style="display:none; border-color:#3b82f6; color:#93c5fd;">📥 Приложение</button>
-        <button class="drawer-btn" id="drawerPassportBtn" type="button">Паспорт проекта</button>
-        <a href="https://карта-доблести.рф" target="_blank" rel="noopener noreferrer" class="drawer-btn gold">Карта Доблести РФ</a>
+    <article class="reader-paper" id="readerPaper" data-view="flow">
+      <div class="reader-chapter-head" id="readerChapterHead"></div>
+      <div class="reader-article" id="readerArticleBody"></div>
+      <div class="reader-nav-footer">
+        <button type="button" class="btn btn-secondary" id="btnPrevChapter">← Предыдущая глава</button>
+        <button type="button" class="btn btn-primary" id="btnNextChapter">Следующая глава →</button>
       </div>
-    </div>
-  </div>
-</header>
+    </article>
+  </main>
 
-  <!-- ==========================================================================
-       ВИД 1: ВИРТУАЛЬНАЯ КНИЖНАЯ ПОЛКА (BOOKSHELF VIEW)
-       ========================================================================== -->
-  <section class="shelf-view-section" id="shelfView">
-    
-    <div class="shelf-hero-banner">
-      <div class="container">
-        <div class="hero-crest">⭐️</div>
-        <div class="hero-badge">Историко-биографический архив • Летопись славы выпускников СРМК</div>
-        <h1 class="hero-title">ИНТЕРАКТИВНЫЙ ФОЛИАНТ ПАМЯТИ</h1>
-        <p class="hero-desc">
-          Выберите фолиант любого из 20 героев, чтобы открыть персональную иллюстрированную книгу с архивными документами, хроникой подвига и аудиогидом.
-        </p>
+  <footer class="srmk-footer" id="siteFooter"></footer>
 
-        <!-- Поиск и фильтры полки -->
-        <div class="shelf-toolbar">
-          <div class="shelf-search">
-            <span>🔍</span>
-            <input type="text" id="shelfSearchInput" placeholder="Поиск тома по имени героя, специальности или награде...">
-          </div>
-          <div class="shelf-filters">
-            <button class="shelf-filter-btn active" data-filter="all" type="button">Все книги (21)</button>
-            <button class="shelf-filter-btn" data-filter="left" type="button">Левая плита (10)</button>
-            <button class="shelf-filter-btn" data-filter="right" type="button">Правая плита (10)</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Деревянные полки с 3D-книгами -->
-    <div class="container shelf-display-container">
-      <div class="bookshelf-tier" id="bookshelfGrid">
-        <!-- 21 интерактивная книга генерируется через js/reader.js -->
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ==========================================================================
-       ВИД 2: 3D-ЧИТАЛКА И TELEGRAM-ХРОНИКА РАЗВОРОТА КНИГИ (BOOK FLIPBOOK & TG RICH FEED)
-       ========================================================================== -->
-  <section class="book-reader-section" id="bookReaderView" style="display:none;">
-    
-    <!-- Индикатор прогресса прочтения (Reading Progress Indicator) -->
-    <div class="reader-progress-track" id="readerProgressTrack">
-      <div class="reader-progress-fill" id="readerProgressFill"></div>
-    </div>
-
-    <!-- Панель управления чтением -->
-    <div class="reader-control-panel">
-      <div class="container control-panel-inner">
-        
-        <div class="current-book-meta">
-          <button id="btnReturnToShelf" class="header-btn" onclick="ReaderEngine.closeBook()" type="button" style="margin-right: 6px;">
-            📚 Полка
-          </button>
-          <span class="meta-vol" id="readerVolBadge">Том I</span>
-          <strong class="meta-hero-name" id="readerHeroTitle">Владислав Петухов</strong>
-        </div>
-
-        <!-- Переключатель режима: 3D Фолиант vs Telegram Хроника -->
-        <div class="reader-mode-toggle" id="readerModeToggle" role="group" aria-label="Режим чтения">
-          <button class="mode-btn active" id="btnModeFolio" onclick="ReaderEngine.setViewMode('folio')" type="button" title="Режим 3D книги с разворотом и перелистыванием">
-            <span>📖 Фолиант</span>
-          </button>
-          <button class="mode-btn" id="btnModeTelegram" onclick="ReaderEngine.setViewMode('telegram')" type="button" title="Режим Telegram-сводки с интерактивным rich-форматированием">
-            <span>💬 Telegram-лента</span>
-          </button>
-        </div>
-
-        <!-- Инструменты форматирования, масштабирования и звука -->
-        <div class="reader-tools">
-          
-          <!-- Масштабирование шрифта (Scale A- / 100% / A+) -->
-          <div class="reader-scale-controls" role="group" aria-label="Масштаб текста">
-            <button class="scale-btn" onclick="ReaderEngine.changeFontScale(-1)" title="Уменьшить масштаб текста (А-)" type="button">А−</button>
-            <span class="scale-indicator" id="scaleIndicator">100%</span>
-            <button class="scale-btn" onclick="ReaderEngine.changeFontScale(1)" title="Увеличить масштаб текста (А+)" type="button">А+</button>
-          </div>
-
-          <button class="tool-btn" id="readerAudioToggleBtn" onclick="ReaderEngine.toggleHeroAudio()" type="button" title="Слушать аудиогид">
-            🎧 Аудиогид
-          </button>
-          
-          <div class="theme-selector" title="Цветовая палитра страницы">
-            <button class="theme-dot active" data-theme="theme-parchment" title="Винтажный пергамент"></button>
-            <button class="theme-dot" data-theme="theme-dark" title="Ночной обсидиан"></button>
-            <button class="theme-dot" data-theme="theme-archive" title="Архивный бланк"></button>
-          </div>
-
-          <button class="tool-btn" id="btnFullscreenToggle" onclick="ReaderEngine.toggleFullscreen()" title="Полноэкранный режим (⛶)" type="button">⛶</button>
-          <button class="tool-btn" onclick="window.print()" title="Печать разворота" type="button">🖨</button>
-          <button class="tool-btn btn-close-reader" onclick="ReaderEngine.closeBook()" title="Закрыть книгу (Esc)" type="button">✕</button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Закрепленная архивная сводка (Telegram Pinned Message) -->
-    <div class="tg-pinned-banner" id="readerPinnedBanner" onclick="ReaderEngine.scrollToPinned()" title="Нажмите, чтобы перейти к ключевой выписке">
-      <div class="container pinned-banner-inner">
-        <span class="pinned-icon" aria-hidden="true">📌</span>
-        <div class="pinned-text-group">
-          <span class="pinned-tag">Закрепленное свидетельство:</span>
-          <span class="pinned-text" id="pinnedBannerContent">Краткая выписка из наградного листа и личного дела</span>
-        </div>
-        <button class="pinned-action-btn" type="button" aria-label="Перейти к цитате">К выдержке ▾</button>
-      </div>
-    </div>
-
-    <!-- 3D Сцена книги & Telegram Feed контейнер -->
-    <div class="book-stage-wrapper" id="readerStageWrapper">
-      
-      <!-- Стрелка влево (для режима фолианта) -->
-      <button class="flip-nav-btn prev-btn" id="prevPageBtn" onclick="ReaderEngine.prevPage()" aria-label="Предыдущая страница">
-        <span>❮</span>
-      </button>
-
-      <!-- 1. Разворот 3D-книги (Folio View) -->
-      <div class="folio-book-3d theme-parchment" id="folioBookElement">
-        
-        <!-- Ляссе (Закладка) -->
-        <div class="ribbon-bookmark"></div>
-
-        <!-- Левая страница -->
-        <div class="book-page page-left" id="pageLeftContent">
-          <!-- Генерируется динамически с Telegram-форматированием -->
-        </div>
-
-        <!-- Центральный корешок / Тень сгиба -->
-        <div class="book-spine-crease"></div>
-
-        <!-- Правая страница -->
-        <div class="book-page page-right" id="pageRightContent">
-          <!-- Генерируется динамически с Telegram-форматированием -->
-        </div>
-
-      </div>
-
-      <!-- 2. Стриминговая Telegram-лента хроники (Telegram Rich Feed View) -->
-      <div class="tg-feed-container theme-parchment" id="telegramFeedElement" style="display:none;">
-        <!-- Динамически наполняется Telegram rich messages через ReaderEngine.renderTelegramFeed() -->
-      </div>
-
-      <!-- Стрелка вправо (для режима фолианта) -->
-      <button class="flip-nav-btn next-btn" id="nextPageBtn" onclick="ReaderEngine.nextPage()" aria-label="Следующая страница">
-        <span>❯</span>
-      </button>
-
-    </div>
-
-    <!-- Нижняя статусная строка читалки -->
-    <div class="reader-bottom-bar">
-      <div class="container bottom-bar-inner">
-        <span class="pagination-info" id="paginationDisplay">Разворот: Стр. 1–2 из 4</span>
-        <div class="page-dots-track" id="pageDotsTrack"></div>
-        <span class="read-speed-estimate" id="readSpeedEstimate">⏱ Время чтения: ~3 мин</span>
-        <span class="shortcut-tip">Листайте стрелками [←] [→] или нажимайте Пробел для аудио</span>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Плавающая панель контекстных действий при выделении текста (Text Selection Quick Bar) -->
-  <div class="reader-selection-bar" id="readerSelectionBar" role="toolbar" aria-label="Быстрые действия с текстом">
-    <button class="sel-btn" onclick="ReaderEngine.copySelectedText()" type="button">📋 Скопировать</button>
-    <button class="sel-btn" onclick="ReaderEngine.quoteSelectedText()" type="button">💬 В цитату</button>
-    <button class="sel-btn" onclick="ReaderEngine.speakSelectedText()" type="button">🔊 Озвучить</button>
-  </div>
-
-  <!-- Модальное окно просмотра архивных фотографий с зумом (Photo Lightbox Modal) -->
-  <div class="reader-lightbox" id="readerLightboxModal" onclick="ReaderEngine.closeLightbox(event)" role="dialog" aria-modal="true" aria-label="Просмотр фотографии">
-    <div class="lightbox-dialog" onclick="event.stopPropagation()">
-      <button class="lightbox-close-btn" onclick="ReaderEngine.closeLightbox()" title="Закрыть (Esc)" type="button">✕</button>
-      <div class="lightbox-img-wrapper">
-        <img id="lightboxImage" src="" alt="Архивная фотография героя в высоком разрешении">
-      </div>
-      <div class="lightbox-footer" id="lightboxFooter">
-        <div class="lightbox-caption-text" id="lightboxCaption">Владислав Петухов • Личное дело СРМК</div>
-        <div class="lightbox-badge">Архивный оригинал 2026</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- АУДИОПЛЕЕР ГЛАВЫ -->
-    <!-- ==========================================================================
-       ЕДИНЫЙ ПОДВАЛ МЕМОРИАЛА (CANONICAL MEMORIAL FOOTER)
-       ========================================================================== -->
-  <footer class="footer" id="siteFooter">
-    <div class="container footer-container">
-      <div class="footer-col">
-        <h3>ГБПОУ СРМК</h3>
-        <p>Ставропольский региональный многопрофильный колледж</p>
-        <p>г. Ставрополь, пр. Юности, д. 3</p>
-        <p style="margin-top: 8px;">
-          <a href="https://rmk.stavedu.ru" target="_blank" rel="noopener noreferrer" style="color: #c5a059; text-decoration: none;">rmk.stavedu.ru</a>
-        </p>
-      </div>
-
-      <div class="footer-col">
-        <h3>Разработчики проекта</h3>
-        <ul class="team-list">
-          <li><strong>Е. В. Бледных</strong> — директор ГБПОУ СРМК, канд. ист. наук;</li>
-          <li><strong>А. В. Генте</strong> — куратор, преп. истории высшей кат.;</li>
-          <li><strong>А. И. Андреев</strong> — разработчик, студент 2 курса ИСиП.</li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h3>Конкурсный статус</h3>
-        <p>Проект разработан для Всероссийской акции «Имя в истории образовательной организации» (номинация «За партой героя»).</p>
-        <p class="copyright">© 2026 ГБПОУ СРМК. «Быть воином — жить вечно».</p>
-        <button onclick="if(typeof AdminCMS !== 'undefined') AdminCMS.open(); else if(typeof GuestbookEngine !== 'undefined') GuestbookEngine.openModeratorPrompt(); else if(window.AchievementsEngine) AchievementsEngine.openModal();" style="background:none; border:none; color:#7b8594; font-size:11px; cursor:pointer; margin-top:8px;" type="button">
-          [ Панель управления ]
-        </button>
-      </div>
-    </div>
-  </footer>
-
-  <audio id="readerAudioElement" preload="metadata"></audio>
-
-  <!-- TOAST УВЕДОМЛЕНИЯ -->
-  <div id="readerToast" class="reader-toast"></div>
-
-  <!-- СКРИПТЫ -->
-  <script src="js/memorial-toast.js"></script>
-  <script src="js/achievements-engine.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cloud-sync.js"></script>
   <script src="js/data.js"></script>
   <script src="js/grand-memory-book-part-1.js"></script>
   <script src="js/grand-memory-book-part-2.js"></script>
   <script src="js/grand-memory-book-part-3.js"></script>
-  <script src="js/sources.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/cloud-sync.js"></script>
-  <script src="js/hall-analytics.js"></script>
-  <script src="js/reader.js"></script>
+  <script src="js/achievements-engine.js"></script>
+  <script src="js/tts-narrator.js"></script>
+  <script src="js/audio-dock.js"></script>
+  <script src="js/lesson-cinema.js"></script>
   <script src="js/navigation.js"></script>
+  <script src="js/spotlight.js"></script>
+  <script src="js/reader.js"></script>
 </body>
 </html>
